@@ -450,6 +450,19 @@ CLEAN_FLAG=0
 ...
 ...
 ...
+15:07:14 Success building watchdog-5.13-11.el7.tis.2.src.rpm on 'b0'
+15:07:17 schedule2: no unbuilt deps for 'wrs-branding'
+15:07:17 Start build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/wrs-branding-4.0.0-6.tis.src.rpm
+15:07:17 building wrs-branding-4.0.0-6.tis.src.rpm
+15:07:24 End build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/wrs-branding-4.0.0-6.tis.src.rpm
+15:07:24 Success building wrs-branding-4.0.0-6.tis.src.rpm on 'b0'
+15:07:27 schedule2: no unbuilt deps for 'wrs-heat-templates'
+15:07:27 Start build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/wrs-heat-templates-1.6.0-1.tis.src.rpm
+15:07:27 building wrs-heat-templates-1.6.0-1.tis.src.rpm
+15:07:33 End build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/wrs-heat-templates-1.6.0-1.tis.src.rpm
+...
+...
+...
 ```
 
-Las Updated? 07/25/2018 16:25
+Las Updated? 07/25/2018 15:20 PST
