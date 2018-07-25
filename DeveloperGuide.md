@@ -218,3 +218,42 @@ Successfully built fcaf81e37805
 Successfully tagged local/user-stx-builder:7.3
 user@workstation:~/stx-tools$ 
 ```
+
+```
+user@workstation:~/stx-tools$ bash tb.sh env
+LOCALDISK=/home/user/starlingx/workspace/localdisk
+GUEST_LOCALDISK=localdisk
+TC_DOCKERFILE=Dockerfile.centos73.TC-builder
+TC_CONTAINER_NAME=user-centos-builder
+TC_CONTAINER_TAG=local/user-stx-builder:7.3
+SOURCE_REMOTE_NAME=
+SOURCE_REMOTE_URI=git@git.openstack.org:openstack
+HOST_MIRROR_DIR=/home/user/starlingx/mirror
+MY_TC_RELEASE=tis-r5-pike
+MY_REPO_ROOT_DIR=/home/user/starlingx/workspace/localdisk/designer/user/starlingx
+```
+
+```
+user@workstation:~/stx-tools$ bash tb.sh run
+867cb3cb68244a220353b9dc9cb5399bbe0b3bb19017e95582924b6d85310270
+```
+
+```
+user@workstation:~/stx-tools$ bash tb.sh exec
+starting lighttpd up...
+MY_REPO=/localdisk/designer/user/starlingx/cgcs-root
+Using git@git.openstack.org:openstack for build
+
+To ease checkout do:
+    eval $(ssh-agent)
+    ssh-add
+To start a fresh source tree:
+    cd $MY_REPO_ROOT_DIR
+    repo init -u git://git.openstack.org/openstack/stx-manifest.git -m default.xml
+To build all packages:
+    cd $MY_REPO
+    build-pkgs or build-pkgs <pkglist>
+To make an iso:
+    build-iso
+[user@867cb3cb6824 /]$ 
+```
