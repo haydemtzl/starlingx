@@ -73,7 +73,7 @@ user@workstation:~/stx-tools/centos-mirror-tools$ docker run -it --name user-cen
 [root@ba54106f7bb4 localdisk]# 
 ```
 
-# Download Packages
+## Download Packages
 
 ```
 [root@ba54106f7bb4 localdisk]# bash download_mirror.sh
@@ -89,20 +89,6 @@ running "update-pxe-network-installer" command after "build-iso"
     - out/stx-r1/CentOS/pike/Binary/images/pxeboot/initrd.img
     - out/stx-r1/CentOS/pike/Binary/images/pxeboot/vmlinuz
 [root@ba54106f7bb4 localdisk]# 
-```
-
-## Download Packages
-
-```
-[root@ba54106f7bb4 localdisk]# bash download_mirror.sh 
---------------------------------------------------------------
-WARNING: this script HAS TO access internet (http/https/ftp),
-so please make sure your network working properly!!
-step #1: start downloading RPMs/SRPMs from 3rd-party websites...
-using ./rpms_from_3rd_parties.lst as the download name lists
-2018-07-25_0914
-Loaded plugins: fastestmirror, ovl
-...
 ```
 
 ## Verify Packages
