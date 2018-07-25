@@ -427,4 +427,29 @@ MAX_WORKERS=8
 CLEAN_FLAG=0
 13:36:24 build-srpms-parallel --std
 13:36:24 make: all
+...
+...
+...
+14:11:07  --> python2-pyOpenSSL-16.2.0-3.el7.noarch
+14:11:07  --> Already installed : systemd-219-42.el7_4.1.x86_64
+14:11:07  --> Already installed : git-1.8.3.1-13.el7.x86_64
+14:11:07  --> python2-babel-2.3.4-1.el7.noarch
+14:11:07 Error: No Package found for python-keystonemiddleware
+14:11:07 Error: No Package found for python-oslo-messaging
+14:11:07 Error: No Package found for python-oslo-service
+14:11:07 
+14:11:07 End build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/distributedcloud-client-1.0.0-1.tis.1.src.rpm
+14:11:07 Error building distributedcloud-client-1.0.0-1.tis.1.src.rpm on 'b0'.
+14:11:07 Will try to build again (if some other package will succeed).
+14:11:07 schedule2: no unbuilt deps for 'dnsmasq'
+14:11:07 Start build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/dnsmasq-2.76-2.el7_4.2.tis.6.src.rpm
+14:11:07 building dnsmasq-2.76-2.el7_4.2.tis.6.src.rpm
+14:11:16 End build on 'b0': /localdisk/loadbuild/user/starlingx/std/rpmbuild/SRPMS/dnsmasq-2.76-2.el7_4.2.tis.6.src.rpm
+14:11:16 Success building dnsmasq-2.76-2.el7_4.2.tis.6.src.rpm on 'b0'
+14:11:17 schedule2: no unbuilt deps for 'dpkg'
+...
+...
+...
 ```
+
+Las Updated? 07/25/2018 16:25
