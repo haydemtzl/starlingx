@@ -370,5 +370,75 @@ remote: Total 9106 (delta 6634), reused 5840 (delta 3658)
 Receiving objects: 100% (9106/9106), 1.33 MiB | 877.00 KiB/s, done.
 Resolving deltas: 100% (6634/6634), done.
 From https://git.openstack.org/openstack/python-ironicclient
+...
+...
+curl: (22) The requested URL returned error: 404 Not Found
+Server does not provide clone.bundle; ignoring.
+remote: Counting objects: 440, done.
+remote: Compressing objects: 100% (231/231), done.
+remote: Total 440 (delta 274), reused 350 (delta 203)
+Receiving objects: 100% (440/440), 137.66 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (274/274), done.
+From https://git.starlingx.io/stx-tools
+ * [new branch]      m/2018.07  -> starlingx/m/2018.07
+ * [new branch]      master     -> starlingx/master
+Fetching projects: 100% (59/59), done.  
+Checking out files: 100% (9252/9252), done.ut files:  13% (1286/9252)   
+Syncing work tree: 100% (59/59), done.  
+
+[user@867cb3cb6824 starlingx]$ 
 ```
 
+```
+[user@867cb3cb6824 starlingx]$ ln -s /import/mirrors/CentOS/stx-r1/CentOS/pike/downloads/ $MY_REPO/stx/
+```
+
+```
+user@workstation:~/stx-tools$ mkdir -p $HOME/starlingx/mirror/CentOS/tis-installer
+user@workstation:~/stx-tools$ cp $HOME/starlingx/mirror/CentOS/stx-r1/CentOS/pike/Binary/images/pxeboot/initrd.img $HOME/starlingx/mirror/CentOS/tis-installer/initrd.img-stx-0.2
+user@workstation:~/stx-tools$ cp $HOME/starlingx/mirror/CentOS/stx-r1/CentOS/pike/Binary/images/pxeboot/vmlinuz $HOME/starlingx/mirror/CentOS/tis-installer/vmlinuz-stx-0.2
+user@workstation:~/stx-tools$ cp $HOME/starlingx/mirror/CentOS/stx-r1/CentOS/pike/Binary/LiveOS/squashfs.img $HOME/starlingx/mirror/CentOS/tis-installer/squashfs.img-stx-0.2
+user@workstation:~/stx-tools$ 
+```
+
+# Build Packages
+
+```
+[user@867cb3cb6824 starlingx]$ generate-cgcs-centos-repo.sh /import/mirrors/CentOS/stx-r1/CentOS/pike/
+...
+...
+Creating symlink for /localdisk/designer/user/starlingx/cgcs-root/cgcs-centos-repo/Source/./setup-2.8.71-7.el7.src.rpm
+------------------------------
+Creating symlink for /localdisk/designer/user/starlingx/cgcs-root/cgcs-centos-repo/Source/./resource-agents-3.9.5-105.el7.src.rpm
+------------------------------
+Copying mock.cfg.proto and comps.xml files.
+Done
+[user@867cb3cb6824 starlingx]$ 
+```
+
+```
+[user@867cb3cb6824 starlingx]$ cd $MY_WORKSPACE
+```
+
+```
+[user@867cb3cb6824 starlingx]$ build-pkgs
+build-pkgs-parallel 
+CLEAN_FLAG=0
+EDIT_FLAG=0
+EXTRA_ARGS_COMMON=''
+EXTRA_ARGS_SRPM=''
+EXTRA_ARGS_RPM=''
+TARGETS='  '
+TARGETS_STD=' '
+TARGETS_RT=' '
+TARGETS_MISC=' '
+Launching std build, logging to /localdisk/loadbuild/user/starlingx/build-std.log
+
+######## Wed Jul 25 13:36:24 UTC 2018: Launching build-srpms-parallel --std  
+
+/localdisk/designer/user/starlingx/cgcs-root/build-tools/build-srpms-parallel --std      
+MAX_WORKERS=8
+CLEAN_FLAG=0
+13:36:24 build-srpms-parallel --std
+13:36:24 make: all
+```
