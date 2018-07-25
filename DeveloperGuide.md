@@ -86,3 +86,56 @@ using ./rpms_from_3rd_parties.lst as the download name lists
 Loaded plugins: fastestmirror, ovl
 ...
 ```
+
+# Create StarlingX Packages
+
+## Setup Building Docker Container
+
+```
+user@workstation:~/stx-tools$ mkdir -p $HOME/starlingx/workspace
+user@workstation:~/stx-tools$ cd $HOME/stx-tools
+user@workstation:~/stx-tools$ cp ~/.gitconfig toCOPY
+user@workstation:~/stx-tools$ nano localrc
+user@workstation:~/stx-tools$ 
+```
+
+```
+# tbuilder localrc
+MYUNAME=user
+PROJECT=starlingx
+HOST_PREFIX=$HOME/starlingx/workspace
+HOST_MIRROR_DIR=$HOME/starlingx/mirror
+```
+
+```
+user@workstation:~/stx-tools$ make base-build
+docker build \
+	--ulimit core=0 \
+	--network host \
+	-t local/dev-centos:7.3 \
+	-f Dockerfile.centos73 \
+	.
+Sending build context to Docker daemon  2.085GB
+Step 1/6 : FROM centos:7.3.1611
+ ---> 66ee80d59a68
+Step 2/6 : RUN yum install -y epel-release &&     yum install -y lighttpd lighttpd-fastcgi lighttpd-mod_geoip     sudo systemd     anaconda anaconda-help anaconda-runtime bc python-psutil createrepo /usr/bin/yumdownloader     /usr/bin/mkisofs git quilt pax perl-CPAN gcc expat-devel syslinux udisks2 rpm-build rpm-sign deltarpm     python-deltarpm rpm-python cpanminus wget     bind bind-utils squashfs-tools
+ ---> Using cache
+ ---> 4175c00ecde8
+Step 3/6 : RUN cpanm --notest Fatal &&     cpanm --notest XML::SAX  &&     cpanm --notest XML::SAX::Expat &&     cpanm --notest XML::Parser &&     cpanm --notest XML::Simple
+ ---> Using cache
+ ---> 02c50642c96a
+Step 4/6 : RUN yum install -y vim-enhanced openssl-devel gettext mongodb mongodb-server mariadb-devel python-testrepository     python-tox python-pep8 python-pip postgresql postgresql-devel python-devel libxml2 libxml2-devel libxslt-devel     libffi-devel sqlite-devel openldap-devel libvirt-devel python-subunit qemu-kvm
+ ---> Using cache
+ ---> fcd963800430
+Step 5/6 : RUN pip install python-subunit junitxml --upgrade &&     pip install tox --upgrade
+ ---> Using cache
+ ---> e5d3c8a74d73
+Step 6/6 : RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo &&     chmod a+x /usr/local/bin/repo
+ ---> Using cache
+ ---> 03797226f078
+Successfully built 03797226f078
+Successfully tagged local/dev-centos:7.3
+user@workstation:~/stx-tools$ 
+```
+
+```
