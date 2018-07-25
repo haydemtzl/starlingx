@@ -257,3 +257,68 @@ To make an iso:
     build-iso
 [user@867cb3cb6824 /]$ 
 ```
+
+```
+[user@867cb3cb6824 /]$ eval $(ssh-agent)
+Agent pid 206
+```
+
+```
+[user@867cb3cb6824 /]$ ssh-add
+Identity added: /home/user/.ssh/id_rsa (/home/user/.ssh/id_rsa)
+```
+
+```
+[user@867cb3cb6824 /]$ cd $MY_REPO_ROOT_DIR
+[user@867cb3cb6824 starlingx]$ repo init -u git://git.openstack.org/openstack/stx-manifest.git -m default.xml
+gpg: keyring `/home/user/.repoconfig/gnupg/secring.gpg' created
+gpg: keyring `/home/user/.repoconfig/gnupg/pubring.gpg' created
+gpg: /home/user/.repoconfig/gnupg/trustdb.gpg: trustdb created
+gpg: key 920F5C65: public key "Repo Maintainer <repo@android.kernel.org>" imported
+gpg: key 692B382C: public key "Conley Owens <cco3@android.com>" imported
+gpg: Total number processed: 2
+gpg:               imported: 2  (RSA: 1)
+
+Get https://gerrit.googlesource.com/git-repo/clone.bundle
+Get https://gerrit.googlesource.com/git-repo
+remote: Finding sources: 100% (17/17)
+remote: Total 17 (delta 7), reused 17 (delta 7)
+Unpacking objects: 100% (17/17), done.
+From https://gerrit.googlesource.com/git-repo
+   a6515fb..e469a0c  master     -> origin/master
+Get git://git.openstack.org/openstack/stx-manifest.git
+remote: Counting objects: 41, done.
+remote: Compressing objects: 100% (18/18), done.
+remote: Total 41 (delta 20), reused 41 (delta 20)
+From git://git.openstack.org/openstack/stx-manifest
+ * [new branch]      m/2018.07  -> origin/m/2018.07
+ * [new branch]      master     -> origin/master
+
+Your identity is: Abraham Arce <abraham.arce.moreno@intel.com>
+If you want to change this, please re-run 'repo init' with --config-name
+
+Testing colorized output (for 'repo diff', 'repo status'):
+  black    red      green    yellow   blue     magenta   cyan     white 
+  bold     dim      ul       reverse 
+Enable color display in this user account (y/N)? 
+
+repo has been initialized in /localdisk/designer/user/starlingx
+[user@867cb3cb6824 starlingx]$ 
+```
+
+```sh
+[user@867cb3cb6824 starlingx]$ repo sync
+Fetching project python-ironicclient.git
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
+curl: (22) The requested URL returned error: 404 Not Found
+Server does not provide clone.bundle; ignoring.
+remote: Counting objects: 9106, done.
+remote: Compressing objects: 100% (5384/5384), done.
+remote: Total 9106 (delta 6634), reused 5840 (delta 3658)
+Receiving objects: 100% (9106/9106), 1.33 MiB | 877.00 KiB/s, done.
+Resolving deltas: 100% (6634/6634), done.
+From https://git.openstack.org/openstack/python-ironicclient
+```
+
