@@ -317,6 +317,9 @@ Identity added: /home/user/.ssh/id_rsa (/home/user/.ssh/id_rsa)
 
 ```
 [user@867cb3cb6824 /]$ cd $MY_REPO_ROOT_DIR
+```
+
+```
 [user@867cb3cb6824 starlingx]$ repo init -u git://git.openstack.org/openstack/stx-manifest.git -m default.xml
 gpg: keyring `/home/user/.repoconfig/gnupg/secring.gpg' created
 gpg: keyring `/home/user/.repoconfig/gnupg/pubring.gpg' created
