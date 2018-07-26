@@ -531,5 +531,20 @@ make: all
 
 # Build StarlingX ISO
 
+```
+[user@867cb3cb6824 starlingx]$ build-iso
+...
+...
+18:39:31 Inserting fragment md5sums into iso image...
+18:39:31 fragmd5 = 9a5c1cabd4c1fabd243767222cfc8d593b91da39c7379f579191332cbe88
+18:39:31 frags = 20
+18:39:31 Setting supported flag to 0
+18:39:35 MAKING /localdisk/loadbuild/user/starlingx/export/report.txt
+18:39:35 ISO REPORT: /localdisk/loadbuild/user/starlingx/export/report.txt
+18:39:35 Done.Output file: /localdisk/loadbuild/user/starlingx/export/bootimage.iso
+18:39:35
+[user@867cb3cb6824 starlingx]$ 
+```
+
 
 Las Updated? 07/25/2018 15:20 PST
