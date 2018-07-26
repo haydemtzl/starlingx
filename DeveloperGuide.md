@@ -463,6 +463,15 @@ CLEAN_FLAG=0
 ...
 ...
 ...
+17:48:10 Recreate repodata
+
+######## Wed Jul 25 17:48:11 UTC 2018: build-rpm-parallel --rt was successful
+
+Wed Jul 25 17:48:11 UTC 2018: rt complete
+
+Skipping 'installer' build
+All builds were successful
+[user@867cb3cb6824 starlingx]$
 ```
 
 # Build StarlingX ISO
