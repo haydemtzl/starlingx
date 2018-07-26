@@ -474,6 +474,22 @@ All builds were successful
 [user@867cb3cb6824 starlingx]$
 ```
 
+```
+[user@867cb3cb6824 starlingx]$ generate-cgcs-tis-repo
+...
+...
+vm-topology needs rpm ['vm-topology', 'python', 'python2-setuptools', 'python-keyring', 'libvirt']
+watchdog needs rpm ['watchdog', 'systemd']
+wrs-branding needs rpm ['wrs-branding']
+wrs-heat-templates needs rpm ['wrs-heat-templates']
+wrs-ssl needs rpm ['wrs-ssl', 'openssl']
+[user@867cb3cb6824 starlingx]$ 
+```
+
+```
+```
+
 # Build StarlingX ISO
+
 
 Las Updated? 07/25/2018 15:20 PST
