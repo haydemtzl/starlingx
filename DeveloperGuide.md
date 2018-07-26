@@ -506,6 +506,29 @@ wrs-ssl needs rpm ['wrs-ssl', 'openssl']
 [user@867cb3cb6824 starlingx]$ 
 ```
 
+```
+[user@867cb3cb6824 starlingx]$ build-rpms --installer
+build-rpms-parallel --installer
+FORMAL_BUILD=0
+modify-build-cfg /localdisk/loadbuild/user/starlingx/installer/user-starlingx-tis-r5-pike-installer.cfg
+make: all
+...
+...
+18:36:20 Pkgs built: 2
+18:36:20 Packages successfully built in this order:
+18:36:20 /localdisk/loadbuild/user/starlingx/installer/rpmbuild/SRPMS/rpm-4.14.0-1.tis.1.src.rpm
+18:36:20 /localdisk/loadbuild/user/starlingx/installer/rpmbuild/SRPMS/anaconda-21.48.22.121-1.el7.centos.tis.5.src.rpm
+18:36:20
+18:36:20 Auditing for obsolete srpms
+18:36:20 waiting for srpm audit to complete
+18:36:20 Auditing for obsolete rpms
+18:36:20 waiting for rpm audit to complete
+18:36:20 Audit complete
+18:36:20
+18:36:20 Recreate repodata
+[user@867cb3cb6824 starlingx]$ 
+```
+
 # Build StarlingX ISO
 
 
