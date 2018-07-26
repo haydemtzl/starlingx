@@ -487,6 +487,23 @@ wrs-ssl needs rpm ['wrs-ssl', 'openssl']
 ```
 
 ```
+[user@867cb3cb6824 starlingx]$ build-srpms --installer
+...
+...
+18:28:21 ==== Update repodata =====
+18:28:21 Directory walk started
+18:28:21 Directory walk done - 2 packages
+18:28:21 Temporary output repo path: /localdisk/loadbuild/user/starlingx/installer/rpmbuild/SRPMS/.repodata/
+18:28:21 Preparing sqlite DBs
+18:28:21 Pool started (with 5 workers)
+18:28:21 Pool finished
+18:28:21 ==== Update repodata complete =====
+18:28:21
+18:28:21 Successfully built 2 packages:
+18:28:21    rpm anaconda
+18:28:21
+18:28:21 Compiled src.rpm's can be found here: /localdisk/loadbuild/user/starlingx/installer/rpmbuild/SRPMS
+[user@867cb3cb6824 starlingx]$ 
 ```
 
 # Build StarlingX ISO
