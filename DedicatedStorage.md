@@ -323,5 +323,118 @@ controller-0:~$ source /etc/nova/openrc
 ## Storage-0
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
+| 3  | compute-0    | compute     | locked         | disabled    | offline      |
+| 4  | compute-1    | compute     | locked         | disabled    | offline      |
+| 5  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 5 personality=storage hostname=storage-0
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2018-12-19T16:01:44.822948+00:00     |
+| hostname            | storage-0                            |
+| id                  | 5                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.101                      |
+| mgmt_mac            | 52:54:00:3a:0e:6f                    |
+| operational         | disabled                             |
+| personality         | storage                              |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 18.10                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | 84816687-3c13-4620-9d03-1266ff0c2825 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show storage-0 | grep install
+| install_output      | text                                            |
+| install_state       | None                                            |
+| install_state_info  | None                                            |
+```
 
+## Storage-1
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
+| 3  | compute-0    | compute     | locked         | disabled    | offline      |
+| 4  | compute-1    | compute     | locked         | disabled    | offline      |
+| 5  | storage-0    | storage     | locked         | disabled    | offline      |
+| 6  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 6 personality=storage hostname=storage-1
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2018-12-19T16:03:24.951145+00:00     |
+| hostname            | storage-1                            |
+| id                  | 6                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.108                      |
+| mgmt_mac            | 52:54:00:8c:ec:e8                    |
+| operational         | disabled                             |
+| personality         | storage                              |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 18.10                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | ce3d948a-56de-4f49-bf4e-002ccdf8b532 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show storage-1 | grep install
+| install_output      | text                                                          |
+| install_state       | None                                                          |
+| install_state_info  | None                                                          |
 ```
