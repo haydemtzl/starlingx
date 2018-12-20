@@ -633,6 +633,8 @@ Reboot
 ```
 # Storage Host Provision
 
+## Storage-0
+
 ```
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list storage-0
 +--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
@@ -652,7 +654,200 @@ Reboot
 +--------------------------------------+---------+--------+--------------------------------------+
 | e69468d8-934f-43df-943d-4ce228111c5e | storage | in-use | bee1e818-4717-459a-987c-9d66d50e2138 |
 +--------------------------------------+---------+--------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-0 835deb1c-21c0-41aa-9b15-ab3ef59edb47
++------------------+--------------------------------------------------+
+| Property         | Value                                            |
++------------------+--------------------------------------------------+
+| osdid            | 0                                                |
+| function         | osd                                              |
+| journal_location | 7542232a-c8b8-4964-b642-2d6380f9d556             |
+| journal_size_gib | 1024                                             |
+| journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
+| journal_node     | /dev/sdb2                                        |
+| uuid             | 7542232a-c8b8-4964-b642-2d6380f9d556             |
+| ihost_uuid       | 84816687-3c13-4620-9d03-1266ff0c2825             |
+| idisk_uuid       | 835deb1c-21c0-41aa-9b15-ab3ef59edb47             |
+| tier_uuid        | e69468d8-934f-43df-943d-4ce228111c5e             |
+| tier_name        | storage                                          |
+| created_at       | 2018-12-20T14:10:35.369502+00:00                 |
+| updated_at       | 2018-12-20T14:11:01.933177+00:00                 |
++------------------+--------------------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-list storage-0
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| uuid                                 | function | osdid | capabilities | idisk_uuid                           | journal_path                                     | journal_node | journal_size_gib | tier_name |
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| 7542232a-c8b8-4964-b642-2d6380f9d556 | osd      | 0     | {}           | 835deb1c-21c0-41aa-9b15-ab3ef59edb47 | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
++---------------------+---------------------------------------------------------------+
+| Property            | Value                                                         |
++---------------------+---------------------------------------------------------------+
+| action              | none                                                          |
+| administrative      | locked                                                        |
+| availability        | online                                                        |
+| bm_ip               | None                                                          |
+| bm_type             | None                                                          |
+| bm_username         | None                                                          |
+| boot_device         | sda                                                           |
+| capabilities        | {u'stor_function': u'monitor'}                                |
+| config_applied      | None                                                          |
+| config_status       | None                                                          |
+| config_target       | None                                                          |
+| console             | ttyS0,115200                                                  |
+| created_at          | 2018-12-19T16:01:44.822948+00:00                              |
+| hostname            | storage-0                                                     |
+| id                  | 5                                                             |
+| install_output      | text                                                          |
+| install_state       | completed                                                     |
+| install_state_info  | None                                                          |
+| invprovision        | unprovisioned                                                 |
+| location            | {}                                                            |[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
++---------------------+---------------------------------------------------------------+
+| Property            | Value                                                         |
++---------------------+---------------------------------------------------------------+
+| action              | none                                                          |
+| administrative      | locked                                                        |
+| availability        | online                                                        |
+| bm_ip               | None                                                          |
+| bm_type             | None                                                          |
+| bm_username         | None                                                          |
+| boot_device         | sda                                                           |
+| capabilities        | {u'stor_function': u'monitor'}                                |
+| config_applied      | None                                                          |
+| config_status       | None                                                          |
+| config_target       | None                                                          |
+| console             | ttyS0,115200                                                  |
+| created_at          | 2018-12-19T16:01:44.822948+00:00                              |
+| hostname            | storage-0                                                     |
+| id                  | 5                                                             |
+| install_output      | text                                                          |
+| install_state       | completed                                                     |
+| install_state_info  | None                                                          |
+| invprovision        | unprovisioned                                                 |
+| location            | {}                                                            |
+| mgmt_ip             | 192.168.204.101                                               |
+| mgmt_mac            | 52:54:00:3a:0e:6f                                             |
+| operational         | disabled                                                      |
+| peers               | {u'hosts': [u'storage-0', u'storage-1'], u'name': u'group-0'} |
+| personality         | storage                                                       |
+| reserved            | False                                                         |
+| rootfs_device       | sda                                                           |
+| serialid            | None                                                          |
+| software_load       | 18.10                                                         |
+| task                | Unlocking                                                     |
+| tboot               | false                                                         |
+| ttys_dcd            | None                                                          |
+| updated_at          | 2018-12-20T14:11:18.060933+00:00                              |
+| uptime              | 79104                                                         |
+| uuid                | 84816687-3c13-4620-9d03-1266ff0c2825                          |
+| vim_progress_status | None                                                          |
++---------------------+---------------------------------------------------------------+
 
+| mgmt_ip             | 192.168.204.101                                               |
+| mgmt_mac            | 52:54:00:3a:0e:6f                                             |
+| operational         | disabled                                                      |
+| peers               | {u'hosts': [u'storage-0', u'storage-1'], u'name': u'group-0'} |
+| personality         | storage                                                       |
+| reserved            | False                                                         |
+| rootfs_device       | sda                                                           |
+| serialid            | None                                                          |
+| software_load       | 18.10                                                         |
+| task                | Unlocking                                                     |
+| tboot               | false                                                         |
+| ttys_dcd            | None                                                          |
+| updated_at          | 2018-12-20T14:11:18.060933+00:00                              |
+| uptime              | 79104                                                         |
+| uuid                | 84816687-3c13-4620-9d03-1266ff0c2825                          |
+| vim_progress_status | None                                                          |
++---------------------+---------------------------------------------------------------+
+```
+
+## Storage-1
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list storage-1
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                      |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| e739079a-6fea-4cf3-8c99-ab3d423cb6b3 | /dev/sda  | 2048    | HDD     | 200.0 | 0.0        | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-1.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
+| 5b7e3abb-32e2-4195-acf7-b02b2f1466ab | /dev/sdb  | 2064    | HDD     | 200.0 | 199.997    | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-2.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-tier-list ceph_cluster
++--------------------------------------+---------+--------+--------------------------------------+
+| uuid                                 | name    | status | backend_using                        |
++--------------------------------------+---------+--------+--------------------------------------+
+| e69468d8-934f-43df-943d-4ce228111c5e | storage | in-use | bee1e818-4717-459a-987c-9d66d50e2138 |
++--------------------------------------+---------+--------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-1 5b7e3abb-32e2-4195-acf7-b02b2f1466ab
++------------------+--------------------------------------------------+
+| Property         | Value                                            |
++------------------+--------------------------------------------------+
+| osdid            | 1                                                |
+| function         | osd                                              |
+| journal_location | 2cfe0331-e658-4298-bce1-27cb4bc32ac8             |
+| journal_size_gib | 1024                                             |
+| journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
+| journal_node     | /dev/sdb2                                        |
+| uuid             | 2cfe0331-e658-4298-bce1-27cb4bc32ac8             |
+| ihost_uuid       | ce3d948a-56de-4f49-bf4e-002ccdf8b532             |
+| idisk_uuid       | 5b7e3abb-32e2-4195-acf7-b02b2f1466ab             |
+| tier_uuid        | e69468d8-934f-43df-943d-4ce228111c5e             |
+| tier_name        | storage                                          |
+| created_at       | 2018-12-20T14:12:37.179923+00:00                 |
+| updated_at       | 2018-12-20T14:12:51.103502+00:00                 |
++------------------+--------------------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-list storage-1
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| uuid                                 | function | osdid | capabilities | idisk_uuid                           | journal_path                                     | journal_node | journal_size_gib | tier_name |
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| 2cfe0331-e658-4298-bce1-27cb4bc32ac8 | osd      | 1     | {}           | 5b7e3abb-32e2-4195-acf7-b02b2f1466ab | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
++--------------------------------------+----------+-------+--------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-1
++---------------------+---------------------------------------------------------------+
+| Property            | Value                                                         |
++---------------------+---------------------------------------------------------------+
+| action              | none                                                          |
+| administrative      | locked                                                        |
+| availability        | online                                                        |
+| bm_ip               | None                                                          |
+| bm_type             | None                                                          |
+| bm_username         | None                                                          |
+| boot_device         | sda                                                           |
+| capabilities        | {}                                                            |
+| config_applied      | None                                                          |
+| config_status       | None                                                          |
+| config_target       | None                                                          |
+| console             | ttyS0,115200                                                  |
+| created_at          | 2018-12-19T16:03:24.951145+00:00                              |
+| hostname            | storage-1                                                     |
+| id                  | 6                                                             |
+| install_output      | text                                                          |
+| install_state       | completed                                                     |
+| install_state_info  | None                                                          |
+| invprovision        | unprovisioned                                                 |
+| location            | {}                                                            |
+| mgmt_ip             | 192.168.204.108                                               |
+| mgmt_mac            | 52:54:00:8c:ec:e8                                             |
+| operational         | disabled                                                      |
+| peers               | {u'hosts': [u'storage-0', u'storage-1'], u'name': u'group-0'} |
+| personality         | storage                                                       |
+| reserved            | False                                                         |
+| rootfs_device       | sda                                                           |
+| serialid            | None                                                          |
+| software_load       | 18.10                                                         |
+| task                | Unlocking                                                     |
+| tboot               | false                                                         |
+| ttys_dcd            | None                                                          |
+| updated_at          | 2018-12-20T14:13:18.093001+00:00                              |
+| uptime              | 79038                                                         |
+| uuid                | ce3d948a-56de-4f49-bf4e-002ccdf8b532                          |
+| vim_progress_status | None                                                          |
++---------------------+---------------------------------------------------------------+
 ```
 
 # Compute Host Provision
