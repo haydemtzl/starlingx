@@ -614,9 +614,178 @@ controller-0:~$ source /etc/nova/openrc
 | uuid                | a53e1d79-facb-42f5-9322-a99fead0f3da |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
+```
 
 Reboot
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | degraded     |
+| 3  | compute-0    | compute     | locked         | disabled    | online       |
+| 4  | compute-1    | compute     | locked         | disabled    | online       |
+| 5  | storage-0    | storage     | locked         | disabled    | online       |
+| 6  | storage-1    | storage     | locked         | disabled    | online       |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+# Storage Host Provision
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list storage-0
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                      |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| 6073a6ab-3eac-4fcd-bdf2-8803e0a5bee1 | /dev/sda  | 2048    | HDD     | 200.0 | 0.0        | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-1.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
+| 835deb1c-21c0-41aa-9b15-ab3ef59edb47 | /dev/sdb  | 2064    | HDD     | 200.0 | 199.997    | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-2.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-tier-list ceph_cluster
++--------------------------------------+---------+--------+--------------------------------------+
+| uuid                                 | name    | status | backend_using                        |
++--------------------------------------+---------+--------+--------------------------------------+
+| e69468d8-934f-43df-943d-4ce228111c5e | storage | in-use | bee1e818-4717-459a-987c-9d66d50e2138 |
++--------------------------------------+---------+--------+--------------------------------------+
+
+```
 
 # Compute Host Provision
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-port-list compute-0
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-----------------------------------+
+| uuid                                 | name    | type     | pci address  | device | processor | accelerated | device type                       |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-----------------------------------+
+| da80542a-55f8-47ba-abb9-f1f9d7781cc0 | enp2s1  | ethernet | 0000:02:01.0 | 0      | -1        | False       | 82540EM Gigabit Ethernet          |
+|                                      |         |          |              |        |           |             | Controller                        |
+|                                      |         |          |              |        |           |             |                                   |
+| 7ac23c18-51dc-4e00-bb60-f4fee938dfaf | enp2s2  | ethernet | 0000:02:02.0 | 0      | -1        | False       | 82540EM Gigabit Ethernet          |
+|                                      |         |          |              |        |           |             | Controller                        |
+|                                      |         |          |              |        |           |             |                                   |
+| 3d3e01f1-4782-4586-8cb1-d6d19ffc3aad | eth1000 | ethernet | 0000:02:03.0 | 0      | -1        | True        | Virtio network device             |
+| 78d37173-a86d-47f3-b04a-de1da11cacaf | eth1001 | ethernet | 0000:02:04.0 | 0      | -1        | True        | Virtio network device             |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-----------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -p providernet-a -c data compute-0 eth1000
++------------------+--------------------------------------+
+| Property         | Value                                |
++------------------+--------------------------------------+
+| ifname           | eth1000                              |
+| iftype           | ethernet                             |
+| ports            | [u'eth1000']                         |
+| providernetworks | providernet-a                        |
+| imac             | 52:54:00:ec:e5:dc                    |
+| imtu             | 1500                                 |
+| ifclass          | data                                 |
+| networks         |                                      |
+| aemode           | None                                 |
+| schedpolicy      | None                                 |
+| txhashpolicy     | None                                 |
+| uuid             | b6528412-bba2-4b20-adad-c0895446c9a8 |
+| ihost_uuid       | b35edc7d-9268-4514-ac66-f3c3d8571826 |
+| vlan_id          | None                                 |
+| uses             | []                                   |
+| used_by          | []                                   |
+| created_at       | 2018-12-19T16:07:13.663986+00:00     |
+| updated_at       | 2018-12-20T09:14:10.039961+00:00     |
+| sriov_numvfs     | 0                                    |
+| ipv4_mode        | disabled                             |
+| ipv6_mode        | disabled                             |
+| accelerated      | [True]                               |
++------------------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-cpu-modify compute-0 -f vswitch -p0 1
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+| uuid                                 | log_c | processor | phy_c | thread | processor_model                           | assigned_function |
+|                                      | ore   |           | ore   |        |                                           |                   |
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+| 697d3101-2e6e-4f58-8c22-c30cc004c86b | 0     | 0         | 0     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | Platform          |
+| 0897c0ab-1961-4a62-a7c8-e6b516d5221d | 1     | 0         | 1     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | vSwitch           |
+| d05f823e-4fe5-4ff1-9df3-ff8f87134867 | 2     | 0         | 2     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | VMs               |
+| 029e6d39-72a9-4a6b-8009-c5badff4596d | 3     | 0         | 3     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | VMs               |
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list compute-0
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                      |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+| 559e6ad1-776f-4ef8-a741-1bdd5834d539 | /dev/sda  | 2048    | HDD     | 200.0 | 172.164    | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-1.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
+| d2fae63d-dc84-4564-a8b4-c8c6282e040f | /dev/sdb  | 2064    | HDD     | 200.0 | 199.997    | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00:1f |
+|                                      |           |         |         |       |            |              |         | .2-ata-2.0                       |
+|                                      |           |         |         |       |            |              |         |                                  |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+----------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-add compute-0 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | fe8e62c2-daec-4ae2-aaa9-bf7840f27ca7                              |
+| ihost_uuid            | b35edc7d-9268-4514-ac66-f3c3d8571826                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2018-12-20T09:15:07.308458+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add compute-0 nova-local d2fae63d-dc84-4564-a8b4-c8c6282e040f
++--------------------------+--------------------------------------------+
+| Property                 | Value                                      |
++--------------------------+--------------------------------------------+
+| uuid                     | dabf783b-db99-488e-91fb-4faf3ba2abd2       |
+| pv_state                 | adding                                     |
+| pv_type                  | disk                                       |
+| disk_or_part_uuid        | d2fae63d-dc84-4564-a8b4-c8c6282e040f       |
+| disk_or_part_device_node | /dev/sdb                                   |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0 |
+| lvm_pv_name              | /dev/sdb                                   |
+| lvm_vg_name              | nova-local                                 |
+| lvm_pv_uuid              | None                                       |
+| lvm_pv_size_gib          | 0.0                                        |
+| lvm_pe_total             | 0                                          |
+| lvm_pe_alloced           | 0                                          |
+| ihost_uuid               | b35edc7d-9268-4514-ac66-f3c3d8571826       |
+| created_at               | 2018-12-20T09:15:29.604701+00:00           |
+| updated_at               | None                                       |
++--------------------------+--------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-modify -b image -s 10240 compute-0 nova-local
+usage: system [--version] [--debug] [-v] [-k] [--cert-file CERT_FILE]
+              [--key-file KEY_FILE] [--ca-file CA_FILE] [--timeout TIMEOUT]
+              [--os-username OS_USERNAME] [--os-password OS_PASSWORD]
+              [--os-tenant-id OS_TENANT_ID] [--os-tenant-name OS_TENANT_NAME]
+              [--os-auth-url OS_AUTH_URL] [--os-region-name OS_REGION_NAME]
+              [--os-auth-token OS_AUTH_TOKEN] [--system-url SYSTEM_URL]
+              [--system-api-version SYSTEM_API_VERSION]
+              [--os-service-type OS_SERVICE_TYPE]
+              [--os-endpoint-type OS_ENDPOINT_TYPE]
+              [--os-user-domain-id OS_USER_DOMAIN_ID]
+              [--os-user-domain-name OS_USER_DOMAIN_NAME]
+              [--os-project-id OS_PROJECT_ID]
+              [--os-project-name OS_PROJECT_NAME]
+              [--os-project-domain-id OS_PROJECT_DOMAIN_ID]
+              [--os-project-domain-name OS_PROJECT_DOMAIN_NAME]
+              <subcommand> ...
+system: error: unrecognized arguments: -s nova-local
+```
+
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock compute-0
+Can not unlock a compute node until at least one storage node is unlocked and enabled.
+```
