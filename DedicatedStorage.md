@@ -1193,5 +1193,25 @@ Reboot
 # System Health Check
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | compute-0    | compute     | unlocked       | enabled     | available    |
+| 4  | compute-1    | compute     | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+    cluster 79280ca9-89b8-4083-a602-a79e148f55f8
+     health HEALTH_OK
+     monmap e1: 3 mons at {controller-0=192.168.204.3:6789/0,controller-1=192.168.204.4:6789/0,storage-0=192.168.204.101:6789/0}
+            election epoch 10, quorum 0,1,2 controller-0,controller-1,storage-0
+     osdmap e83: 2 osds: 2 up, 2 in
+            flags sortbitwise,require_jewel_osds
+      pgmap v128: 2048 pgs, 11 pools, 1588 bytes data, 1116 objects
+            95092 kB used, 397 GB / 397 GB avail
+                2048 active+clean
 ```
