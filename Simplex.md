@@ -321,5 +321,82 @@ Please follow the administrator guide to complete configuring the system.
 ```
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-list controller-0 --disk 89d03b65-a479-44ff-a570-492232c509d8
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+| uuid                                 | device_path                                      | device_node | type_guid                            | type_name           | size_gib | status |
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+| 25fec7c1-6441-440b-843a-38c3c09dad50 | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 | /dev/sdc1   | ba5eba11-0000-1111-2222-000000000001 | LVM Physical Volume | 199.0    | Ready  |
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+```
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add controller-0 nova-local 25fec7c1-6441-440b-843a-38c3c09dad50
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | 0d38b489-9f36-4396-aad5-cf0e6d75dffa             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | 25fec7c1-6441-440b-843a-38c3c09dad50             |
+| disk_or_part_device_node | /dev/sdc1                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 |
+| lvm_pv_name              | /dev/sdc1                                        |
+| lvm_vg_name              | nova-local                                       |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | 8a3d98ed-6832-4c43-ac65-768979f0d648             |
+| created_at               | 2019-01-11T16:34:32.110245+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
+```
+
+## Unlocking Controller-0
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
++---------------------+--------------------------------------------+
+| Property            | Value                                      |
++---------------------+--------------------------------------------+
+| action              | none                                       |
+| administrative      | locked                                     |
+| availability        | online                                     |
+| bm_ip               | None                                       |
+| bm_type             | None                                       |
+| bm_username         | None                                       |
+| boot_device         | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| capabilities        | {}                                         |
+| config_applied      | 0f1d23ef-bb06-482b-97d5-23b7ddb27434       |
+| config_status       | None                                       |
+| config_target       | 0f1d23ef-bb06-482b-97d5-23b7ddb27434       |
+| console             | tty0                                       |
+| created_at          | 2019-01-11T15:12:31.428932+00:00           |
+| hostname            | controller-0                               |
+| id                  | 1                                          |
+| install_output      | text                                       |
+| install_state       | None                                       |
+| install_state_info  | None                                       |
+| invprovision        | provisioned                                |
+| location            | {}                                         |
+| mgmt_ip             | 192.168.204.3                              |
+| mgmt_mac            | 00:00:00:00:00:00                          |
+| operational         | disabled                                   |
+| personality         | controller                                 |
+| reserved            | False                                      |
+| rootfs_device       | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| serialid            | None                                       |
+| software_load       | 19.01                                      |
+| subfunction_avail   | online                                     |
+| subfunction_oper    | disabled                                   |
+| subfunctions        | controller,worker                          |
+| task                | Unlocking                                  |
+| tboot               | false                                      |
+| ttys_dcd            | None                                       |
+| updated_at          | 2019-01-11T16:34:42.458788+00:00           |
+| uptime              | 6988                                       |
+| uuid                | 8a3d98ed-6832-4c43-ac65-768979f0d648       |
+| vim_progress_status | None                                       |
++---------------------+--------------------------------------------+
+```
+
