@@ -245,7 +245,13 @@ Please follow the administrator guide to complete configuring the system.
 ```
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-list
++--------------------------------------+------------+---------+------------+------+----------+--------------+
+| uuid                                 | name       | backend | state      | task | services | capabilities |
++--------------------------------------+------------+---------+------------+------+----------+--------------+
+| 8256b3d5-df46-4e1c-81b5-4bc3bd17b070 | file-store | file    | configured | None | glance   |              |
+| 8980cb1f-9144-4544-8733-353fcddde1f6 | lvm-store  | lvm     | configured | None | cinder   |              |
++--------------------------------------+------------+---------+------------+------+----------+--------------+
 ```
 
 ## Configuring VM Local Storage on Controller Disk
@@ -312,6 +318,132 @@ Please follow the administrator guide to complete configuring the system.
 | created_at  | 2019-01-14T15:48:39.825789+00:00                 |
 | updated_at  | None                                             |
 +-------------+--------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-list controller-0 --disk 182c5d4b-2482-44f5-bee7-bf45e8156016
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+| uuid                                 | device_path                                      | device_node | type_guid                            | type_name           | size_gib | status |
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+| 6a8b0103-7057-4113-b4d8-5a2d8bb5e106 | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 | /dev/sdc1   | ba5eba11-0000-1111-2222-000000000001 | LVM Physical Volume | 199.0    | Ready  |
++--------------------------------------+--------------------------------------------------+-------------+--------------------------------------+---------------------+----------+--------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add controller-0 nova-local 6a8b0103-7057-4113-b4d8-5a2d8bb5e106
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | 68d51625-96c5-4689-861d-39615d62f286             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | 6a8b0103-7057-4113-b4d8-5a2d8bb5e106             |
+| disk_or_part_device_node | /dev/sdc1                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 |
+| lvm_pv_name              | /dev/sdc1                                        |
+| lvm_vg_name              | nova-local                                       |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | 006b8955-68aa-45c2-96e8-510cbf74c03b             |
+| created_at               | 2019-01-14T16:00:09.254448+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
+```
+
+## Unlocking Controller-0
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
++---------------------+--------------------------------------------+
+| Property            | Value                                      |
++---------------------+--------------------------------------------+
+| action              | none                                       |
+| administrative      | locked                                     |
+| availability        | online                                     |
+| bm_ip               | None                                       |
+| bm_type             | None                                       |
+| bm_username         | None                                       |
+| boot_device         | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| capabilities        | {}                                         |
+| config_applied      | 74a09109-1f3f-443b-90d2-f17418aea237       |
+| config_status       | None                                       |
+| config_target       | 74a09109-1f3f-443b-90d2-f17418aea237       |
+| console             | tty0                                       |
+| created_at          | 2019-01-14T10:13:26.105067+00:00           |
+| hostname            | controller-0                               |
+| id                  | 1                                          |
+| install_output      | text                                       |
+| install_state       | None                                       |
+| install_state_info  | None                                       |
+| invprovision        | provisioned                                |
+| location            | {}                                         |
+| mgmt_ip             | 192.168.204.3                              |
+| mgmt_mac            | 52:54:00:f0:c1:cf                          |
+| operational         | disabled                                   |
+| personality         | controller                                 |
+| reserved            | False                                      |
+| rootfs_device       | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| serialid            | None                                       |
+| software_load       | 19.01                                      |
+| subfunction_avail   | online                                     |
+| subfunction_oper    | disabled                                   |
+| subfunctions        | controller,worker                          |
+| task                | Unlocking                                  |
+| tboot               | false                                      |
+| ttys_dcd            | None                                       |
+| updated_at          | 2019-01-14T15:59:22.071034+00:00           |
+| uptime              | 26051                                      |
+| uuid                | 006b8955-68aa-45c2-96e8-510cbf74c03b       |
+| vim_progress_status | None                                       |
++---------------------+--------------------------------------------+
+```
+
+## Verifying the Controller-0 Configuration
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 ```
 
 ```
