@@ -205,5 +205,115 @@ Created a new providernet_range:
 ## Adding an LVM Storage Backend at Installation
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-add lvm -s cinder
+
+WARNING : THIS OPERATION IS NOT REVERSIBLE AND CANNOT BE CANCELLED. 
+
+By confirming this operation, the LVM backend will be created.
+
+Please refer to the system admin guide for minimum spec for LVM
+storage. Set the 'confirmed' field to execute this operation
+for the lvm backend.
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-add lvm -s cinder --confirmed
+
+System configuration has changed.
+Please follow the administrator guide to complete configuring the system.
+
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+| uuid                                 | name       | backend | state       | task                           | services | capabilities |
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+| 8256b3d5-df46-4e1c-81b5-4bc3bd17b070 | file-store | file    | configured  | None                           | glance   |              |
+| 8980cb1f-9144-4544-8733-353fcddde1f6 | lvm-store  | lvm     | configuring | {u'controller-0':              | cinder   |              |
+|                                      |            |         |             | 'configuring'}                 |          |              |
+|                                      |            |         |             |                                |          |              |
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-list
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+| uuid                                 | name       | backend | state       | task                           | services | capabilities |
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+| 8256b3d5-df46-4e1c-81b5-4bc3bd17b070 | file-store | file    | configured  | None                           | glance   |              |
+| 8980cb1f-9144-4544-8733-353fcddde1f6 | lvm-store  | lvm     | configuring | {u'controller-0':              | cinder   |              |
+|                                      |            |         |             | 'configuring'}                 |          |              |
+|                                      |            |         |             |                                |          |              |
++--------------------------------------+------------+---------+-------------+--------------------------------+----------+--------------+
+```
+
+```
+
+```
+
+## Configuring VM Local Storage on Controller Disk
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list controller-0
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-----------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                 |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                             |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-----------------------------+
+| 09f40d22-7f86-42e1-a827-2941b2488cfb | /dev/sda  | 2048    | HDD     | 600.0 | 360.976    | Undetermined | QM00001 | /dev/disk/by-path/pci-0000: |
+|                                      |           |         |         |       |            |              |         | 00:1f.2-ata-1.0             |
+|                                      |           |         |         |       |            |              |         |                             |
+| 6cb523be-b97c-4de9-a974-6de851258359 | /dev/sdb  | 2064    | HDD     | 200.0 | 0.997      | Undetermined | QM00003 | /dev/disk/by-path/pci-0000: |
+|                                      |           |         |         |       |            |              |         | 00:1f.2-ata-2.0             |
+|                                      |           |         |         |       |            |              |         |                             |
+| 182c5d4b-2482-44f5-bee7-bf45e8156016 | /dev/sdc  | 2080    | HDD     | 200.0 | 199.997    | Undetermined | QM00005 | /dev/disk/by-path/pci-0000: |
+|                                      |           |         |         |       |            |              |         | 00:1f.2-ata-3.0             |
+|                                      |           |         |         |       |            |              |         |                             |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-----------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-add controller-0 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | 56892b5a-9008-4b84-98cf-e775accac65c                              |
+| ihost_uuid            | 006b8955-68aa-45c2-96e8-510cbf74c03b                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-01-14T15:46:35.630358+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-add controller-0 182c5d4b-2482-44f5-bee7-bf45e8156016 199 -t lvm_phys_vol
++-------------+--------------------------------------------------+
+| Property    | Value                                            |
++-------------+--------------------------------------------------+
+| device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 |
+| device_node | /dev/sdc1                                        |
+| type_guid   | ba5eba11-0000-1111-2222-000000000001             |
+| type_name   | None                                             |
+| start_mib   | None                                             |
+| end_mib     | None                                             |
+| size_mib    | 203776                                           |
+| uuid        | 6a8b0103-7057-4113-b4d8-5a2d8bb5e106             |
+| ihost_uuid  | 006b8955-68aa-45c2-96e8-510cbf74c03b             |
+| idisk_uuid  | 182c5d4b-2482-44f5-bee7-bf45e8156016             |
+| ipv_uuid    | None                                             |
+| status      | Creating                                         |
+| created_at  | 2019-01-14T15:48:39.825789+00:00                 |
+| updated_at  | None                                             |
++-------------+--------------------------------------------------+
+```
+
+```
 
 ```
