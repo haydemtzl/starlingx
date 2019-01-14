@@ -503,28 +503,98 @@ controller-0:~$ source /etc/nova/openrc
 # Controller-1 Host Installation
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/nova/openrc
 ```
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 2 personality=controller hostname=controller-1
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-14T16:30:06.590410+00:00     |
+| hostname            | controller-1                         |
+| id                  | 2                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.4                        |
+| mgmt_mac            | 52:54:00:5f:6a:ee                    |
+| operational         | disabled                             |
+| personality         | controller                           |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| subfunction_avail   | not-installed                        |
+| subfunction_oper    | disabled                             |
+| subfunctions        | controller,worker                    |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | 9c2f618c-75d1-4d21-af30-eb058cc46a64 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
 ```
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-```
+## Monitoring Controller-1 Host
 
 ```
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show controller-1 | grep install
+| install_output      | text                                    |
+| install_state       | None                                    |
+| install_state_info  | None                                    |
+| subfunction_avail   | not-installed                           |
 ```
 
+## Listing Controller-1 Host
+
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+# Controller-1 Provisioning
 
 ```
 
