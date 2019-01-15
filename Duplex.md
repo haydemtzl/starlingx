@@ -597,9 +597,370 @@ controller-0:~$ source /etc/nova/openrc
 # Controller-1 Provisioning
 
 ```
-
+controller-0:~$ source /etc/nova/openrc
 ```
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | online       |
++----+--------------+-------------+----------------+-------------+--------------+
+```
 
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-port-list controller-1
+
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+------------------+
+| uuid                                 | name    | type     | pci address  | device | processor | accelerated | device type      |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+------------------+
+| d9e32e19-5e02-4d93-bdce-df7c6aeb0bc2 | enp2s1  | ethernet | 0000:02:01.0 | 0      | -1        | False       | 82540EM Gigabit  |
+|                                      |         |          |              |        |           |             | Ethernet         |
+|                                      |         |          |              |        |           |             | Controller       |
+|                                      |         |          |              |        |           |             |                  |
+| 4d0b8c46-bc7d-4b1e-8b69-3b5f85f0d8f6 | enp2s2  | ethernet | 0000:02:02.0 | 0      | -1        | False       | 82540EM Gigabit  |
+|                                      |         |          |              |        |           |             | Ethernet         |
+|                                      |         |          |              |        |           |             | Controller       |
+|                                      |         |          |              |        |           |             |                  |
+| 384817e0-8f73-4c0f-9199-16846b67e446 | eth1000 | ethernet | 0000:02:03.0 | 0      | -1        | True        | Virtio network   |
+|                                      |         |          |              |        |           |             | device           |
+|                                      |         |          |              |        |           |             |                  |
+| fe109a21-d3c1-42aa-bbae-da92c7c8bf2e | eth1001 | ethernet | 0000:02:04.0 | 0      | -1        | True        | Virtio network   |
+|                                      |         |          |              |        |           |             | device           |
+|                                      |         |          |              |        |           |             |                  |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -n enp2s1 -c platform --networks oam controller-1 enp2s1
++------------------+--------------------------------------+
+| Property         | Value                                |
++------------------+--------------------------------------+
+| ifname           | enp2s1                               |
+| iftype           | ethernet                             |
+| ports            | [u'enp2s1']                          |
+| providernetworks | None                                 |
+| imac             | 52:54:00:cd:21:78                    |
+| imtu             | 1500                                 |
+| ifclass          | platform                             |
+| networks         | oam                                  |
+| aemode           | None                                 |
+| schedpolicy      | None                                 |
+| txhashpolicy     | None                                 |
+| uuid             | d8add911-0139-48f3-b676-4a1210e3612d |
+| ihost_uuid       | 9c2f618c-75d1-4d21-af30-eb058cc46a64 |
+| vlan_id          | None                                 |
+| uses             | []                                   |
+| used_by          | []                                   |
+| created_at       | 2019-01-14T17:09:51.865649+00:00     |
+| updated_at       | 2019-01-15T08:40:54.293652+00:00     |
+| sriov_numvfs     | 0                                    |
+| ipv4_mode        | static                               |
+| ipv6_mode        | disabled                             |
+| accelerated      | [False]                              |
++------------------+--------------------------------------+
+```
+
+## Providing Data Interfaces on Controller-1
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-list -a controller-1
++--------------------------------------+---------+----------+----------+------+--------------+------+------+------------+-------------------+
+| uuid                                 | name    | class    | type     | vlan | ports        | uses | used | attributes | provider networks |
+|                                      |         |          |          | id   |              | i/f  | by   |            |                   |
+|                                      |         |          |          |      |              |      | i/f  |            |                   |
++--------------------------------------+---------+----------+----------+------+--------------+------+------+------------+-------------------+
+| 97174eaf-0923-4161-b7d3-2b8ca0b16556 | mgmt0   | platform | ethernet | None | [u'enp2s2']  | []   | []   | MTU=1500   | None              |
+| d137e367-fd84-4323-b303-9b2406110215 | eth1000 | None     | ethernet | None | [u'eth1000'] | []   | []   | MTU=1500   | None              |
+| d8add911-0139-48f3-b676-4a1210e3612d | enp2s1  | platform | ethernet | None | [u'enp2s1']  | []   | []   | MTU=1500   | None              |
+| fd67b82d-2c69-431f-9f4d-15f12c950a99 | eth1001 | None     | ethernet | None | [u'eth1001'] | []   | []   | MTU=1500   | None              |
++--------------------------------------+---------+----------+----------+------+--------------+------+------+------------+-------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -p providernet-a -c data controller-1 eth1000
++------------------+--------------------------------------+
+| Property         | Value                                |
++------------------+--------------------------------------+
+| ifname           | eth1000                              |
+| iftype           | ethernet                             |
+| ports            | [u'eth1000']                         |
+| providernetworks | providernet-a                        |
+| imac             | 52:54:00:8e:ef:d8                    |
+| imtu             | 1500                                 |
+| ifclass          | data                                 |
+| networks         |                                      |
+| aemode           | None                                 |
+| schedpolicy      | None                                 |
+| txhashpolicy     | None                                 |
+| uuid             | d137e367-fd84-4323-b303-9b2406110215 |
+| ihost_uuid       | 9c2f618c-75d1-4d21-af30-eb058cc46a64 |
+| vlan_id          | None                                 |
+| uses             | []                                   |
+| used_by          | []                                   |
+| created_at       | 2019-01-14T17:09:53.753060+00:00     |
+| updated_at       | 2019-01-15T08:41:56.663906+00:00     |
+| sriov_numvfs     | 0                                    |
+| ipv4_mode        | disabled                             |
+| ipv6_mode        | disabled                             |
+| accelerated      | [True]                               |
++------------------+--------------------------------------+
+```
+
+## Provisioning Storage on Controller-1
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list controller-1
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                   |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                               |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+| 01879566-c03e-47ae-bda6-45fc9f7f72ac | /dev/sda  | 2048    | HDD     | 600.0 | 360.976    | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-1.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
+| 4b3a36de-c6aa-4e19-954e-fde5cecaf10e | /dev/sdb  | 2064    | HDD     | 200.0 | 199.997    | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-2.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
+| 975604a9-204e-4d50-ba7e-05cd29269c6e | /dev/sdc  | 2080    | HDD     | 200.0 | 199.997    | Undetermined | QM00005 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-3.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-add controller-1 cinder-volumes
++-----------------------+--------------------------------------+
+| Property              | Value                                |
++-----------------------+--------------------------------------+
+| lvm_vg_name           | cinder-volumes                       |
+| vg_state              | adding                               |
+| uuid                  | ee59d06e-5ab3-4a47-b509-fca46c7f1c4b |
+| ihost_uuid            | 9c2f618c-75d1-4d21-af30-eb058cc46a64 |
+| lvm_vg_access         | None                                 |
+| lvm_max_lv            | 0                                    |
+| lvm_cur_lv            | 0                                    |
+| lvm_max_pv            | 0                                    |
+| lvm_cur_pv            | 0                                    |
+| lvm_vg_size_gib       | 0.0                                  |
+| lvm_vg_avail_size_gib | 0.0                                  |
+| lvm_vg_total_pe       | 0                                    |
+| lvm_vg_free_pe        | 0                                    |
+| created_at            | 2019-01-15T08:43:23.780441+00:00     |
+| updated_at            | None                                 |
+| parameters            | {u'lvm_type': u'thin'}               |
++-----------------------+--------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-add controller-1 4b3a36de-c6aa-4e19-954e-fde5cecaf10e 199 -t lvm_phys_vol
++-------------+--------------------------------------------------+
+| Property    | Value                                            |
++-------------+--------------------------------------------------+
+| device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part1 |
+| device_node | /dev/sdb1                                        |
+| type_guid   | ba5eba11-0000-1111-2222-000000000001             |
+| type_name   | None                                             |
+| start_mib   | None                                             |
+| end_mib     | None                                             |
+| size_mib    | 203776                                           |
+| uuid        | 0978e551-6494-47cf-b662-8c745339d12a             |
+| ihost_uuid  | 9c2f618c-75d1-4d21-af30-eb058cc46a64             |
+| idisk_uuid  | 4b3a36de-c6aa-4e19-954e-fde5cecaf10e             |
+| ipv_uuid    | None                                             |
+| status      | Creating (on unlock)                             |
+| created_at  | 2019-01-15T08:44:20.901677+00:00                 |
+| updated_at  | None                                             |
++-------------+--------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-list controller-1 --disk 4b3a36de-c6aa-4e19-954e-fde5cecaf10e
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+| uuid                                 | device_path                 | device_nod | type_guid                            | type_ | size_ | status   |
+|                                      |                             | e          |                                      | name  | gib   |          |
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+| 0978e551-6494-47cf-b662-8c745339d12a | /dev/disk/by-path/pci-0000: | /dev/sdb1  | ba5eba11-0000-1111-2222-000000000001 | None  | 199.0 | Creating |
+|                                      | 00:1f.2-ata-2.0-part1       |            |                                      |       |       | (on      |
+|                                      |                             |            |                                      |       |       | unlock)  |
+|                                      |                             |            |                                      |       |       |          |
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add controller-1 cinder-volumes 0978e551-6494-47cf-b662-8c745339d12a
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | d5cf7179-0d99-4179-b4b8-0c0e02f49f11             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | 0978e551-6494-47cf-b662-8c745339d12a             |
+| disk_or_part_device_node | /dev/sdb1                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part1 |
+| lvm_pv_name              | /dev/sdb1                                        |
+| lvm_vg_name              | cinder-volumes                                   |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | 9c2f618c-75d1-4d21-af30-eb058cc46a64             |
+| created_at               | 2019-01-15T08:47:41.629932+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
+```
+
+## Configuring VM Local Storage on Controller Disk
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list controller-1
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                   |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                               |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+| 01879566-c03e-47ae-bda6-45fc9f7f72ac | /dev/sda  | 2048    | HDD     | 600.0 | 360.976    | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-1.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
+| 4b3a36de-c6aa-4e19-954e-fde5cecaf10e | /dev/sdb  | 2064    | HDD     | 200.0 | 0.997      | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-2.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
+| 975604a9-204e-4d50-ba7e-05cd29269c6e | /dev/sdc  | 2080    | HDD     | 200.0 | 199.997    | Undetermined | QM00005 | /dev/disk/by-path/pci-0000:00 |
+|                                      |           |         |         |       |            |              |         | :1f.2-ata-3.0                 |
+|                                      |           |         |         |       |            |              |         |                               |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+-------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-add controller-1 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | 63073145-04cd-4d33-be48-3cb2b7e875d0                              |
+| ihost_uuid            | 9c2f618c-75d1-4d21-af30-eb058cc46a64                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-01-15T08:48:30.938737+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-add controller-1 975604a9-204e-4d50-ba7e-05cd29269c6e 199 -t lvm_phys_vol
++-------------+--------------------------------------------------+
+| Property    | Value                                            |
++-------------+--------------------------------------------------+
+| device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 |
+| device_node | /dev/sdc1                                        |
+| type_guid   | ba5eba11-0000-1111-2222-000000000001             |
+| type_name   | None                                             |
+| start_mib   | None                                             |
+| end_mib     | None                                             |
+| size_mib    | 203776                                           |
+| uuid        | 0ae3a9cd-0b2b-438b-80f6-e0305bdf5635             |
+| ihost_uuid  | 9c2f618c-75d1-4d21-af30-eb058cc46a64             |
+| idisk_uuid  | 975604a9-204e-4d50-ba7e-05cd29269c6e             |
+| ipv_uuid    | None                                             |
+| status      | Creating (on unlock)                             |
+| created_at  | 2019-01-15T08:49:25.692581+00:00                 |
+| updated_at  | None                                             |
++-------------+--------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-partition-list controller-1
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+| uuid                                 | device_path                 | device_nod | type_guid                            | type_ | size_ | status   |
+|                                      |                             | e          |                                      | name  | gib   |          |
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+| 0978e551-6494-47cf-b662-8c745339d12a | /dev/disk/by-path/pci-0000: | /dev/sdb1  | ba5eba11-0000-1111-2222-000000000001 | None  | 199.0 | Creating |
+|                                      | 00:1f.2-ata-2.0-part1       |            |                                      |       |       | (on      |
+|                                      |                             |            |                                      |       |       | unlock)  |
+|                                      |                             |            |                                      |       |       |          |
+| 0ae3a9cd-0b2b-438b-80f6-e0305bdf5635 | /dev/disk/by-path/pci-0000: | /dev/sdc1  | ba5eba11-0000-1111-2222-000000000001 | None  | 199.0 | Creating |
+|                                      | 00:1f.2-ata-3.0-part1       |            |                                      |       |       | (on      |
+|                                      |                             |            |                                      |       |       | unlock)  |
+|                                      |                             |            |                                      |       |       |          |
++--------------------------------------+-----------------------------+------------+--------------------------------------+-------+-------+----------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add controller-1 nova-local 0ae3a9cd-0b2b-438b-80f6-e0305bdf5635
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | 432876f8-c763-42e0-9a42-6ed1b748b87f             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | 0ae3a9cd-0b2b-438b-80f6-e0305bdf5635             |
+| disk_or_part_device_node | /dev/sdc1                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-3.0-part1 |
+| lvm_pv_name              | /dev/sdc1                                        |
+| lvm_vg_name              | nova-local                                       |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | 9c2f618c-75d1-4d21-af30-eb058cc46a64             |
+| created_at               | 2019-01-15T08:51:05.649266+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
+```
+
+## Unlocking Controller-1
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-1
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | online                               |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | Config out-of-date                   |
+| config_target       | 34b87eb9-da47-45cb-94de-d11ae4920b9a |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-14T16:30:06.590410+00:00     |
+| hostname            | controller-1                         |
+| id                  | 2                                    |
+| install_output      | text                                 |
+| install_state       | completed                            |
+| install_state_info  | None                                 |
+| invprovision        | unprovisioned                        |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.4                        |
+| mgmt_mac            | 52:54:00:5f:6a:ee                    |
+| operational         | disabled                             |
+| personality         | controller                           |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| subfunction_avail   | online                               |
+| subfunction_oper    | disabled                             |
+| subfunctions        | controller,worker                    |
+| task                | Unlocking                            |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | 2019-01-15T08:50:02.330310+00:00     |
+| uptime              | 56353                                |
+| uuid                | 9c2f618c-75d1-4d21-af30-eb058cc46a64 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
 ```
