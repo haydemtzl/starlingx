@@ -985,3 +985,83 @@ controller-0:~$ source /etc/nova/openrc
 | 2  | controller-1 | controller  | unlocked       | enabled     | available    |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
+
+# Compute Hosts Installation
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | degraded     |
+| 2  | controller-1 | controller  | unlocked       | disabled    | offline      |
+| 3  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 3 personality=worker hostname=worker-0
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-15T11:49:33.804289+00:00     |
+| hostname            | worker-0                             |
+| id                  | 3                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.68                       |
+| mgmt_mac            | 52:54:00:e9:85:e1                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | 6f2de9b6-c55c-47b0-b40e-aff47f1e1bda |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show worker-0 | grep install
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | degraded     |
+| 2  | controller-1 | controller  | unlocked       | disabled    | offline      |
+| 3  | worker-0     | worker      | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+# Compute Host Provision
+
+```
+
+```
