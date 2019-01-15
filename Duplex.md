@@ -1054,14 +1054,232 @@ controller-0:~$ source /etc/nova/openrc
 +----+--------------+-------------+----------------+-------------+--------------+
 | id | hostname     | personality | administrative | operational | availability |
 +----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | degraded     |
-| 2  | controller-1 | controller  | unlocked       | disabled    | offline      |
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
 | 3  | worker-0     | worker      | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | worker-0     | worker      | locked         | disabled    | online       |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 # Compute Host Provision
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/nova/openrc
+```
 
+## Provisioning Network Interfaces on a Compute Host
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-port-list worker-0
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-------------------------------------+
+| uuid                                 | name    | type     | pci address  | device | processor | accelerated | device type                         |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-------------------------------------+
+| de9ec830-cf33-4a06-8985-cd3262f6ecd3 | enp2s1  | ethernet | 0000:02:01.0 | 0      | -1        | False       | 82540EM Gigabit Ethernet Controller |
+| 9def88fb-d871-4542-83e2-d4b6e35169a1 | enp2s2  | ethernet | 0000:02:02.0 | 0      | -1        | False       | 82540EM Gigabit Ethernet Controller |
+| b2e38da9-840f-446c-b466-ceb6479266f6 | eth1000 | ethernet | 0000:02:03.0 | 0      | -1        | True        | Virtio network device               |
+| c1694675-643d-4ba7-b821-cd147450112e | eth1001 | ethernet | 0000:02:04.0 | 0      | -1        | True        | Virtio network device               |
++--------------------------------------+---------+----------+--------------+--------+-----------+-------------+-------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -p providernet-a -c data worker-0 eth1000
++------------------+--------------------------------------+
+| Property         | Value                                |
++------------------+--------------------------------------+
+| ifname           | eth1000                              |
+| iftype           | ethernet                             |
+| ports            | [u'eth1000']                         |
+| providernetworks | providernet-a                        |
+| imac             | 52:54:00:d2:14:8d                    |
+| imtu             | 1500                                 |
+| ifclass          | data                                 |
+| networks         |                                      |
+| aemode           | None                                 |
+| schedpolicy      | None                                 |
+| txhashpolicy     | None                                 |
+| uuid             | f875b6ec-f309-4ce9-a167-17ad296bbe9f |
+| ihost_uuid       | 6f2de9b6-c55c-47b0-b40e-aff47f1e1bda |
+| vlan_id          | None                                 |
+| uses             | []                                   |
+| used_by          | []                                   |
+| created_at       | 2019-01-15T12:24:56.608047+00:00     |
+| updated_at       | 2019-01-15T12:27:51.547114+00:00     |
+| sriov_numvfs     | 0                                    |
+| ipv4_mode        | disabled                             |
+| ipv6_mode        | disabled                             |
+| accelerated      | [True]                               |
++------------------+--------------------------------------+
+```
+
+## VSwitch Virtual Environment
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-cpu-modify worker-0 -f vswitch -p0 1
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+| uuid                                 | log_c | processor | phy_c | thread | processor_model                           | assigned_function |
+|                                      | ore   |           | ore   |        |                                           |                   |
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+| 9d53c015-8dd5-4cd8-9abb-6f231fa773c2 | 0     | 0         | 0     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | Platform          |
+| 8620eaa7-19af-4ef7-a5aa-690ed57f01c7 | 1     | 0         | 1     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | vSwitch           |
+| f26598a5-8029-4d20-999e-2ec5d532d62e | 2     | 0         | 2     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | Applications      |
+| f7b3ce4a-10da-485d-873c-4e6988f7e9cf | 3     | 0         | 3     | 0      | Intel Core i7 9xx (Nehalem Class Core i7) | Applications      |
++--------------------------------------+-------+-----------+-------+--------+-------------------------------------------+-------------------+
+```
+
+## Provisioning Storage on a Compute Host
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-disk-list worker-0
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+--------------------------------------------+
+| uuid                                 | device_no | device_ | device_ | size_ | available_ | rpm          | serial_ | device_path                                |
+|                                      | de        | num     | type    | gib   | gib        |              | id      |                                            |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+--------------------------------------------+
+| 0ae45272-c9f4-4824-8405-f6c8946fda1e | /dev/sda  | 2048    | HDD     | 200.0 | 120.976    | Undetermined | QM00001 | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| d751abfe-de57-4b23-b166-1d3d5b4d5ca6 | /dev/sdb  | 2064    | HDD     | 200.0 | 199.997    | Undetermined | QM00003 | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0 |
++--------------------------------------+-----------+---------+---------+-------+------------+--------------+---------+--------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-add worker-0 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | 78e84a57-c40e-438c-97a4-49ebec6394d1                              |
+| ihost_uuid            | 6f2de9b6-c55c-47b0-b40e-aff47f1e1bda                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-01-15T12:31:45.796538+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-pv-add worker-0 nova-local d751abfe-de57-4b23-b166-1d3d5b4d5ca6
++--------------------------+--------------------------------------------+
+| Property                 | Value                                      |
++--------------------------+--------------------------------------------+
+| uuid                     | bba20f20-81fc-40a2-bf1e-a2fae849625b       |
+| pv_state                 | adding                                     |
+| pv_type                  | disk                                       |
+| disk_or_part_uuid        | d751abfe-de57-4b23-b166-1d3d5b4d5ca6       |
+| disk_or_part_device_node | /dev/sdb                                   |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0 |
+| lvm_pv_name              | /dev/sdb                                   |
+| lvm_vg_name              | nova-local                                 |
+| lvm_pv_uuid              | None                                       |
+| lvm_pv_size_gib          | 0.0                                        |
+| lvm_pe_total             | 0                                          |
+| lvm_pe_alloced           | 0                                          |
+| ihost_uuid               | 6f2de9b6-c55c-47b0-b40e-aff47f1e1bda       |
+| created_at               | 2019-01-15T12:32:40.535160+00:00           |
+| updated_at               | None                                       |
++--------------------------+--------------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-modify -b image -s 10240 worker-0 nova-local
+usage: system [--version] [--debug] [-v] [-k] [--cert-file CERT_FILE]
+              [--key-file KEY_FILE] [--ca-file CA_FILE] [--timeout TIMEOUT]
+              [--os-username OS_USERNAME] [--os-password OS_PASSWORD]
+              [--os-tenant-id OS_TENANT_ID] [--os-tenant-name OS_TENANT_NAME]
+              [--os-auth-url OS_AUTH_URL] [--os-region-name OS_REGION_NAME]
+              [--os-auth-token OS_AUTH_TOKEN] [--system-url SYSTEM_URL]
+              [--system-api-version SYSTEM_API_VERSION]
+              [--os-service-type OS_SERVICE_TYPE]
+              [--os-endpoint-type OS_ENDPOINT_TYPE]
+              [--os-user-domain-id OS_USER_DOMAIN_ID]
+              [--os-user-domain-name OS_USER_DOMAIN_NAME]
+              [--os-project-id OS_PROJECT_ID]
+              [--os-project-name OS_PROJECT_NAME]
+              [--os-project-domain-id OS_PROJECT_DOMAIN_ID]
+              [--os-project-domain-name OS_PROJECT_DOMAIN_NAME]
+              <subcommand> ...
+system: error: unrecognized arguments: -s nova-local
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-modify
+usage: system host-lvg-modify [-b <instance backing>]
+                              [-c <concurrent disk operations>]
+                              [-l <lvm_type>]
+                              <hostname or id> <lvg name or uuid>
+system host-lvg-modify: error: too few arguments
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-modify -b image -s 10240 worker-0 nova-local
+```
+
+## Unlocking a Compute Host
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock worker-0
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | online                               |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | 758da2c8-ed84-4ac3-a88b-f71363dd2175 |
+| config_status       | None                                 |
+| config_target       | 758da2c8-ed84-4ac3-a88b-f71363dd2175 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-15T11:49:33.804289+00:00     |
+| hostname            | worker-0                             |
+| id                  | 3                                    |
+| install_output      | text                                 |
+| install_state       | completed                            |
+| install_state_info  | None                                 |
+| invprovision        | unprovisioned                        |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.68                       |
+| mgmt_mac            | 52:54:00:e9:85:e1                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | Unlocking                            |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | 2019-01-15T12:36:28.944200+00:00     |
+| uptime              | 882                                  |
+| uuid                | 6f2de9b6-c55c-47b0-b40e-aff47f1e1bda |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
+
+# System Health Check
+
+## Listing StarlingX Nodes
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | worker-0     | worker      | locked         | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
 ```
