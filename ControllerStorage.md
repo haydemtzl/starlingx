@@ -240,3 +240,186 @@ Lvm is configuring. All storage backends must be configured before operation is 
 | vim_progress_status | None                                       |
 +---------------------+--------------------------------------------+
 ```
+
+## Verifying the Controller-0 Configuration
+
+
+```
+controller-0:~$ source /etc/nova/openrc                                                                                                                     
+[wrsroot@controller-0 ~(keystone_admin)]$ 
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system service-list
++-----+-------------------------------+--------------+----------------+
+| id  | service_name                  | hostname     | state          |
++-----+-------------------------------+--------------+----------------+
+| 68  | aodh-api                      | controller-0 | enabled-active |
+| 69  | aodh-evaluator                | controller-0 | enabled-active |
+| 70  | aodh-listener                 | controller-0 | enabled-active |
+| 71  | aodh-notifier                 | controller-0 | enabled-active |
+| 102 | barbican-api                  | controller-0 | enabled-active |
+| 103 | barbican-keystone-listener    | controller-0 | enabled-active |
+| 104 | barbican-worker               | controller-0 | enabled-active |
+| 43  | ceilometer-agent-notification | controller-0 | enabled-active |
+| 14  | cgcs-export-fs                | controller-0 | enabled-active |
+| 10  | cgcs-fs                       | controller-0 | enabled-active |
+| 16  | cgcs-nfs-ip                   | controller-0 | enabled-active |
+| 35  | cinder-api                    | controller-0 | enabled-active |
+| 38  | cinder-backup                 | controller-0 | enabled-active |
+| 58  | cinder-ip                     | controller-0 | enabled-active |
+| 56  | cinder-lvm                    | controller-0 | enabled-active |
+| 36  | cinder-scheduler              | controller-0 | enabled-active |
+| 37  | cinder-volume                 | controller-0 | enabled-active |
+| 23  | dnsmasq                       | controller-0 | enabled-active |
+| 5   | drbd-cgcs                     | controller-0 | enabled-active |
+| 55  | drbd-cinder                   | controller-0 | enabled-active |
+| 75  | drbd-extension                | controller-0 | enabled-active |
+| 3   | drbd-pg                       | controller-0 | enabled-active |
+| 6   | drbd-platform                 | controller-0 | enabled-active |
+| 4   | drbd-rabbit                   | controller-0 | enabled-active |
+| 77  | extension-export-fs           | controller-0 | enabled-active |
+| 76  | extension-fs                  | controller-0 | enabled-active |
+| 24  | fm-mgr                        | controller-0 | enabled-active |
+| 27  | glance-api                    | controller-0 | enabled-active |
+| 26  | glance-registry               | controller-0 | enabled-active |
+| 108 | gnocchi-api                   | controller-0 | enabled-active |
+| 109 | gnocchi-metricd               | controller-0 | enabled-active |
+| 62  | guest-agent                   | controller-0 | enabled-active |
+| 64  | haproxy                       | controller-0 | enabled-active |
+| 45  | heat-api                      | controller-0 | enabled-active |
+| 46  | heat-api-cfn                  | controller-0 | enabled-active |
+| 47  | heat-api-cloudwatch           | controller-0 | enabled-active |
+| 44  | heat-engine                   | controller-0 | enabled-active |
+| 51  | horizon                       | controller-0 | enabled-active |
+| 22  | hw-mon                        | controller-0 | enabled-active |
+| 57  | iscsi                         | controller-0 | enabled-active |
+| 25  | keystone                      | controller-0 | enabled-active |
+| 50  | lighttpd                      | controller-0 | enabled-active |
+| 2   | management-ip                 | controller-0 | enabled-active |
+| 20  | mtc-agent                     | controller-0 | enabled-active |
+| 28  | neutron-server                | controller-0 | enabled-active |
+| 9   | nfs-mgmt                      | controller-0 | enabled-active |
+| 29  | nova-api                      | controller-0 | enabled-active |
+| 63  | nova-api-proxy                | controller-0 | enabled-active |
+| 31  | nova-conductor                | controller-0 | enabled-active |
+| 33  | nova-console-auth             | controller-0 | enabled-active |
+| 34  | nova-novnc                    | controller-0 | enabled-active |
+| 83  | nova-placement-api            | controller-0 | enabled-active |
+| 30  | nova-scheduler                | controller-0 | enabled-active |
+| 1   | oam-ip                        | controller-0 | enabled-active |
+| 48  | open-ldap                     | controller-0 | enabled-active |
+| 82  | panko-api                     | controller-0 | enabled-active |
+| 52  | patch-alarm-manager           | controller-0 | enabled-active |
+| 7   | pg-fs                         | controller-0 | enabled-active |
+| 15  | platform-export-fs            | controller-0 | enabled-active |
+| 11  | platform-fs                   | controller-0 | enabled-active |
+| 17  | platform-nfs-ip               | controller-0 | enabled-active |
+| 12  | postgres                      | controller-0 | enabled-active |
+| 65  | pxeboot-ip                    | controller-0 | enabled-active |
+| 13  | rabbit                        | controller-0 | enabled-active |
+| 8   | rabbit-fs                     | controller-0 | enabled-active |
+| 49  | snmp                          | controller-0 | enabled-active |
+| 19  | sysinv-conductor              | controller-0 | enabled-active |
+| 18  | sysinv-inv                    | controller-0 | enabled-active |
+| 59  | vim                           | controller-0 | enabled-active |
+| 60  | vim-api                       | controller-0 | enabled-active |
+| 61  | vim-webserver                 | controller-0 | enabled-active |
++-----+-------------------------------+--------------+----------------+
+```
+
+## Controller-1 / Compute Hosts Installation
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
+| 3  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 3 personality=worker hostname=worker-0
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-17T14:40:34.573926+00:00     |
+| hostname            | worker-0                             |
+| id                  | 3                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.248                      |
+| mgmt_mac            | 52:54:00:f0:16:c9                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | d5fb7325-858e-48da-96b2-9edbddaf6e6b |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show worker-0 | grep install
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
+| 3  | worker-0     | worker      | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+# Controller-1 Provisioning
+
+```
+```
+
+
+# Compute Host Provision
+
+```
+
+```
