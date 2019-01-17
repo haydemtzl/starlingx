@@ -653,3 +653,67 @@ system: error: unrecognized arguments: -s nova-local
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
+
+# System Health Check
+
+## Listing StarlingX Nodes
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
+| 3  | worker-0     | worker      | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ fm alarm-list
++----------+--------------------------------------------------------------------------+----------------------+----------+---------------+
+| Alarm ID | Reason Text                                                              | Entity ID            | Severity | Time Stamp    |
++----------+--------------------------------------------------------------------------+----------------------+----------+---------------+
+| 400.002  | Service group cloud-services loss of redundancy; expected 1 standby      | service_domain=      | major    | 2019-01-17T14 |
+|          | member but no standby members available                                  | controller.          |          | :27:35.427254 |
+|          |                                                                          | service_group=cloud- |          |               |
+|          |                                                                          | services             |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group controller-services loss of redundancy; expected 1 standby | service_domain=      | major    | 2019-01-17T14 |
+|          | member but no standby members available                                  | controller.          |          | :26:17.214315 |
+|          |                                                                          | service_group=       |          |               |
+|          |                                                                          | controller-services  |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group vim-services loss of redundancy; expected 1 standby member | service_domain=      | major    | 2019-01-17T14 |
+|          | but no standby members available                                         | controller.          |          | :26:17.127586 |
+|          |                                                                          | service_group=vim-   |          |               |
+|          |                                                                          | services             |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group oam-services loss of redundancy; expected 1 standby member | service_domain=      | major    | 2019-01-17T14 |
+|          | but no standby members available                                         | controller.          |          | :26:04.373822 |
+|          |                                                                          | service_group=oam-   |          |               |
+|          |                                                                          | services             |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group patching-services loss of redundancy; expected 1 standby   | service_domain=      | major    | 2019-01-17T14 |
+|          | member but no standby members available                                  | controller.          |          | :26:03.995340 |
+|          |                                                                          | service_group=       |          |               |
+|          |                                                                          | patching-services    |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group directory-services loss of redundancy; expected 2 active   | service_domain=      | major    | 2019-01-17T14 |
+|          | members but only 1 active member available                               | controller.          |          | :26:03.907343 |
+|          |                                                                          | service_group=       |          |               |
+|          |                                                                          | directory-services   |          |               |
+|          |                                                                          |                      |          |               |
+| 400.002  | Service group web-services loss of redundancy; expected 2 active members | service_domain=      | major    | 2019-01-17T14 |
+|          | but only 1 active member available                                       | controller.          |          | :26:03.801357 |
+|          |                                                                          | service_group=web-   |          |               |
+|          |                                                                          | services             |          |               |
+|          |                                                                          |                      |          |               |
+| 400.005  | Communication failure detected with peer over port enp2s2 on host        | host=controller-0.   | major    | 2019-01-17T14 |
+|          | controller-0                                                             | network=mgmt         |          | :26:03.714416 |
+|          |                                                                          |                      |          |               |
+| 400.005  | Communication failure detected with peer over port enp2s1 on host        | host=controller-0.   | major    | 2019-01-17T14 |
+|          | controller-0                                                             | network=oam          |          | :26:01.384896 |
+|          |                                                                          |                      |          |               |
++----------+--------------------------------------------------------------------------+----------------------+----------+---------------+
+```
