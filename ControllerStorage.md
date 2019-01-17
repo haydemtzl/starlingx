@@ -187,5 +187,56 @@ Lvm is configuring. All storage backends must be configured before operation is 
 ```
 
 ```
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-list
++--------------------------------------+------------+---------+------------+------+----------+--------------+
+| uuid                                 | name       | backend | state      | task | services | capabilities |
++--------------------------------------+------------+---------+------------+------+----------+--------------+
+| 66aa8fcb-706a-42cf-9340-e73469c1289d | lvm-store  | lvm     | configured | None | cinder   |              |
+| 7373878a-e354-41fc-9d9d-54e4d5d09d48 | file-store | file    | configured | None | glance   |              |
++--------------------------------------+------------+---------+------------+------+----------+--------------+
+```
 
+## Unlocking Controller-0
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
++---------------------+--------------------------------------------+
+| Property            | Value                                      |
++---------------------+--------------------------------------------+
+| action              | none                                       |
+| administrative      | locked                                     |
+| availability        | online                                     |
+| bm_ip               | None                                       |
+| bm_type             | None                                       |
+| bm_username         | None                                       |
+| boot_device         | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| capabilities        | {}                                         |
+| config_applied      | 326fa54e-98ab-4613-a507-13f887d5827b       |
+| config_status       | None                                       |
+| config_target       | 326fa54e-98ab-4613-a507-13f887d5827b       |
+| console             | tty0                                       |
+| created_at          | 2019-01-17T10:30:42.079395+00:00           |
+| hostname            | controller-0                               |
+| id                  | 1                                          |
+| install_output      | text                                       |
+| install_state       | None                                       |
+| install_state_info  | None                                       |
+| invprovision        | provisioned                                |
+| location            | {}                                         |
+| mgmt_ip             | 192.168.204.3                              |
+| mgmt_mac            | 52:54:00:a5:05:d3                          |
+| operational         | disabled                                   |
+| personality         | controller                                 |
+| reserved            | False                                      |
+| rootfs_device       | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0 |
+| serialid            | None                                       |
+| software_load       | 19.01                                      |
+| task                | Unlocking                                  |
+| tboot               | false                                      |
+| ttys_dcd            | None                                       |
+| updated_at          | 2019-01-17T14:03:50.257452+00:00           |
+| uptime              | 13785                                      |
+| uuid                | f8714e42-2abd-4aa6-adc4-53402f6c4bd0       |
+| vim_progress_status | None                                       |
++---------------------+--------------------------------------------+
 ```
