@@ -412,12 +412,6 @@ controller-0:~$ source /etc/nova/openrc
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-# Controller-1 Provisioning
-
-```
-```
-
-
 # Compute Host Provision
 
 ```
@@ -614,7 +608,24 @@ system: error: unrecognized arguments: -s nova-local
 ```
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock worker-0
 +---------------------+--------------------------------------+
-| Property            | Value                                |
+| Property            | Value                                |[wrsroot@controller-0 ~(keystone_admin)]$ system host-lvg-modify -b image -s 10240 worker-0 nova-local
+usage: system [--version] [--debug] [-v] [-k] [--cert-file CERT_FILE]
+              [--key-file KEY_FILE] [--ca-file CA_FILE] [--timeout TIMEOUT]
+              [--os-username OS_USERNAME] [--os-password OS_PASSWORD]
+              [--os-tenant-id OS_TENANT_ID] [--os-tenant-name OS_TENANT_NAME]
+              [--os-auth-url OS_AUTH_URL] [--os-region-name OS_REGION_NAME]
+              [--os-auth-token OS_AUTH_TOKEN] [--system-url SYSTEM_URL]
+              [--system-api-version SYSTEM_API_VERSION]
+              [--os-service-type OS_SERVICE_TYPE]
+              [--os-endpoint-type OS_ENDPOINT_TYPE]
+              [--os-user-domain-id OS_USER_DOMAIN_ID]
+              [--os-user-domain-name OS_USER_DOMAIN_NAME]
+              [--os-project-id OS_PROJECT_ID]
+              [--os-project-name OS_PROJECT_NAME]
+              [--os-project-domain-id OS_PROJECT_DOMAIN_ID]
+              [--os-project-domain-name OS_PROJECT_DOMAIN_NAME]
+              <subcommand> ...
+system: error: unrecognized arguments: -s nova-local
 +---------------------+--------------------------------------+
 | action              | none                                 |
 | administrative      | locked                               |
@@ -716,4 +727,87 @@ system: error: unrecognized arguments: -s nova-local
 |          | controller-0                                                             | network=oam          |          | :26:01.384896 |
 |          |                                                                          |                      |          |               |
 +----------+--------------------------------------------------------------------------+----------------------+----------+---------------+
+```
+
+# Controller-1 Provisioning
+
+
+```
+controller-0:~$ source /etc/nova/openrc
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
+| 3  | worker-0     | worker      | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 2 personality=controller hostname=controller-1
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-01-17T14:40:03.388786+00:00     |
+| hostname            | controller-1                         |
+| id                  | 2                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.4                        |
+| mgmt_mac            | 52:54:00:dc:12:2f                    |
+| operational         | disabled                             |
+| personality         | controller                           |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | b335b224-f3a3-47f5-8219-e52daf3c1549 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-show controller-1 | grep install
+| install_output      | text                                    |
+| install_state       | None                                    |
+| install_state_info  | None                                    |
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
+| 3  | worker-0     | worker      | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```
+
 ```
