@@ -1019,4 +1019,15 @@ controller-0:~$ source /etc/nova/openrc
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
+
+```
+controller-0:~$ source /etc/nova/openrc 
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | worker-0     | worker      | unlocked       | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
 ```
