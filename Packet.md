@@ -4,10 +4,10 @@ iPXE 1.0.255+ -- Open Source Network Boot Firmware -- http://ipxe.org
 Features: DNS HTTP HTTPS iSCSI TFTP VLAN AoE ELF MBOOT PXE bzImage COMBOOT Menu 
 PXEXT                                                                           
                                                                                 
-net0: 0c:c4:7a:b2:19:b0 using undionly on 0000:01:00.0 (open)                   
+net0: 00:00:00:00:00:00 using undionly on 0000:01:00.0 (open)                   
   [Link:up, TX:0 TXE:1 RX:0 RXE:0]                                              
   [TXE: 1 x "Network unreachable (http://ipxe.org/28086011)"]                   
-Configuring (net0 0c:c4:7a:b2:19:b0).................. ok                       
+Configuring (net0 00:00:00:00:00:00).................. ok                       
 net0: 147.75.70.179/255.255.255.254 gw 147.75.70.178                            
 net0: fe80::ec4:7aff:feb2:19b0/64                                               
 Next server: 147.75.200.3                                                       
