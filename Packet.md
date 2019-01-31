@@ -15,6 +15,7 @@ Resources
 
 - [Custom iPXE](https://support.packet.com/kb/articles/custom-ipxe)
 - [SOS: Serial over SSH](https://support.packet.com/kb/articles/sos-serial-over-ssh)
+- [Grub & Kernels](https://support.packet.com/kb/articles/grub-kernels)
 
 ## Output
 
