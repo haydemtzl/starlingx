@@ -22,6 +22,49 @@ initrd.img... 40%
 ```
 
 ```
+Type "exit" to return to menu.                                                  
+iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
+https://boot.netboot.xyz/memdisk... ok                                          
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/ma               
+http://mirror.starlingx.cengn.ca/mirror/starlingx/ma... No such file or director
+y (http://ipxe.org/2d0c613b)                                                    
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/ma\              
+http://mirror.starlingx.cengn.ca/mirror/starlingx/ma\... No such file or directo
+ry (http://ipxe.org/2d0c613b)                                                   
+iPXE> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaa                                                                  
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaa: command not found                                                     
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
+90130T060000Z/outputs/io....                                                    
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
+/outputs/io....... No such file or directory (http://ipxe.org/2d0c613b)         
+iPXE> initrd http://mi/starlingx/m                                              
+http://mi/starlingx/m... Error 0x3e11613b (http://ipxe.org/3e11613b)            
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
+90130T060000Z/outputs/iso/bootimage.iso                                         
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
+/outputs/iso/bootimage.iso... 86%                    
+```
+
+```
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
+90130T060000Z/outputs/io....                                                    
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
+/outputs/io....... No such file or directory (http://ipxe.org/2d0c613b)         
+iPXE> initrd http://mi/starlingx/m                                              
+http://mi/starlingx/m... Error 0x3e11613b (http://ipxe.org/3e11613b)            
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/cento     
+e820: 000000007f136000 000000000026f000 4                                       
+MEMDISK: Image appears to be truncated                                      rw  
+                                                                                
+/outputs/iso/bootimage.iso... ok                                                
+iPXE> boot                          
+```
+
+```
 user@workstation:~/starlingx/documentation/latest/stx-update$ ssh *.packet.net
 The authenticity of host 'sos.dfw2.packet.net (0.0.0.0)' can't be established.
 RSA key fingerprint is SHA256:*.
