@@ -58,6 +58,8 @@ iPXE> boot
 
 Console was unresponsive, typing different characters including _Enter_ dit not modified console. Next step was to boot a smaller image with same server and methodology: __Alpine Standard ISO__
 
+Are we experiencing this issue? [Booting Linux ISOs with Memdisk and iPXE](https://www.reversengineered.com/2016/01/07/booting-linux-isos-with-memdisk-and-ipxe/)
+
 ## Alpine ISO
 
 ```sh
