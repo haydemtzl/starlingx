@@ -65,6 +65,17 @@ iPXE> initrd http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-st
 ```
 
 ```
+Type "exit" to return to menu.                                                  
+iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
+https://boot.netboot.xyz/memdisk... ok                                          
+iPXE>                                                                           
+iPXE> initrd http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-st
+andard-3.9.0-x86_64.iso                                                         
+http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-standard-3.9.0-
+iPXE> boot
+```
+
+```
 e820: 00000000fed01000 0000000000003000 2                                       
 e820: 00000000fed08000 0000000000001000 2                                       �
 e820: 00000000fed08000 0000000000001000 2                                       
@@ -87,6 +98,7 @@ Drive probing gives drive shift limit: 0xe1
 old: int13 = f00074cc  int15 = 8ac0074d  int1e = f000efc7                       
 new: int13 = 8640000a  int15 = 864003fd  int1e = f000efc7                         
 Loading boot sector... booting...                                                                                                                                 
+
 boot:                                                                           
 ```
 
