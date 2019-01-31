@@ -1,3 +1,62 @@
+# Packet Bare Metal
+
+# StarlingX ISO
+
+New Server: On Demand
+
+- Pre Requisite: SSH Key
+- Hostname: demo
+- Location: SJC1, Sunnyvale CA
+- Type: t1.small.x86
+- OS: Custom iPXE
+  - https://boot.netboot.xyz/
+  
+Resources
+
+- [Custom iPXE](https://support.packet.com/kb/articles/custom-ipxe)
+- [SOS: Serial over SSH](https://support.packet.com/kb/articles/sos-serial-over-ssh)
+
+## Output
+
+```
+Type "exit" to return to menu.                                                  
+iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
+https://boot.netboot.xyz/memdisk... ok                                          
+```
+
+When pasting full Starling ISO URL:
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z/outputs/iso/bootimage.iso
+Only N number of characters were accepted, they got truncated at a specific length:
+_http://mirror.starlingx.cengn.ca/mirror/starlingx/ma_
+
+```
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/ma               
+http://mirror.starlingx.cengn.ca/mirror/starlingx/ma... No such file or director
+y (http://ipxe.org/2d0c613b)
+```
+
+To fix, a specific length of the string was pasted, then manually some characters were typed until a new line given, so fianlly the rest of the charecters were pasted:
+
+```
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
+90130T060000Z/outputs/iso/bootimage.iso                                         
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
+/outputs/iso/bootimage.iso... 86%                    
+```
+
+When StarlingX ISO was loaded, and after 
+
+```
+iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/cento     
+e820: 000000007f136000 000000000026f000 4                                       
+MEMDISK: Image appears to be truncated                                      rw  
+                                                                                
+/outputs/iso/bootimage.iso... ok                                                
+iPXE> boot                          
+```
+
+# iPXE Demo
+
 ```
 iPXE 1.0.255+ -- Open Source Network Boot Firmware -- http://ipxe.org           
                                                                                 
@@ -19,69 +78,4 @@ http://147.75.200.3/phone-home...... ok
 http://boot.ipxe.org/demo/boot.php.... ok                                       
 vmlinuz-3.16.0-rc4... ok                                                        
 initrd.img... 40%                                                              
-```
-
-```
-Type "exit" to return to menu.                                                  
-iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
-https://boot.netboot.xyz/memdisk... ok                                          
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/ma               
-http://mirror.starlingx.cengn.ca/mirror/starlingx/ma... No such file or director
-y (http://ipxe.org/2d0c613b)                                                    
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/ma\              
-http://mirror.starlingx.cengn.ca/mirror/starlingx/ma\... No such file or directo
-ry (http://ipxe.org/2d0c613b)                                                   
-iPXE> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaa                                                                  
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-aaaaaaaa: command not found                                                     
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
-90130T060000Z/outputs/io....                                                    
-http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
-/outputs/io....... No such file or directory (http://ipxe.org/2d0c613b)         
-iPXE> initrd http://mi/starlingx/m                                              
-http://mi/starlingx/m... Error 0x3e11613b (http://ipxe.org/3e11613b)            
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
-90130T060000Z/outputs/iso/bootimage.iso                                         
-http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
-/outputs/iso/bootimage.iso... 86%                    
-```
-
-```
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
-90130T060000Z/outputs/io....                                                    
-http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
-/outputs/io....... No such file or directory (http://ipxe.org/2d0c613b)         
-iPXE> initrd http://mi/starlingx/m                                              
-http://mi/starlingx/m... Error 0x3e11613b (http://ipxe.org/3e11613b)            
-iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/cento     
-e820: 000000007f136000 000000000026f000 4                                       
-MEMDISK: Image appears to be truncated                                      rw  
-                                                                                
-/outputs/iso/bootimage.iso... ok                                                
-iPXE> boot                          
-```
-
-```
-user@workstation:~/starlingx/documentation/latest/stx-update$ ssh *.packet.net
-The authenticity of host 'sos.dfw2.packet.net (0.0.0.0)' can't be established.
-RSA key fingerprint is SHA256:*.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '*.packet.net,0.0.0.0' (RSA) to the list of known hosts.
-[Read-only SOS Session. Use ~? for help.]
-~?
-Supported escape sequences:
- ~.   - terminate connection (and any multiplexed sessions)
- ~B   - send a BREAK to the remote system
- ~C   - open a command line
- ~R   - request rekey
- ~V/v - decrease/increase verbosity (LogLevel)
- ~^Z  - suspend ssh
- ~#   - list forwarded connections
- ~&   - background ssh (when waiting for connections to terminate)
- ~?   - this message
- ~~   - send the escape character by typing it twice
-(Note that escapes are only recognized immediately after newline.)
 ```
