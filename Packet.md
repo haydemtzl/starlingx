@@ -1,6 +1,6 @@
 # Packet Bare Metal
 
-# StarlingX ISO
+## StarlingX ISO
 
 New Server: On Demand
 
@@ -18,6 +18,8 @@ Resources
 
 ## Output
 
+Using __Out-of-Band Console__
+
 ```
 Type "exit" to return to menu.                                                  
 iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
@@ -25,8 +27,7 @@ https://boot.netboot.xyz/memdisk... ok
 ```
 
 When pasting full Starling ISO URL:
-http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z/outputs/iso/bootimage.iso
-Only N number of characters were accepted, they got truncated at a specific length:
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z/outputs/iso/bootimage.iso, only N number of characters were accepted, they got truncated at a specific length:
 _http://mirror.starlingx.cengn.ca/mirror/starlingx/ma_
 
 ```
@@ -35,7 +36,7 @@ http://mirror.starlingx.cengn.ca/mirror/starlingx/ma... No such file or director
 y (http://ipxe.org/2d0c613b)
 ```
 
-To fix, a specific length of the string was pasted, then manually some characters were typed until a new line given, so fianlly the rest of the charecters were pasted:
+To get string the valid string accepted, a specific length of the string was pasted, then manually some characters were typed until a new line was given, so finally the rest of the charecters were able to be pasted again:
 
 ```
 iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/201
@@ -44,7 +45,7 @@ http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z
 /outputs/iso/bootimage.iso... 86%                    
 ```
 
-When StarlingX ISO was loaded, and after 
+When StarlingX ISO was loaded, and after commanding a _boot_, error "Image appears to be truncated" was given:
 
 ```
 iPXE> initrd http://mirror.starlingx.cengn.ca/mirror/starlingx/master/cento     
@@ -55,7 +56,55 @@ MEMDISK: Image appears to be truncated                                      rw
 iPXE> boot                          
 ```
 
-# iPXE Demo
+Console was unresponsive, typing different characters including _Enter_ dit not modified console. Next step was to boot a smaller image with same server and methodology: __Alpine Standard ISO__
+
+## Alpine ISO
+
+```sh
+iPXE> initrd http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-standard-3.9.0-x86_64.iso
+```
+
+```
+e820: 00000000fed01000 0000000000003000 2                                       
+e820: 00000000fed08000 0000000000001000 2                                       �
+e820: 00000000fed08000 0000000000001000 2                                       
+e820: 00000000fed0c000 0000000000004000 2                                       
+e820: 00000000fed1c000 0000000000001000 2                                       
+e820: 00000000fef00000 0000000000100000 2                                       
+e820: 00000000ff800000 0000000000800000 2                                       
+Ramdisk at 0x78199000, length 0x06f00000                                        
+command line: iso raw                                                           
+MEMDISK: Image seems to have fractional end cylinder                              
+MEMDISK: Image appears to be truncated                                          
+Disk is hd96, 28416 K, C/H/S = 65535/255/15 (El Torito/El Torito), EDD on, rw     
+Using raw access to high memory                                                 
+Code 1860, meminfo 360, cmdline 8, stack 512                                       
+Total size needed = 2740 bytes, allocating 3K                                   
+Old dos memory at 0x87000 (map says 0x8ac00), loading at 0x86400                
+1588: 0xffff  15E801: 0x3c00 0x7719                                               
+INT 13 08: Success, count = 1, BPT = 0000:0000                                  
+Drive probing gives drive shift limit: 0xe1                                       
+old: int13 = f00074cc  int15 = 8ac0074d  int1e = f000efc7                       
+new: int13 = 8640000a  int15 = 864003fd  int1e = f000efc7                         
+Loading boot sector... booting...                                                                                                                                 
+boot:                                                                           
+```
+
+Unresponsive console for me, it seems same behaviour with StarlingX meaning _Image appears to be truncated_ is not meaningful, what is next?
+
+## iPXE Demo
+
+- Taken from [iPXE](http://ipxe.org/scripting)
+- Using "Add optional user data" under "Additional Settings"
+
+```
+#!ipxe
+
+dhcp
+chain http://boot.ipxe.org/demo/boot.php
+```
+
+Output
 
 ```
 iPXE 1.0.255+ -- Open Source Network Boot Firmware -- http://ipxe.org           
