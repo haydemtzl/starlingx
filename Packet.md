@@ -104,7 +104,12 @@ Loading boot sector... booting...
 boot:                                                                           
 ```
 
-Unresponsive console for me, it seems same behaviour with StarlingX meaning _Image appears to be truncated_ is not meaningful, what is next?
+Unresponsive console for me, it seems same behaviour with StarlingX meaning _Image appears to be truncated_ is not meaningful. __Out-of-Band Console__ was closed and open again but no sucess with more console output.
+
+```
+user@workstation:~$ ssh {server-uuid}@sos.sjc1.packet.net[SOS Session Ready. Use ~? for help.]
+[Note: You may need to press RETURN or Ctrl+L to get a prompt.]
+```
 
 ## iPXE Demo
 
