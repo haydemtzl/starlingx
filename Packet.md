@@ -146,6 +146,16 @@ new: int13 = 8640000a  int15 = 864003fd  int1e = f000efc7
 MEMDISK: bootstrap too large to load                                         
 ```
 
+After some time...
+
+```
+new: int13 = 8640000a  int15 = 864003fd  int1e = f000efc7                       
+Connection to sos.sjc1.packet.net closed.                                       
+user@workstation:~$ 
+user@workstation:~$ ssh 448c8798-3efe-4f5a-8ae9-6386f69ab8a0@sos.sjc1.packet.net[SOS Session Ready. Use ~? for help.]
+[Note: You may need to press RETURN or Ctrl+L to get a prompt.]
+
+```
 
 ## iPXE Demo
 
