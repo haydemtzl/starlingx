@@ -113,6 +113,40 @@ user@workstation:~$ ssh {server-uuid}@sos.sjc1.packet.net[SOS Session Ready. Use
 [Note: You may need to press RETURN or Ctrl+L to get a prompt.]
 ```
 
+## Set Console Option
+
+```
+:packet_x86_64
+set console console=ttyS1,115200n8
+```
+
+```
+e820: 0000000100000000 0000000180000000 1                                       e820: 00000000e0000000 0000000004000000 2                                       
+e820: 00000000fed01000 0000000000003000 2                                       
+e820: 00000000fed08000 0000000000001000 2                                       
+e820: 00000000fed0c000 0000000000004000 2                                       
+e820: 00000000fed1c000 0000000000001000 2                                       
+e820: 00000000fef00000 0000000000100000 2                                       
+e820: 00000000ff800000 0000000000800000 2                                       
+Ramdisk at 0x78192000, length 0x06f07000                                        
+command line: iso raw                                                           
+El Torito BVD sanity check failed.                                              
+El Torito boot catalog sanity check failed.                                     
+MEMDISK: Image seems to have fractional end cylinder                            
+Disk is hd0, 2186172 K, C/H/S = 111/64/32 (guess/guess), EDD on, rw             
+Using raw access to high memory                                                 
+Code 1860, meminfo 360, cmdline 8, stack 512                                    
+Total size needed = 2740 bytes, allocating 3K                                   
+Old dos memory at 0x87000 (map says 0x8ac00), loading at 0x86400                
+1588: 0xffff  15E801: 0x3c00 0x7719                                             
+INT 13 08: Success, count = 1, BPT = 0000:0000                                  
+Drive probing gives drive shift limit: 0x82                                     
+old: int13 = f00074cc  int15 = 8ac0074d  int1e = f000efc7                       
+new: int13 = 8640000a  int15 = 864003fd  int1e = f000efc7                       
+MEMDISK: bootstrap too large to load                                         
+```
+
+
 ## iPXE Demo
 
 - Taken from [iPXE](http://ipxe.org/scripting)
