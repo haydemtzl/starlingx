@@ -204,3 +204,23 @@ http://boot.ipxe.org/demo/boot.php.... ok
 vmlinuz-3.16.0-rc4... ok                                                        
 initrd.img... 40%                                                              
 ```
+
+# Errors
+
+```sh
+
+iPXE> kernel https://boot.netboot.xyz/memdisk iso raw console=ttyS1,115200n8
+https://boot.netboot.xyz/memdisk... ok
+Could not select: Exec format error (http://ipxe.org/2e008081)
+```
+
+```sh
+iPXE> set kernel-params console=ttyS1,115200n8
+iPXE> kernel https://boot.netboot.xys/memdisk iso raw ${kernel-params}
+https://boot.netboot.xys/memdisk... Error 0x3e11618e (http://ipxe.org/3e11618e)
+```
+
+```sh
+iPXE> kernel http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190206T060000Z/outputs/installer/vmlinuz iso raw ${kernel-params}
+http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190206T060000Z/outputs/installer/vmlinuz... ok 
+```
