@@ -21,6 +21,15 @@ Resources
 
 Using __Out-of-Band Console__
 
+- x86 servers require console=ttyS1,115200n8
+- aarch64 servers require console=ttyAMA0,115200
+
+```sh
+Type "exit" to return to menu.                                                  
+iPXE> kernel https://boot.netboot.xyz/memdisk iso raw console=ttyS1,115200n8
+https://boot.netboot.xyz/memdisk... ok                                          
+```
+
 ```
 Type "exit" to return to menu.                                                  
 iPXE> kernel https://boot.netboot.xyz/memdisk iso raw                           
