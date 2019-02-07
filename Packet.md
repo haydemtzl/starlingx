@@ -36,6 +36,8 @@ iPXE> kernel https://boot.netboot.xyz/memdisk iso raw
 https://boot.netboot.xyz/memdisk... ok                                          
 ```
 
+> Make sure to use a valid StarlingX ISO image.
+
 When pasting full Starling ISO URL:
 http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190130T060000Z/outputs/iso/bootimage.iso, only N number of characters were accepted, they got truncated at a specific length:
 _http://mirror.starlingx.cengn.ca/mirror/starlingx/ma_
