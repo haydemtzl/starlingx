@@ -24,11 +24,25 @@ Using __Out-of-Band Console__
 - x86 servers require console=ttyS1,115200n8
 - aarch64 servers require console=ttyAMA0,115200
 
+### Parameter Kernel
+
+Option one, arguments:
+
 ```sh
 Type "exit" to return to menu.                                                  
 iPXE> kernel https://boot.netboot.xyz/memdisk iso raw console=ttyS1,115200n8
 https://boot.netboot.xyz/memdisk... ok                                          
 ```
+
+Option two, arguments with variables:
+
+```sh
+iPXE> set kernel-params console=ttyS1,115200n8
+iPXE> kernel https://boot.netboot.xys/memdisk iso raw ${kernel-params}
+https://boot.netboot.xys/memdisk... Error 0x3e11618e (http://ipxe.org/3e11618e)
+```
+
+Option three, no arguments:
 
 ```
 Type "exit" to return to menu.                                                  
