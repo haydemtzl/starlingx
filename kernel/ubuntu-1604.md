@@ -1,8 +1,16 @@
-# Setup
+# Steps
+
+0. Mainline Kernel Git Tree v4.14
+1. Compile in Ubuntu 16.04 with Default defconfig
+2. Compile in Ubuntu 16.04 with StarlingX defconfig
+
+# Prerequisites
 
 ```sh
 $ sudo apt-get install git build-essential kernel-package fakeroot libncurses5-dev libssl-dev ccache
 ```
+
+# Mainline Kernel Git Tree
 
 ```sh
 $ git clone https://github.com/xe1gyq/linux.git
