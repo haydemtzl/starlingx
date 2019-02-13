@@ -1,3 +1,9 @@
+# Setup
+
+```sh
+$ sudo apt-get install git build-essential kernel-package fakeroot libncurses5-dev libssl-dev ccache
+```
+
 ```sh
 $ git clone https://github.com/xe1gyq/linux.git
 ```
