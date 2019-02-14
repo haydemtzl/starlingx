@@ -262,18 +262,18 @@ CONFIG_PREEMPT_COUNT=y
 - [RT 4.14](http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/)
 
 ```sh
-user@workstation:~/linux$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.87-rt49.patch.gz
+user@workstation:~/linux$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/older/patch-4.14-rt1.patch.gz
 ```
 
 ```sh
-user@workstation:~/linux$ gunzip patch-4.14.87-rt49.patch.gz 
+user@workstation:~/linux$ gunzip patch-4.14-rt1.patch.gz
 ```
 
 
 ```sh
 user@workstation:~/linux$ ls
-arch   certs    CREDITS  Documentation  firmware  include  ipc     Kconfig  lib          Makefile  net                       README   scripts   sound      tools  virt
-block  COPYING  crypto   drivers        fs        init     Kbuild  kernel   MAINTAINERS  mm        patch-4.14.87-rt49.patch  samples  security  starlingx  usr
+arch   certs    CREDITS  Documentation  firmware  include  ipc     Kconfig  lib              MAINTAINERS  mm   patch-4.14-rt1.patch  samples  security  starlingx  usr
+block  COPYING  crypto   drivers        fs        init     Kbuild  kernel   localversion-rt  Makefile     net  README                scripts  sound     tools      virt
 ```
 
 ```sh
