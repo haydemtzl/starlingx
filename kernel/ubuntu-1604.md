@@ -1,15 +1,15 @@
 # Steps
 
-0. Prerequisites Done
-1. Mainline v4.14 Clone Done
-2. Mainline v4.14 Compilation Default defconfig Done
-3. Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT Done
-4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT Done
-5. Mainline v4.14 Run with CONFIG_SIGEXIT Done
-6. Mainline v4.14 Compilation StarlingX defconfig + Customizations Done
-7. Mainline v4.14 Run StarlingX defconfig + Customizations Failed
-8. Mainline v4.14 RT Compilation Default defconfig Not Started
-9. Mainline v4.14 RT Run Default defconfig Not Started
+0. Prerequisites __Done__
+1. Mainline v4.14 Clone __Done__
+2. Mainline v4.14 Compilation Default defconfig __Done__
+3. Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT __Done__
+4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT __Done__
+5. Mainline v4.14 Run with CONFIG_SIGEXIT __Done__
+6. Mainline v4.14 Compilation StarlingX defconfig + Customizations __Done__
+7. Mainline v4.14 Run StarlingX defconfig + Customizations __Done__ Issues
+8. Mainline v4.14 RT Compilation Default defconfig __Done__
+9. Mainline v4.14 RT Run Default defconfig __Done__
 
 # Prerequisites
 
@@ -267,6 +267,8 @@ CONFIG_PREEMPT=y
 CONFIG_PREEMPT_COUNT=y
 # CONFIG_PREEMPT_TRACER is not set
 ```
+
+Issues? Computer hang! Will test removing __CONFIG_PREEMPT__.
 
 # Mainline v4.14 RT Compilation Default defconfig
 
