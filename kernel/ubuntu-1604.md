@@ -240,10 +240,21 @@ user@workstation:~$ cat /proc/kallsyms | grep do_notify_others
 ```
 
 ```sh
-user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_INTEL_IOMMU_DEFAULT_ON
+user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_INTEL_IOMMU_DEFAULT_ON
 CONFIG_INTEL_IOMMU_DEFAULT_ON=y
-user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_E1000E
-CONFIG_E1000E is not set
+user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_E1000E
+# CONFIG_E1000E is not set
+```
+
+```sh
+user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_PREEMPT
+CONFIG_PREEMPT_RCU=y
+CONFIG_PREEMPT_NOTIFIERS=y
+# CONFIG_PREEMPT_NONE is not set
+# CONFIG_PREEMPT_VOLUNTARY is not set
+CONFIG_PREEMPT=y
+CONFIG_PREEMPT_COUNT=y
+# CONFIG_PREEMPT_TRACER is not set
 ```
 
 # Mainline v4.14 RT Compilation Default defconfig
@@ -251,5 +262,16 @@ CONFIG_E1000E is not set
 - [RT 4.14](http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/)
 
 ```sh
-$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.93-rt53.patch.gz
+user@workstation:~/linux$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.87-rt49.patch.gz
+```
+
+```sh
+user@workstation:~/linux$ gunzip patch-4.14.87-rt49.patch.gz 
+```
+
+
+```sh
+user@workstation:~/linux$ ls
+arch   certs    CREDITS  Documentation  firmware  include  ipc     Kconfig  lib          Makefile  net                       README   scripts   sound      tools  virt
+block  COPYING  crypto   drivers        fs        init     Kbuild  kernel   MAINTAINERS  mm        patch-4.14.87-rt49.patch  samples  security  starlingx  usr
 ```
