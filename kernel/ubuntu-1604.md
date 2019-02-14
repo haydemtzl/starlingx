@@ -157,3 +157,48 @@ New value: CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=n
 # merged configuration written to .config (needs make)
 #
 ```
+
+```sh
+Makefile:940: "Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel"
+scripts/kconfig/conf  --silentoldconfig Kconfig
+.config:8789:warning: override: MCORE2 changes choice state
+.config:9296:warning: override: reassigning to symbol DRM_BOCHS
+.config:9341:warning: override: reassigning to symbol HID_RMI
+.config:9470:warning: override: reassigning to symbol HP_WIRELESS
+.config:9537:warning: override: reassigning to symbol CRYPTO_DRBG_MENU
+.config:9546:warning: override: PREEMPT changes choice state
+*
+* Restart config...
+*
+*
+* Generic Driver Options
+*
+Support for uevent helper (UEVENT_HELPER) [Y/n/?] y
+  path to uevent helper (UEVENT_HELPER_PATH) [] 
+Maintain a devtmpfs filesystem to mount at /dev (DEVTMPFS) [Y/n/?] y
+  Automount devtmpfs at /dev, after the kernel mounted the rootfs (DEVTMPFS_MOUNT) [Y/n/?] y
+Select only drivers that don't need compile-time external firmware (STANDALONE) [N/y/?] n
+Prevent firmware from being built (PREVENT_FIRMWARE_BUILD) [Y/n/?] y
+Userspace firmware loading support (FW_LOADER) [Y/?] y
+  Include in-kernel firmware blobs in kernel binary (FIRMWARE_IN_KERNEL) [Y/n/?] y
+  External firmware blobs to build into the kernel binary (EXTRA_FIRMWARE) [] 
+Fallback user-helper invocation for firmware loading (FW_LOADER_USER_HELPER_FALLBACK) [N/y/?] n
+Allow device coredump (ALLOW_DEV_COREDUMP) [Y/n/?] y
+Driver Core verbose debug messages (DEBUG_DRIVER) [N/y/?] n
+Managed device resources verbose debug messages (DEBUG_DEVRES) [N/y/?] n
+Test driver remove calls during probe (UNSTABLE) (DEBUG_TEST_DRIVER_REMOVE) [N/y/?] n
+Build kernel module to test asynchronous driver probing (TEST_ASYNC_DRIVER_PROBE) [N/m/?] n
+Enable verbose DMA_FENCE_TRACE messages (DMA_FENCE_TRACE) [N/y/?] n
+DMA Contiguous Memory Allocator (DMA_CMA) [Y/n/?] y
+  *
+  * Default contiguous memory area size:
+  *
+  Size in Mega Bytes (CMA_SIZE_MBYTES) [16] 16
+  Selected region size
+  > 1. Use mega bytes value only (CMA_SIZE_SEL_MBYTES)
+    2. Use percentage value only (CMA_SIZE_SEL_PERCENTAGE) (NEW)
+    3. Use lower value (minimum) (CMA_SIZE_SEL_MIN) (NEW)
+    4. Use higher value (maximum) (CMA_SIZE_SEL_MAX) (NEW)
+  choice[1-4]: 
+
+```
