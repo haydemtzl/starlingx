@@ -33,7 +33,9 @@ Switched to a new branch 'v4.14'
 
 # Mainline Kernel Git Tree v4.14 Compilation Default defconfig
 
-## CONFIG_SIGEXIT=n
+## [PATCH] Notification of death of arbitrary processes
+
+### CONFIG_SIGEXIT=n
 
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make oldconfig
@@ -47,7 +49,7 @@ user@workstation:~/starlingx/kernel/linux.github$ make -j5
 user@workstation:~/starlingx/kernel/linux.github$ make menuconfig
 ```
 
-## CONFIG_SIGEXIT=y
+### CONFIG_SIGEXIT=y
 
 ```
     General setup  --->
