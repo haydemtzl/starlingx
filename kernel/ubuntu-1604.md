@@ -87,6 +87,14 @@ user@workstation:~$ cat /proc/kallsyms | grep do_notify_others
 0000000000000000 T do_notify_others
 ```
 
+```sh
+user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_INTEL_IOMMU_DEFAULT_ON
+# CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
+user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_E1000E
+CONFIG_E1000E=m
+CONFIG_E1000E_HWTS=y
+```
+
 # Mainline v4.14 Compilation StarlingX defconfig + Customizations
 
 - [kernel-3.10.0-x86_64.config.tis_extra](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra)
