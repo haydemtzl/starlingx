@@ -1,9 +1,12 @@
 # Steps
 
-0. Prerequisites
-1. Mainline Kernel Git Tree v4.14 Clone 
-2. Mainline Kernel Git Tree v4.14 Compilation Default defconfig
-3. Mainline Kernel Git Tree v4.14 Compilation StarlingX defconfig
+0. Prerequisites Done
+1. Mainline v4.14 Clone Done
+2. Mainline v4.14 Compilation Default defconfig Done
+3. Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT Done
+4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT Done
+5. Mainline v4.14 Run with CONFIG_SIGEXIT In Process
+6. Mainline v4.14 Compilation StarlingX defconfig In Process
 
 # Prerequisites
 
@@ -11,7 +14,7 @@
 $ sudo apt-get install git build-essential kernel-package fakeroot libncurses5-dev libssl-dev ccache
 ```
 
-# Mainline Kernel Git Tree Clone v4.14
+# Mainline v4.14 Clone
 
 ```sh
 $ git clone https://github.com/xe1gyq/linux.git
@@ -31,11 +34,7 @@ Checking out files: 100% (42539/42539), done.
 Switched to a new branch 'v4.14'
 ```
 
-# Mainline Kernel Git Tree v4.14 Compilation Default defconfig
-
-## [PATCH] Notification of death of arbitrary processes
-
-### CONFIG_SIGEXIT=n
+# Mainline v4.14 Compilation Default defconfig
 
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make oldconfig
@@ -45,11 +44,17 @@ user@workstation:~/starlingx/kernel/linux.github$ make oldconfig
 user@workstation:~/starlingx/kernel/linux.github$ make -j5
 ```
 
+# Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT
+
+- [\[PATCH\] Notification of death of arbitrary processes](https://github.com/xe1gyq/linux/commit/859bf7ecb646201fc5250da1d6b184c6404149e3)
+
+# Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT
+
+> CONFIG_SIGEXIT=y
+
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make menuconfig
 ```
-
-### CONFIG_SIGEXIT=y
 
 ```
     General setup  --->
@@ -59,6 +64,10 @@ user@workstation:~/starlingx/kernel/linux.github$ make menuconfig
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make -j5
 ```
+
+# Mainline v4.14 Run with CONFIG_SIGEXIT
+
+> Work In Progress
 
 # Mainline Kernel Git Tree v4.14 Compilation StarlingX defconfig
 
