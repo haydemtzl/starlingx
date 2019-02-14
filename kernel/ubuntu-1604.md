@@ -7,6 +7,9 @@
 4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT Done
 5. Mainline v4.14 Run with CONFIG_SIGEXIT Done
 6. Mainline v4.14 Compilation StarlingX defconfig + Customizations Done
+7. Mainline v4.14 Run StarlingX defconfig + Customizations Failed
+8. Mainline v4.14 RT Compilation Default defconfig Not Started
+9. Mainline v4.14 RT Run Default defconfig Not Started
 
 # Prerequisites
 
@@ -241,4 +244,12 @@ user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_INTEL_IOMMU
 CONFIG_INTEL_IOMMU_DEFAULT_ON=y
 user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_E1000E
 CONFIG_E1000E is not set
+```
+
+# Mainline v4.14 RT Compilation Default defconfig
+
+- [RT 4.14](http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/)
+
+```sh
+$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.93-rt53.patch.gz
 ```
