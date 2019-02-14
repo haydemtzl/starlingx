@@ -142,7 +142,7 @@ user@workstation:~/starlingx/kernel/linux.github$ scripts/kconfig/merge_config.s
 ```
 
 ```sh
-$ wget https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra
+$ wget https://git.openstack.org/cgit/openstack/stx-integ/plain/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra
 ```
 
 ```sh
