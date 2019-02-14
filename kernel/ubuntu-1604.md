@@ -376,15 +376,26 @@ user@workstation:~/starlingx/kernel/rt-tests$ make all
 user@workstation:~/starlingx/kernel/rt-tests$ ls
 bld      cyclictest  hwlatdetect  Makefile    pi_stress  ptsematest       rt-migrate-test  sendme      sigwaittest  svsematest
 COPYING  hackbench   MAINTAINERS  pip_stress  pmqtest    README.markdown  scripts          signaltest  src
-user@workstation:~/starlingx/kernel/rt-tests$ ./cyclictest 
-Unable to change scheduling policy!
-either run as root or join realtime group
 ```
 
-```sh
-user@workstation:~/starlingx/kernel/rt-tests$ sudo ./cyclictest 
-# /dev/cpu_dma_latency set to 0us
-policy: other/other: loadavg: 0.67 0.94 0.63 3/1107 9825          
+```On a non-realtime system, you may see something like
 
-T: 0 ( 9821) P: 0 I:1000 C:  42284 Min:      6 Act:    9 Avg:   10 Max:    2453
+   T: 0 ( 3431) P:99 I:1000 C: 100000 Min:      5 Act:   10 Avg:   14 Max:   39242
+   T: 1 ( 3432) P:98 I:1500 C:  66934 Min:      4 Act:   10 Avg:   17 Max:   39661
+
+The rightmost column contains the most important result, i.e. the worst-case
+latency of 39.242 milliseconds. On a realtime-enabled system, my workstation:
+
+user@workstation:~/starlingx/kernel/rt-tests$ sudo ./cyclictest -a -t -n -p99
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 1.11 0.88 1.15 4/1092 10482          
+
+T: 0 (10468) P:99 I:1000 C:   7027 Min:      1 Act:    1 Avg:    1 Max:      11
+T: 1 (10469) P:99 I:1500 C:   4685 Min:      1 Act:    1 Avg:    1 Max:      17
+T: 2 (10470) P:99 I:2000 C:   3513 Min:      1 Act:    1 Avg:    1 Max:      22
+T: 3 (10471) P:99 I:2500 C:   2810 Min:      1 Act:    1 Avg:    1 Max:      19
+T: 4 (10472) P:99 I:3000 C:   2342 Min:      1 Act:    1 Avg:    1 Max:      16
+T: 5 (10473) P:99 I:3500 C:   2007 Min:      1 Act:    2 Avg:    1 Max:      16
+T: 6 (10474) P:99 I:4000 C:   1756 Min:      1 Act:    1 Avg:    1 Max:      19
+T: 7 (10475) P:99 I:4500 C:   1561 Min:      1 Act:    1 Avg:    1 Max:      19
 ```
