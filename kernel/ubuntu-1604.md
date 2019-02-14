@@ -237,6 +237,13 @@ DMA Contiguous Memory Allocator (DMA_CMA) [Y/n/?] y
 
 ```
 
+### Scheduler
+
+The following kernel scheduler configurations options are changed and set as follows: 
+
+- CONFIG_SCHEDSTATS=y
+- CONFIG_RT_GROUP_SCHED=n
+- CONFIG_SCHED_TRACER=n
 
 ```sh
 user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_SIGEXIT
