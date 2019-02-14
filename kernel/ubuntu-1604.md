@@ -5,8 +5,8 @@
 2. Mainline v4.14 Compilation Default defconfig Done
 3. Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT Done
 4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT Done
-5. Mainline v4.14 Run with CONFIG_SIGEXIT In Process
-6. Mainline v4.14 Compilation StarlingX defconfig + Customizations In Process
+5. Mainline v4.14 Run with CONFIG_SIGEXIT Done
+6. Mainline v4.14 Compilation StarlingX defconfig + Customizations Done
 
 # Prerequisites
 
@@ -221,4 +221,24 @@ DMA Contiguous Memory Allocator (DMA_CMA) [Y/n/?] y
     4. Use higher value (maximum) (CMA_SIZE_SEL_MAX) (NEW)
   choice[1-4]: 
 
+```
+
+
+```sh
+user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_SIGEXIT
+CONFIG_SIGEXIT=y
+```
+
+```sh
+user@workstation:~$ cat /proc/kallsyms | grep do_notify_task_state
+0000000000000000 T do_notify_task_state
+user@workstation:~$ cat /proc/kallsyms | grep do_notify_others
+0000000000000000 T do_notify_others
+```
+
+```sh
+user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_INTEL_IOMMU_DEFAULT_ON
+CONFIG_INTEL_IOMMU_DEFAULT_ON=y
+user@workstation:~/linux$ cat /boot/config-$(uname -r) | grep CONFIG_E1000E
+CONFIG_E1000E is not set
 ```
