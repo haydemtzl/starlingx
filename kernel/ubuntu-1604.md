@@ -1,9 +1,9 @@
 # Steps
 
 0. Prerequisites
-1. Mainline Kernel Git Tree v4.14
-2. Mainline Kernel Git Tree v4.14 Default defconfig
-3. Mainline Kernel Git Tree v4.14 StarlingX defconfig
+1. Mainline Kernel Git Tree v4.14 Clone 
+2. Mainline Kernel Git Tree v4.14 Compilation Default defconfig
+3. Mainline Kernel Git Tree v4.14 Compilation StarlingX defconfig
 
 # Prerequisites
 
@@ -11,7 +11,7 @@
 $ sudo apt-get install git build-essential kernel-package fakeroot libncurses5-dev libssl-dev ccache
 ```
 
-# Mainline Kernel Git Tree v4.14
+# Mainline Kernel Git Tree Clone v4.14
 
 ```sh
 $ git clone https://github.com/xe1gyq/linux.git
@@ -31,7 +31,7 @@ Checking out files: 100% (42539/42539), done.
 Switched to a new branch 'v4.14'
 ```
 
-# Mainline Kernel Git Tree v4.14 Default defconfig
+# Mainline Kernel Git Tree v4.14 Compilation Default defconfig
 
 ## CONFIG_SIGEXIT=n
 
@@ -58,7 +58,7 @@ user@workstation:~/starlingx/kernel/linux.github$ make menuconfig
 user@workstation:~/starlingx/kernel/linux.github$ make -j5
 ```
 
-# Mainline Kernel Git Tree v4.14 StarlingX defconfig
+# Mainline Kernel Git Tree v4.14 Compilation StarlingX defconfig
 
 ```sh
 $ cp /localdisk/loadbuild/builder/starlingx/std/results/builder-starlingx-tis-r5-pike-std/kernel-3.10.0-957.1.3.el7.1.tis/kernel-3.10.0-957.1.3.el7.1.tis.src.rpm .
