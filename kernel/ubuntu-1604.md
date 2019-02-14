@@ -279,3 +279,7 @@ block  COPYING  crypto   drivers        fs        init     Kbuild  kernel   loca
 ```sh
 user@workstation:~/linux$ git clean -f -d && git clean -f -X && git clean -fx && git reset --hard
 ```
+
+```sh
+user@workstation:~/linux$ poatch -p1 < patch-4.14-rt1.patch
+```
