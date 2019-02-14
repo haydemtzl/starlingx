@@ -6,7 +6,7 @@
 3. Mainline v4.14 Porting from v3.10 CONFIG_SIGEXIT to v4.4 CONFIG_SIGEXIT Done
 4. Mainline v4.14 Compilation Default defconfig with CONFIG_SIGEXIT Done
 5. Mainline v4.14 Run with CONFIG_SIGEXIT In Process
-6. Mainline v4.14 Compilation StarlingX defconfig In Process
+6. Mainline v4.14 Compilation StarlingX defconfig + Customizations In Process
 
 # Prerequisites
 
@@ -69,7 +69,7 @@ user@workstation:~/starlingx/kernel/linux.github$ make -j5
 
 > Work In Progress
 
-# Mainline Kernel Git Tree v4.14 Compilation StarlingX defconfig
+# Mainline v4.14 Compilation StarlingX defconfig + Customizations
 
 ```sh
 $ cp /localdisk/loadbuild/builder/starlingx/std/results/builder-starlingx-tis-r5-pike-std/kernel-3.10.0-957.1.3.el7.1.tis/kernel-3.10.0-957.1.3.el7.1.tis.src.rpm .
@@ -123,4 +123,10 @@ kernel-3.10.0-ppc64le-debug.config
 
 ```sh
 $ cp /home/user/starlingx/workspace/localdisk/designer/builder/starlingx/sandbox/kernel-3.10.0-957.1.3.el7.1.tis.src/kernel-3.10.0-x86_64.config.tis_extra ~/starlingx/kernel/linux.github/
+```
+
+## Customizations
+
+```
+user@workstation:~/starlingx/kernel/linux.github$ scripts/kconfig/merge_config.sh -m -n .config customizations
 ```
