@@ -275,3 +275,7 @@ user@workstation:~/linux$ ls
 arch   certs    CREDITS  Documentation  firmware  include  ipc     Kconfig  lib          Makefile  net                       README   scripts   sound      tools  virt
 block  COPYING  crypto   drivers        fs        init     Kbuild  kernel   MAINTAINERS  mm        patch-4.14.87-rt49.patch  samples  security  starlingx  usr
 ```
+
+```sh
+user@workstation:~/linux$ git clean -f -d && git clean -f -X && git clean -fx && git reset --hard
+```
