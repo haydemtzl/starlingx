@@ -39,6 +39,8 @@ Switched to a new branch 'v4.14'
 
 # Mainline v4.14 Compilation Default defconfig
 
+- From [kernel: config-4.15.0-45-generic ](https://github.com/xe1gyq/starlingx/commit/4bf015bf77563cfe6117d58e9f3d6ad5fe210b95#diff-e661e2a5e23af26038240c07a1fdb56f) to [kernel: config-4.14.0](https://github.com/xe1gyq/starlingx/commit/313e76ecfe4dbe47ae54f726820fce4ec020792c#diff-e661e2a5e23af26038240c07a1fdb56f)
+
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make oldconfig
 ```
@@ -55,6 +57,17 @@ user@workstation:~/starlingx/kernel/linux.github$ make -j5
 
 > CONFIG_SIGEXIT=y
 
+- Using [kernel: config-4.14.0 CONFIG_SIGEXIT](https://github.com/xe1gyq/starlingx/commit/2848a0dfd9c164af2b38480fb54e0290b1c301bc#diff-e661e2a5e23af26038240c07a1fdb56f)
+
+```
+Symbol: SIGEXIT [=y]
+Type  : boolean
+Prompt: Notification of death of arbitrary processes
+  Location:
+(1) -> General setup
+  Defined at init/Kconfig:1485
+```
+
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ make menuconfig
 ```
@@ -69,9 +82,6 @@ user@workstation:~/starlingx/kernel/linux.github$ make -j5
 ```
 
 # Mainline v4.14 Run with CONFIG_SIGEXIT
-
-> Work In Progress
-
 
 ```sh
 user@workstation:~/linux$ uname -a
@@ -100,7 +110,8 @@ CONFIG_E1000E_HWTS=y
 
 # Mainline v4.14 Compilation StarlingX defconfig + Customizations
 
-- [kernel-3.10.0-x86_64.config.tis_extra](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra)
+- Taking [kernel-3.10.0-x86_64.config.tis_extra](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra)
+- Merging those into [kernel: config-4.14.0 customizations](https://github.com/xe1gyq/starlingx/commit/6ea0ea16ed2b5e006f0e1dada21659ddbd036f62#diff-e661e2a5e23af26038240c07a1fdb56f)
 
 ## Analysis
 
@@ -259,7 +270,30 @@ CONFIG_PREEMPT_COUNT=y
 
 # Mainline v4.14 RT Compilation Default defconfig
 
+## Prerequisites
+
+> Transition: From [kernel: 4.15.0-43-generic ](https://github.com/xe1gyq/starlingx/commit/3a9482ac6a4f7e3c038d3e1a35edb143ea382663#diff-ef9338168208a30d9a07034844f14a1b) to [kernel: config-4.14.0 ](https://github.com/xe1gyq/starlingx/commit/b80d2b896f18033a838edf6226bb6cdba33965d5#diff-ef9338168208a30d9a07034844f14a1b)
+
+## RT Patch
+
+```
+CONFIG_PREEMPT_RT_FULL:
+
+All and everything
+
+Symbol: PREEMPT_RT_FULL [=y]
+Type  : boolean
+Prompt: Fully Preemptible Kernel (RT)
+  Location:
+    -> Processor type and features
+      -> Preemption Model (<choice> [=y])
+  Defined at kernel/Kconfig.preempt:76
+Depends on: <choice> && IRQ_FORCED_THREADING [=y]
+Selects: PREEMPT_RT_BASE [=y] && PREEMPT_RCU [=y]   
+```
+
 - [RT 4.14](http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/)
+- Using [kernel: config-4.14.0 CONFIG_PREEMPT_RT_FULL ](https://github.com/xe1gyq/starlingx/commit/05f528fdbb7e5de075bba0e42d18306ae9e06388#diff-ef9338168208a30d9a07034844f14a1b)
 
 ```sh
 user@workstation:~/linux$ wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/older/patch-4.14-rt1.patch.gz
@@ -268,7 +302,6 @@ user@workstation:~/linux$ wget http://cdn.kernel.org/pub/linux/kernel/projects/r
 ```sh
 user@workstation:~/linux$ gunzip patch-4.14-rt1.patch.gz
 ```
-
 
 ```sh
 user@workstation:~/linux$ ls
