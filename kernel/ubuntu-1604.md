@@ -69,6 +69,12 @@ user@workstation:~/starlingx/kernel/linux.github$ make -j5
 
 > Work In Progress
 
+
+```
+user@workstation:~/linux$ uname -a
+Linux workstation 4.14.0-rt177+ #2 SMP Wed Feb 13 21:28:22 CST 2019 x86_64 x86_64 x86_64 GNU/Linux
+```
+
 # Mainline v4.14 Compilation StarlingX defconfig + Customizations
 
 ```sh
