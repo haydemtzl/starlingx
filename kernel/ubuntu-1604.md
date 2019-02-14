@@ -345,3 +345,46 @@ Linux workstation 4.14.0-rt1+ #2 SMP PREEMPT RT Thu Feb 14 01:15:08 CST 2019 x86
 user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_PREEMPT_RT_FULL
 CONFIG_PREEMPT_RT_FULL=y
 ```
+
+# Mainline v4.14 RT Tests Default defconfig
+
+> rt-tests is a test suite, that contains programs to test various real time Linux features. It is maintained by Clark Williams and John Kacur.
+
+- [rt-tests homepage](https://wiki.linuxfoundation.org/realtime/documentation/howto/tools/rt-tests)
+
+```sh
+user@workstation:~$ sudo apt-get install build-essential libnuma-dev
+```
+
+```sh
+user@workstation:~/starlingx/kernel$ git clone git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
+Cloning into 'rt-tests'...
+```
+
+```sh
+user@workstation:~/starlingx/kernel$ cd rt-tests
+user@workstation:~/starlingx/kernel/rt-tests$ git checkout stable/v1.0
+Branch stable/v1.0 set up to track remote branch stable/v1.0 from origin.
+Switched to a new branch 'stable/v1.0'
+```
+
+```sh
+user@workstation:~/starlingx/kernel/rt-tests$ make all
+```
+
+```sh
+user@workstation:~/starlingx/kernel/rt-tests$ ls
+bld      cyclictest  hwlatdetect  Makefile    pi_stress  ptsematest       rt-migrate-test  sendme      sigwaittest  svsematest
+COPYING  hackbench   MAINTAINERS  pip_stress  pmqtest    README.markdown  scripts          signaltest  src
+user@workstation:~/starlingx/kernel/rt-tests$ ./cyclictest 
+Unable to change scheduling policy!
+either run as root or join realtime group
+```
+
+```sh
+user@workstation:~/starlingx/kernel/rt-tests$ sudo ./cyclictest 
+# /dev/cpu_dma_latency set to 0us
+policy: other/other: loadavg: 0.67 0.94 0.63 3/1107 9825          
+
+T: 0 ( 9821) P: 0 I:1000 C:  42284 Min:      6 Act:    9 Avg:   10 Max:    2453
+```
