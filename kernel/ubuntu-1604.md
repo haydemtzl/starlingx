@@ -79,6 +79,8 @@ Linux workstation 4.14.0-rt177+ #2 SMP Wed Feb 13 21:28:22 CST 2019 x86_64 x86_6
 
 - [kernel-3.10.0-x86_64.config.tis_extra](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra)
 
+## Analysis
+
 ```sh
 $ cp /localdisk/loadbuild/builder/starlingx/std/results/builder-starlingx-tis-r5-pike-std/kernel-3.10.0-957.1.3.el7.1.tis/kernel-3.10.0-957.1.3.el7.1.tis.src.rpm .
 ```
@@ -137,4 +139,12 @@ $ cp /home/user/starlingx/workspace/localdisk/designer/builder/starlingx/sandbox
 
 ```
 user@workstation:~/starlingx/kernel/linux.github$ scripts/kconfig/merge_config.sh -m -n .config customizations
+```
+
+```sh
+$ wget https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/kernel-3.10.0-x86_64.config.tis_extra
+```
+
+```sh
+$ scripts/kconfig/merge_config.sh -m -n .config kernel-3.10.0-x86_64.config.tis_extra 
 ```
