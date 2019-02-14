@@ -323,9 +323,25 @@ user@workstation:~/linux$ patch -p1 < patch-4.14-rt1.patch
 user@workstation:~/linux$ make
 ```
 
-From
+```sh
+user@workstation:~/linux$ sudo make modules_install install
+```
+
+From 
 
 ```sh
-user@workstation:~/starlingx/kernel/linux.mainline$ uname -a
+user@workstation:~$ uname -a
 Linux workstation 4.15.0-43-generic #46~16.04.1-Ubuntu SMP Fri Dec 7 13:31:08 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+```
+
+To
+
+```
+user@workstation:~$ uname -a
+Linux workstation 4.14.0-rt1+ #2 SMP PREEMPT RT Thu Feb 14 01:15:08 CST 2019 x86_64 x86_64 x86_64 GNU/Linux
+```
+
+```sh
+user@workstation:~$ cat /boot/config-$(uname -r) | grep CONFIG_PREEMPT_RT_FULL
+CONFIG_PREEMPT_RT_FULL=y
 ```
