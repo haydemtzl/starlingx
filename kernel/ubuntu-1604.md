@@ -380,6 +380,8 @@ COPYING  hackbench   MAINTAINERS  pip_stress  pmqtest    README.markdown  script
 
 ## RT Not Enabled
 
+> On a non-realtime system, you may see something like:
+
 ```sh
 user@workstation:~/starlingx/kernel/rt-tests$ sudo ./cyclictest -a -t -n -p99
 # /dev/cpu_dma_latency set to 0us
@@ -389,7 +391,7 @@ T: 0 (24029) P:99 I:1000 C:  81972 Min:      1 Act:    2 Avg:    2 Max:    1673
 T: 1 (24030) P:99 I:1500 C:  54649 Min:      1 Act:    2 Avg:    2 Max:    2618
 T: 2 (24031) P:99 I:2000 C:  40987 Min:      1 Act:    3 Avg:    2 Max:    1628
 T: 3 (24032) P:99 I:2500 C:  32790 Min:      1 Act:    2 Avg:    2 Max:    1088
-T: 4 (24033) P:99 I:3000 C:  27325 Min:      2 Act:    2 Avg:    2 Max:    1077
+T: 4 (24033) P:99 I:3000 C:  27325 Min:      2 Act:    2 Avg:    2 Max:    1077:
 T: 5 (24034) P:99 I:3500 C:  23421 Min:      2 Act:    2 Avg:    2 Max:    1382
 T: 6 (24035) P:99 I:4000 C:  20493 Min:      2 Act:    3 Avg:    3 Max:      74
 T: 7 (24036) P:99 I:4500 C:  18216 Min:      2 Act:    3 Avg:    3 Max:      21
@@ -397,14 +399,10 @@ T: 7 (24036) P:99 I:4500 C:  18216 Min:      2 Act:    3 Avg:    3 Max:      21
 
 ## Rt Enabled
 
-```On a non-realtime system, you may see something like
-
-   T: 0 ( 3431) P:99 I:1000 C: 100000 Min:      5 Act:   10 Avg:   14 Max:   39242
-   T: 1 ( 3432) P:98 I:1500 C:  66934 Min:      4 Act:   10 Avg:   17 Max:   39661
-
-The rightmost column contains the most important result, i.e. the worst-case
+> The rightmost column contains the most important result, i.e. the worst-case
 latency of 39.242 milliseconds. On a realtime-enabled system, my workstation:
 
+```
 user@workstation:~/starlingx/kernel/rt-tests$ sudo ./cyclictest -a -t -n -p99
 # /dev/cpu_dma_latency set to 0us
 policy: fifo: loadavg: 1.11 0.88 1.15 4/1092 10482          
