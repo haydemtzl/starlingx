@@ -147,4 +147,13 @@ $ wget https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std
 
 ```sh
 $ scripts/kconfig/merge_config.sh -m -n .config kernel-3.10.0-x86_64.config.tis_extra 
+...
+...
+Value of CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND is redefined by fragment kernel-3.10.0-x86_64.config.tis_extra:
+Previous value: # CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND is not set
+New value: CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=n
+
+#
+# merged configuration written to .config (needs make)
+#
 ```
