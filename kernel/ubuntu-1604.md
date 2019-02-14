@@ -316,5 +316,16 @@ user@workstation:~/linux$ git clean -f -d && git clean -f -X && git clean -fx &&
 ```
 
 ```sh
-user@workstation:~/linux$ poatch -p1 < patch-4.14-rt1.patch
+user@workstation:~/linux$ patch -p1 < patch-4.14-rt1.patch
+```
+
+```sh
+user@workstation:~/linux$ make
+```
+
+From
+
+```sh
+user@workstation:~/starlingx/kernel/linux.mainline$ uname -a
+Linux workstation 4.15.0-43-generic #46~16.04.1-Ubuntu SMP Fri Dec 7 13:31:08 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
