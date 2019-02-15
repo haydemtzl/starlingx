@@ -182,6 +182,8 @@ Date:   Tue Apr 30 15:28:03 2013 -0700
 
 It all started here for _set_cpus_allowed_ptr_ under _\_\_call_usermodehelper_ _kernel/kmod.c_:
 
+- [log kernel/kmod.c](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/kernel/kmod.c)
+
 ```
 commit f70316dace2bb99730800d47044acb818c6735f6
 Author: Mike Travis <travis@sgi.com>
@@ -190,14 +192,14 @@ Date:   Fri Apr 4 18:11:06 2008 -0700
     generic: use new set_cpus_allowed_ptr function
 ```
 
-This patch is very important! 
+This patch is very important!
 
 ```c
 -       set_cpus_allowed_ptr(current, CPU_MASK_ALL_PTR);
 +       set_cpus_allowed_ptr(current, cpu_all_mask);
 ```
 
-[1a2142afa5646ad5af44bbe1febaa5e0b7e71156](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1a2142afa5646ad5af44bbe1febaa5e0b7e71156)
+- [1a2142afa5646ad5af44bbe1febaa5e0b7e71156](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1a2142afa5646ad5af44bbe1febaa5e0b7e71156)
 
 ```sh
 commit 1a2142afa5646ad5af44bbe1febaa5e0b7e71156
@@ -205,6 +207,33 @@ Author: Rusty Russell <rusty@rustcorp.com.au>
 Date:   Mon Mar 30 22:05:10 2009 -0600
 
     cpumask: remove dangerous CPU_MASK_ALL_PTR, &CPU_MASK_ALL
+```
+
+This is where all legacy code (where StarlingX applied) was replaced!
+
+- [898b374af6f71041bd3bceebe257e564f3f1d458](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=898b374af6f71041bd3bceebe257e564f3f1d458)
+
+```
+commit 898b374af6f71041bd3bceebe257e564f3f1d458
+Author: Neil Horman <nhorman@tuxdriver.com>
+Date:   Wed May 26 14:42:59 2010 -0700
+
+    exec: replace call_usermodehelper_pipe with use of umh init function and resolve limit
+```
+
+- [kmod: move call_usermodehelper_fns\(\) to .c file and unexport all it's helpers](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/kmod.c?id=785042f2e275089e22c36b462f6495ce8d91732d)
+- [kmod: add up-to-date explanations on the purpose of each asynchronous levels](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/kmod.c?id=b639e86bae431db3fbc9fae8d09a9bbf97b74711)
+
+This is the end
+
+- [235586939d7fe4833ada9e988f92af543ee6851f](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=235586939d7fe4833ada9e988f92af543ee6851f)
+
+```
+commit 235586939d7fe4833ada9e988f92af543ee6851f
+Author: Luis R. Rodriguez <mcgrof@kernel.org>
+Date:   Fri Sep 8 16:17:00 2017 -0700
+
+    kmod: split out umh code into its own file
 ```
 
 ## Patch StarlingX
