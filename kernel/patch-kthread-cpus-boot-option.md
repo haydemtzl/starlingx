@@ -151,7 +151,7 @@ kernel/cpu.c:struct cpumask __cpu_kthread_mask __read_mostly;
 kernel/cpu.c:EXPORT_SYMBOL(__cpu_kthread_mask);
 ```
 
-### kernel/kmod.c set_cpus_allowed_ptr
+### kernel/kmod.c call_usermodehelper set_cpus_allowed_ptr
 
 Where does _set_cpus_allowed_ptr_ go? In the past it was under _\_\_call_usermodehelper_ _kernel/kmod.c_
 Take a look at these changes to understand the new landing place:
@@ -235,6 +235,83 @@ Date:   Fri Sep 8 16:17:00 2017 -0700
 
     kmod: split out umh code into its own file
 ```
+
+So our patch modified call_usermodehelper:
+
+```
+--- linux.orig/kernel/kmod.c	2013-09-05 14:55:24.000000000 -0500
++++ linux/kernel/kmod.c	2013-09-05 14:56:29.412657249 -0500
+@@ -209,8 +209,8 @@ static int ____call_usermodehelper(void
+ 	flush_signal_handlers(current, 1);
+ 	spin_unlock_irq(&current->sighand->siglock);
+
+-	/* We can run anywhere, unlike our parent keventd(). */
+-	set_cpus_allowed_ptr(current, cpu_all_mask);
++	/* We can run only where init is allowed to run. */
++	set_cpus_allowed_ptr(current, cpu_kthread_mask);
+```
+
+```
+user@workstation:~/starlingx/kernel/linux.github$ git grep set_cpus_allowed_ptr
+arch/blackfin/kernel/process.c:         set_cpus_allowed_ptr(current, cpumask_of(smp_processor_id()));
+arch/mips/kernel/mips-mt-fpaff.c:               retval = set_cpus_allowed_ptr(p, effective_mask);
+arch/mips/kernel/mips-mt-fpaff.c:               retval = set_cpus_allowed_ptr(p, new_mask);
+arch/mips/kernel/traps.c:                       set_cpus_allowed_ptr(current, &tmask);
+arch/x86/kernel/apm_32.c:               set_cpus_allowed_ptr(current, cpumask_of(0));
+arch/x86/kernel/apm_32.c:       set_cpus_allowed_ptr(current, cpumask_of(0));
+drivers/acpi/acpi_pad.c:        set_cpus_allowed_ptr(current, cpumask_of(preferred_cpu));
+drivers/block/drbd/drbd_main.c: set_cpus_allowed_ptr(p, resource->cpu_mask);
+drivers/crypto/caam/qi.c:       set_cpus_allowed_ptr(current, get_cpu_mask(mod_init_cpu));
+drivers/crypto/caam/qi.c:       set_cpus_allowed_ptr(current, &old_cpumask);
+drivers/crypto/caam/qi.c:       set_cpus_allowed_ptr(current, get_cpu_mask(mod_init_cpu));
+drivers/crypto/caam/qi.c:       set_cpus_allowed_ptr(current, &old_cpumask);
+drivers/misc/sgi-xp/xpc_main.c: set_cpus_allowed_ptr(current, cpumask_of(XPC_HB_CHECK_CPU));
+drivers/staging/lustre/lnet/libcfs/linux/linux-cpu.c:           rc = set_cpus_allowed_ptr(current, cpumask);
+include/linux/sched.h:extern int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask);
+include/linux/sched.h:static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask)
+include/linux/tick.h:           set_cpus_allowed_ptr(t, housekeeping_mask);
+include/target/iscsi/iscsi_target_core.h:       set_cpus_allowed_ptr(p, conn->conn_cpumask);
+init/main.c:    set_cpus_allowed_ptr(tsk, cpumask_of(smp_processor_id()));
+init/main.c:        set_cpus_allowed_ptr(current, cpu_kthread_mask);
+kernel/cgroup/cpuset.c:         set_cpus_allowed_ptr(task, cs->effective_cpus);
+kernel/cgroup/cpuset.c:         WARN_ON_ONCE(set_cpus_allowed_ptr(task, cpus_attach));
+kernel/cgroup/cpuset.c: set_cpus_allowed_ptr(task, &current->cpus_allowed);
+kernel/cgroup/cpuset.c:  * subsequent cpuset_change_cpumask()->set_cpus_allowed_ptr()
+kernel/cgroup/cpuset.c:  * the pending set_cpus_allowed_ptr() will fix things.
+kernel/irq/manage.c: *  set_cpus_allowed_ptr() here as we hold desc->lock and this
+kernel/irq/manage.c:            set_cpus_allowed_ptr(current, mask);
+kernel/kthread.c:               set_cpus_allowed_ptr(task, cpu_kthread_mask);
+kernel/kthread.c:       set_cpus_allowed_ptr(tsk, cpu_kthread_mask);
+kernel/rcu/rcuperf.c:   set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+kernel/rcu/rcuperf.c:   set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+kernel/rcu/tree_plugin.h:       set_cpus_allowed_ptr(t, cm);
+kernel/reboot.c:        set_cpus_allowed_ptr(current, cpumask_of(cpu));
+kernel/sched/core.c:     * during wakeups, see set_cpus_allowed_ptr()'s TASK_WAKING test.
+kernel/sched/core.c:static int __set_cpus_allowed_ptr(struct task_struct *p,
+kernel/sched/core.c:int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask)
+kernel/sched/core.c:    return __set_cpus_allowed_ptr(p, new_mask, false);
+kernel/sched/core.c:EXPORT_SYMBOL_GPL(set_cpus_allowed_ptr);
+kernel/sched/core.c: *    see __set_cpus_allowed_ptr(). At this point the newly online
+kernel/sched/core.c:static inline int __set_cpus_allowed_ptr(struct task_struct *p,
+kernel/sched/core.c:    return set_cpus_allowed_ptr(p, new_mask);
+kernel/sched/core.c:    retval = __set_cpus_allowed_ptr(p, new_mask, true);
+kernel/sched/core.c:     * success of set_cpus_allowed_ptr() on all attached tasks
+kernel/sched/core.c:    if (set_cpus_allowed_ptr(current, non_isolated_cpus) < 0)
+kernel/torture.c:               set_cpus_allowed_ptr(stp->st_t, shuffle_tmp_mask);
+kernel/workqueue.c:      * set_cpus_allowed_ptr() will fail if the cpumask doesn't have any
+kernel/workqueue.c:     set_cpus_allowed_ptr(worker->task, pool->attrs->cpumask);
+kernel/workqueue.c:             WARN_ON_ONCE(set_cpus_allowed_ptr(worker->task,
+kernel/workqueue.c:             WARN_ON_ONCE(set_cpus_allowed_ptr(worker->task, &cpumask) < 0);
+mm/compaction.c:                set_cpus_allowed_ptr(tsk, cpumask);
+mm/compaction.c:                        set_cpus_allowed_ptr(pgdat->kcompactd, mask);
+mm/page_alloc.c:                set_cpus_allowed_ptr(current, cpumask);
+mm/vmscan.c:            set_cpus_allowed_ptr(tsk, cpumask);
+mm/vmscan.c:                    set_cpus_allowed_ptr(pgdat->kswapd, mask);
+net/sunrpc/svc.c:               set_cpus_allowed_ptr(task, cpumask_of(node));
+net/sunrpc/svc.c:               set_cpus_allowed_ptr(task, cpumask_of_node(node));
+```
+
+Where change will be under [kernel/kmod.c](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kmod.c)?
 
 ## Patch StarlingX
 
