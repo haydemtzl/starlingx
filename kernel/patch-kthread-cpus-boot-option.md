@@ -47,3 +47,7 @@ But! [Deprecated - use cpusets instead](https://git.kernel.org/pub/scm/linux/ker
 ```sh
 user@workstation:~/starlingx/kernel/linux.github$ git grep cpusets
 ```
+
+# Testing
+
+- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/kernel-parameters.rst#n73
