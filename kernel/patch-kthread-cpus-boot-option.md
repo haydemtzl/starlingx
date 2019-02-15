@@ -6,6 +6,8 @@
 
 - [\[RFC\] Restrict kernel spawning of threads to a specified set of cpus.](https://lwn.net/Articles/565932/)
 
+### cpu_all_mask 
+
 - [cpu_all_mask](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/cpumask.h#n769)
 
 ```
@@ -13,6 +15,66 @@
  * so it has to refer to an address rather than a pointer. */
 extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 #define cpu_all_mask to_cpumask(cpu_all_bits)
+```
+
+### 
+
+- [0 x86_64_start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/head64.c#n405)
+- [1 start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n537)
+  - [start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/start_kernel.h)
+- [2 arch_call_rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n739)
+  - [arch_call_rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n532)
+  - [rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n534)
+- [3 rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n397)
+
+```c
+noinline void __ref rest_init(void)
+{
+	struct task_struct *tsk;
+	int pid;
+
+	rcu_scheduler_starting();
+	/*
+	 * We need to spawn init first so that it obtains pid 1, however
+	 * the init task will end up wanting to create kthreads, which, if
+	 * we schedule it before we create kthreadd, will OOPS.
+	 */
+	pid = kernel_thread(kernel_init, NULL, CLONE_FS);
+	/*
+	 * Pin init on the boot CPU. Task migration is not properly working
+	 * until sched_init_smp() has been run. It will set the allowed
+	 * CPUs for init to the non isolated CPUs.
+	 */
+	rcu_read_lock();
+	tsk = find_task_by_pid_ns(pid, &init_pid_ns);
+	set_cpus_allowed_ptr(tsk, cpumask_of(smp_processor_id()));
+	rcu_read_unlock();
+
+	numa_default_policy();
+	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
+	rcu_read_lock();
+	kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
+	rcu_read_unlock();
+
+	/*
+	 * Enable might_sleep() and smp_processor_id() checks.
+	 * They cannot be enabled earlier because with CONFIG_PREEMPT=y
+	 * kernel_thread() would trigger might_sleep() splats. With
+	 * CONFIG_PREEMPT_VOLUNTARY=y the init task might have scheduled
+	 * already, but it's stuck on the kthreadd_done completion.
+	 */
+	system_state = SYSTEM_SCHEDULING;
+
+	complete(&kthreadd_done);
+
+	/*
+	 * The boot idle thread must execute schedule()
+	 * at least once to get things moving:
+	 */
+	schedule_preempt_disabled();
+	/* Call into cpu_idle with preempt disabled */
+	cpu_startup_entry(CPUHP_ONLINE);
+}
 ```
 
 ## Patch StarlingX
