@@ -153,7 +153,7 @@ kernel/cpu.c:EXPORT_SYMBOL(__cpu_kthread_mask);
 
 ### kernel/kmod.c set_cpus_allowed_ptr
 
-Where does _set_cpus_allowed_ptr_ go? In the past it was under _\_\_call_usermodehelper_
+Where does _set_cpus_allowed_ptr_ go? In the past it was under _\_\_call_usermodehelper_ _kernel/kmod.c_
 Take a look at these changes to understand the new landing place:
 
 ```sh
@@ -178,6 +178,33 @@ Author: Lucas De Marchi <lucas.demarchi@profusion.mobi>
 Date:   Tue Apr 30 15:28:03 2013 -0700
 
     kmod: split call to call_usermodehelper_fns()
+```
+
+It all started here for _set_cpus_allowed_ptr_ under _\_\_call_usermodehelper_ _kernel/kmod.c_:
+
+```
+commit f70316dace2bb99730800d47044acb818c6735f6
+Author: Mike Travis <travis@sgi.com>
+Date:   Fri Apr 4 18:11:06 2008 -0700
+
+    generic: use new set_cpus_allowed_ptr function
+```
+
+This patch is very important! 
+
+```c
+-       set_cpus_allowed_ptr(current, CPU_MASK_ALL_PTR);
++       set_cpus_allowed_ptr(current, cpu_all_mask);
+```
+
+[1a2142afa5646ad5af44bbe1febaa5e0b7e71156](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1a2142afa5646ad5af44bbe1febaa5e0b7e71156)
+
+```sh
+commit 1a2142afa5646ad5af44bbe1febaa5e0b7e71156
+Author: Rusty Russell <rusty@rustcorp.com.au>
+Date:   Mon Mar 30 22:05:10 2009 -0600
+
+    cpumask: remove dangerous CPU_MASK_ALL_PTR, &CPU_MASK_ALL
 ```
 
 ## Patch StarlingX
