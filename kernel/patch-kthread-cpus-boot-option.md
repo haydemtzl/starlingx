@@ -1,7 +1,8 @@
 # Kthread CPUs Kernel Boot Option
 
-## Background
+- [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch)
 
+## Background
 
 > From [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
 
@@ -39,4 +40,10 @@ kernel/sched/topology.c:        ret = cpulist_parse(str, cpu_isolated_map);
 kernel/sched/topology.c:        cpumask_andnot(doms_cur[0], cpu_map, cpu_isolated_map);
 kernel/sched/topology.c:                        cpumask_andnot(doms_new[0], cpu_active_mask, cpu_isolated_map);
 kernel/sched/topology.c:                cpumask_andnot(doms_new[0], cpu_active_mask, cpu_isolated_map);
+```
+
+But! [Deprecated - use cpusets instead](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/kernel-parameters.txt#n1848)
+
+```sh
+user@workstation:~/starlingx/kernel/linux.github$ git grep cpusets
 ```
