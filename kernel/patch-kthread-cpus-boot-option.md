@@ -151,6 +151,35 @@ kernel/cpu.c:struct cpumask __cpu_kthread_mask __read_mostly;
 kernel/cpu.c:EXPORT_SYMBOL(__cpu_kthread_mask);
 ```
 
+### kernel/kmod.c set_cpus_allowed_ptr
+
+Where does _set_cpus_allowed_ptr_ go? In the past it was under _\_\_call_usermodehelper_
+Take a look at these changes to understand the new landing place:
+
+```sh
+commit 3e63a93b987685f02421e18b2aa452d20553a88b
+Author: Oleg Nesterov <oleg@redhat.com>
+Date:   Fri Mar 23 15:02:49 2012 -0700
+
+    kmod: introduce call_modprobe() helper
+```
+
+```sh
+commit 235586939d7fe4833ada9e988f92af543ee6851f
+Author: Luis R. Rodriguez <mcgrof@kernel.org>
+Date:   Fri Sep 8 16:17:00 2017 -0700
+
+    kmod: split out umh code into its own file
+```
+
+```sh
+commit f634460c90751da21745eec7a220edf76c7d0c76
+Author: Lucas De Marchi <lucas.demarchi@profusion.mobi>
+Date:   Tue Apr 30 15:28:03 2013 -0700
+
+    kmod: split call to call_usermodehelper_fns()
+```
+
 ## Patch StarlingX
 
 > From [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
