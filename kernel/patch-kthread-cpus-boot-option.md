@@ -105,6 +105,52 @@ static void __init do_basic_setup(void)
 }
 ```
 
+### NR_CPUS
+
+```
+config NR_CPUS
+        int "Maximum number of CPUs" if SMP && !MAXSMP
+        range 2 8 if SMP && X86_32 && !X86_BIGSMP
+        range 2 512 if SMP && !MAXSMP && !CPUMASK_OFFSTACK
+        range 2 8192 if SMP && !MAXSMP && CPUMASK_OFFSTACK && X86_64
+        default "1" if !SMP
+        default "8192" if MAXSMP
+        default "32" if SMP && X86_BIGSMP
+        default "8" if SMP && X86_32
+        default "64" if SMP
+        ---help---
+          This allows you to specify the maximum number of CPUs which this
+          kernel will support.  If CPUMASK_OFFSTACK is enabled, the maximum
+          supported value is 8192, otherwise the maximum value is 512.  The
+          minimum value which makes sense is 2.
+
+          This is purely to save memory - each supported CPU adds
+          approximately eight kilobytes to the kernel image.
+```
+
+### cpu_kthread_mask
+
+Taking _cpu_active_mask_ as an example
+
+```sh
+user@workstation:~/starlingx/kernel/linux.github$ git grep __cpu_active_mask
+include/linux/cpumask.h:extern struct cpumask __cpu_active_mask;
+include/linux/cpumask.h:#define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+include/linux/cpumask.h:                cpumask_set_cpu(cpu, &__cpu_active_mask);
+include/linux/cpumask.h:                cpumask_clear_cpu(cpu, &__cpu_active_mask);
+kernel/cpu.c:struct cpumask __cpu_active_mask __read_mostly;
+kernel/cpu.c:EXPORT_SYMBOL(__cpu_active_mask);
+scripts/gdb/linux/cpus.py:    for cpu in cpu_list("__cpu_active_mask"):
+```
+
+```sh
+user@workstation:~/starlingx/kernel/linux.github$ git grep __cpu_kthread_mask
+include/linux/cpumask.h:extern struct cpumask __cpu_kthread_mask;
+include/linux/cpumask.h:#define cpu_kthread_mask  ((const struct cpumask *)&__cpu_kthread_mask)
+kernel/cpu.c:struct cpumask __cpu_kthread_mask __read_mostly;
+kernel/cpu.c:EXPORT_SYMBOL(__cpu_kthread_mask);
+```
+
 ## Patch StarlingX
 
 > From [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
