@@ -2,9 +2,9 @@
 
 - [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch)
 
-## Background
+## Patch Original
 
-### General
+- [\[RFC\] Restrict kernel spawning of threads to a specified set of cpus.](https://lwn.net/Articles/565932/)
 
 - [cpu_all_mask](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/cpumask.h#n769)
 
@@ -15,13 +15,13 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 #define cpu_all_mask to_cpumask(cpu_all_bits)
 ```
 
-### Details
+## Patch StarlingX
 
 > From [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
 
 - [Documentation/admin-guide/kernel-parameters.rst](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/kernel-parameters.txt#n1847)
 
-#### isolcpus
+### isolcpus
 
 ```
 user@workstation:~/starlingx/kernel/linux.github$ git grep isolcpus
@@ -37,7 +37,7 @@ kernel/sched/topology.c:                pr_err("sched: Error, all isolcpus= valu
 kernel/sched/topology.c:__setup("isolcpus=", isolated_cpu_setup);
 ```
 
-#### cpu_isolated_map
+### cpu_isolated_map
 
 ```
 user@workstation:~/starlingx/kernel/linux.github$ git grep cpu_isolated_map
@@ -61,9 +61,10 @@ But! [Deprecated - use cpusets instead](https://git.kernel.org/pub/scm/linux/ker
 user@workstation:~/starlingx/kernel/linux.github$ git grep cpusets
 ```
 
-# Testing
+## Testing
 
 - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/kernel-parameters.rst#n73
 
-# Support
+## Support
 
+Tbd
