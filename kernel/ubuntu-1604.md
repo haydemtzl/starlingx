@@ -285,22 +285,6 @@ Issues? Computer hang! Will test removing __CONFIG_PREEMPT__.
 
 ## RT Patch
 
-```
-CONFIG_PREEMPT_RT_FULL:
-
-All and everything
-
-Symbol: PREEMPT_RT_FULL [=y]
-Type  : boolean
-Prompt: Fully Preemptible Kernel (RT)
-  Location:
-    -> Processor type and features
-      -> Preemption Model (<choice> [=y])
-  Defined at kernel/Kconfig.preempt:76
-Depends on: <choice> && IRQ_FORCED_THREADING [=y]
-Selects: PREEMPT_RT_BASE [=y] && PREEMPT_RCU [=y]   
-```
-
 - [RT 4.14](http://cdn.kernel.org/pub/linux/kernel/projects/rt/4.14/)
 - Using [kernel: config-4.14.0 CONFIG_PREEMPT_RT_FULL ](https://github.com/xe1gyq/starlingx/commit/05f528fdbb7e5de075bba0e42d18306ae9e06388#diff-ef9338168208a30d9a07034844f14a1b)
 
@@ -324,6 +308,24 @@ user@workstation:~/linux$ git clean -f -d && git clean -f -X && git clean -fx &&
 
 ```sh
 user@workstation:~/linux$ patch -p1 < patch-4.14-rt1.patch
+```
+
+Make sure CONFIG_PREEMPT_RT_FULL is set to _y_
+
+```
+CONFIG_PREEMPT_RT_FULL:
+
+All and everything
+
+Symbol: PREEMPT_RT_FULL [=y]
+Type  : boolean
+Prompt: Fully Preemptible Kernel (RT)
+  Location:
+    -> Processor type and features
+      -> Preemption Model (<choice> [=y])
+  Defined at kernel/Kconfig.preempt:76
+Depends on: <choice> && IRQ_FORCED_THREADING [=y]
+Selects: PREEMPT_RT_BASE [=y] && PREEMPT_RCU [=y]   
 ```
 
 ```sh
