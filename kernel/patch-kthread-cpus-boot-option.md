@@ -3,7 +3,7 @@
 ## Background
 
 
-> From [\[PATCH\] affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
+> From [\[PATCH\] StarlingX: affine compute kernel threads](https://git.openstack.org/cgit/openstack/stx-integ/tree/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch) VT: The existing "isolcpus" kernel bootarg, cgroup/cpuset, and taskset might provide the some way to have cpu isolation.  However none of them satisfies the requirements. Replacing spaces with tabs. Combine two calls of set_cpus_allowed_ptr() in kernel_init_freeable() in init/main.c into one.
 
 - [Documentation/admin-guide/kernel-parameters.rst](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/kernel-parameters.txt#n1847)
 
