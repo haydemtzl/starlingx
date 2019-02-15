@@ -17,7 +17,7 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 #define cpu_all_mask to_cpumask(cpu_all_bits)
 ```
 
-### 
+### set_cpus_allowed_ptr? where to place in actual kernel?
 
 - [0 x86_64_start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/head64.c#n405)
 - [1 start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n537)
@@ -26,6 +26,7 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
   - [arch_call_rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n532)
   - [rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n534)
 - [3 rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n397)
+  - [kernel_thread(kernel_init, NULL, CLONE_FS);](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n408)
 
 ```c
 noinline void __ref rest_init(void)
@@ -74,6 +75,30 @@ noinline void __ref rest_init(void)
 	schedule_preempt_disabled();
 	/* Call into cpu_idle with preempt disabled */
 	cpu_startup_entry(CPUHP_ONLINE);
+}
+```
+
+- [X kernel_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n1050)
+- [X kernel_init_freeable](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n1103)
+  - [do_basic_setup](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n1136)
+
+```c
+/*
+ * Ok, the machine is now initialized. None of the devices
+ * have been touched yet, but the CPU subsystem is up and
+ * running, and memory and process management works.
+ *
+ * Now we can finally start doing some real work..
+ */
+static void __init do_basic_setup(void)
+{
+	cpuset_init_smp();
+	shmem_init();
+	driver_init();
+	init_irq_proc();
+	do_ctors();
+	usermodehelper_enable();
+	do_initcalls();
 }
 ```
 
