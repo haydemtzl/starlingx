@@ -19,6 +19,8 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 
 ### set_cpus_allowed_ptr? where to place in actual kernel?
 
+> Pay attention to _set_cpus_allowed_ptr_ and _do_basic_setup_
+
 - [0 x86_64_start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/head64.c#n405)
 - [1 start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n537)
   - [start_kernel](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/start_kernel.h)
@@ -27,6 +29,7 @@ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
   - [rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n534)
 - [3 rest_init](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n397)
   - [kernel_thread(kernel_init, NULL, CLONE_FS);](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n408)
+  - [set_cpus_allowed_ptr](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n416)
 
 ```c
 noinline void __ref rest_init(void)
