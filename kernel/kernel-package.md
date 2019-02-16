@@ -6,3 +6,6 @@
 
 - [Debian Linux Kernel Handbook](https://kernel-team.pages.debian.net/kernel-handbook/)
 
+```sh
+user@workstation:~/starlingx/kernel/linux.github$ make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-custom
+```
