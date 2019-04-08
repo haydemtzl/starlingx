@@ -269,3 +269,180 @@ cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/centos-7/Dockerfi
 cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/opensuse-13.2/Dockerfile.in \
 cgcs-root/stx/git/docker-distribution/BUILDING.md:People looking for advanced operational use cases might consider rolling their own image with a custom Dockerfile inheriting `FROM registry:
 ```
+
+```sh
+[builder@a51007fb8bff starlingx]$ repo grep bsp-files
+cgcs-root/build-tools/build-iso:   export BSP_FILES_PATH="$STX_DIR/stx-metal/bsp-files"
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/build_srpm.data:           $GIT_BASE/bsp-files/grub.cfg \
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/build_srpm.data:           $GIT_BASE/bsp-files/kickstarts/post_clone_iso_ks.cfg \
+cgcs-root/stx/stx-metal/kickstart/centos/build_srpm.data:SRC_DIR="${GIT_BASE}/bsp-files"
+```
+
+```sh
+[builder@a51007fb8bff starlingx]$ repo grep post_clone_iso_ks.cfg
+cgcs-root/stx/stx-config/controllerconfig/controllerconfig/controllerconfig/clone.py:        subprocess.check_output("cat /pxeboot/post_clone_iso_ks.cfg >> " +
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/build_srpm.data:           $GIT_BASE/bsp-files/kickstarts/post_clone_iso_ks.cfg \
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/pxe-network-installer.spec:Source013: post_clone_iso_ks.cfg
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/pxe-network-installer.spec:install -v -m 644 %{_sourcedir}/post_clone_iso_ks.cfg \
+cgcs-root/stx/stx-metal/installer/pxe-network-installer/centos/pxe-network-installer.spec:    %{buildroot}/pxeboot/post_clone_iso_ks.cfg
+```
+
+## [2]
+
+```sh
+[builder@a51007fb8bff stx-metal]$ ls -al bsp-files/
+total 116
+drwxr-xr-x  4 builder cgts  4096 Apr  8 12:15 .
+drwxr-xr-x 17 builder cgts  4096 Apr  8 09:13 ..
+-rwxr-xr-x  1 builder cgts 11940 Feb 11 10:24 centos-ks-gen.pl
+-rw-r--r--  1 builder cgts  7542 Feb 11 10:24 centos.syslinux.cfg
+-rw-r--r--  1 builder cgts   823 Mar 29 10:55 filter_out_from_controller
+-rw-r--r--  1 builder cgts   367 Mar 29 10:55 filter_out_from_smallsystem
+-rw-r--r--  1 builder cgts   321 Mar 29 10:55 filter_out_from_smallsystem_lowlatency
+-rw-r--r--  1 builder cgts  5977 Mar 29 10:55 filter_out_from_storage
+-rw-r--r--  1 builder cgts  5171 Mar 29 10:55 filter_out_from_worker
+-rw-r--r--  1 builder cgts  5182 Mar 29 10:55 filter_out_from_worker_lowlatency
+-rw-r--r--  1 builder cgts  9135 Feb 11 10:24 grub.cfg
+drwxr-xr-x  2 builder cgts  4096 Apr  8 09:13 kickstarts
+-rwxr-xr-x  1 builder cgts   825 Feb 11 10:24 pkg-list.pl
+-rw-r--r--  1 builder cgts  4314 Feb 11 10:24 platform_comps.py
+-rw-r--r--  1 builder cgts  7108 Feb 11 10:24 pxeboot.cfg
+-rw-r--r--  1 builder cgts  5637 Feb 11 10:24 pxeboot_grub.cfg
+-rwxr-xr-x  1 builder cgts  3168 Feb 11 10:24 pxeboot_setup.sh
+drwxr-xr-x  2 builder cgts  4096 Feb 11 10:24 upgrades
+```
+
+- bsp-files/centos.syslinux.cfg
+
+```sh
+menu begin
+  menu title Standard Controller Configuration
+```
+
+```sh
+[builder@a51007fb8bff stx-metal]$ ls -al bsp-files/filter_out_from_*
+-rw-r--r-- 1 builder cgts  823 Mar 29 10:55 bsp-files/filter_out_from_controller
+-rw-r--r-- 1 builder cgts  367 Mar 29 10:55 bsp-files/filter_out_from_smallsystem
+-rw-r--r-- 1 builder cgts  321 Mar 29 10:55 bsp-files/filter_out_from_smallsystem_lowlatency
+-rw-r--r-- 1 builder cgts 5977 Mar 29 10:55 bsp-files/filter_out_from_storage
+-rw-r--r-- 1 builder cgts 5171 Mar 29 10:55 bsp-files/filter_out_from_worker
+-rw-r--r-- 1 builder cgts 5182 Mar 29 10:55 bsp-files/filter_out_from_worker_lowlatency
+```
+
+- bsp-files/grub.cfg
+
+```sh
+# ---------------------- NOTE ----------------------
+# If you are updating menus, make sure that controllerconfig/clone.py
+# is in sync with your changes (only serial console ids).
+#     STANDARD_STANDARD = 'standard>serial>' + 
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_STANDARD
+#     STANDARD_EXTENDED = 'standard>serial>' +
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_EXTENDED
+#     AIO_STANDARD = 'standard>aio>' +
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_STANDARD
+#     AIO_EXTENDED = 'standard>aio>'  +
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_EXTENDED
+#     AIO_LL_STANDARD = 'standard>aio-lowlat>' +
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_STANDARD
+#     AIO_LL_EXTENDED = 'standard>aio-lowlat>'  +
+#                         sysinv_constants.SYSTEM_SECURITY_PROFILE_EXTENDED
+#     SUBMENUITEM_TBOOT = 'tboot'
+#     SUBMENUITEM_SECUREBOOT = 'secureboot'
+# --------------------------------------------------
+```
+
+- bsp-files/platform_comps.py
+
+
+```sh
+    add_group(comps, 'controller', rpmlist,
+              filter_dir, 'filter_out_from_controller')
+    add_group(comps, 'controller-worker', rpmlist,
+              filter_dir, 'filter_out_from_smallsystem')
+    add_group(comps, 'controller-worker-lowlatency', rpmlist,
+              filter_dir, 'filter_out_from_smallsystem_lowlatency')
+    add_group(comps, 'worker', rpmlist, filter_dir, 'filter_out_from_worker')
+    add_group(comps, 'worker-lowlatency', rpmlist,
+              filter_dir, 'filter_out_from_worker_lowlatency')
+    add_group(comps, 'storage', rpmlist, filter_dir, 'filter_out_from_storage')
+
+    add_group(comps, 'controller')
+    add_group(comps, 'controller-worker')
+    add_group(comps, 'controller-worker-lowlatency')
+    add_group(comps, 'worker')
+    add_group(comps, 'worker-lowlatency')
+    add_group(comps, 'storage')
+```
+
+```sh
+[builder@a51007fb8bff stx-metal]$ ls -al bsp-files/kickstarts/
+total 140
+drwxr-xr-x 2 builder cgts 4096 Apr  8 09:13 .
+drwxr-xr-x 4 builder cgts 4096 Apr  8 12:21 ..
+-rw-r--r-- 1 builder cgts 1383 Feb 11 10:24 functions.sh
+-rw-r--r-- 1 builder cgts  926 Feb 11 10:24 post_clone_iso_ks.cfg
+-rw-r--r-- 1 builder cgts 3636 Feb 11 10:24 post_common.cfg
+-rw-r--r-- 1 builder cgts 3445 Mar 29 10:55 post_kernel_aio_and_worker.cfg
+-rw-r--r-- 1 builder cgts 1512 Feb 11 10:24 post_kernel_controller.cfg
+-rw-r--r-- 1 builder cgts 1335 Feb 11 10:24 post_kernel_storage.cfg
+-rw-r--r-- 1 builder cgts  449 Feb 11 10:24 post_lvm_no_pv_on_rootfs.cfg
+-rw-r--r-- 1 builder cgts  723 Feb 11 10:24 post_lvm_pv_on_rootfs.cfg
+-rwxr-xr-x 1 builder cgts 4040 Feb 11 10:24 post_net_common.cfg
+-rw-r--r-- 1 builder cgts 3113 Feb 11 10:24 post_net_controller.cfg
+-rw-r--r-- 1 builder cgts  459 Feb 11 10:24 post_platform_conf_aio.cfg
+-rw-r--r-- 1 builder cgts  470 Feb 11 10:24 post_platform_conf_aio_lowlatency.cfg
+-rw-r--r-- 1 builder cgts  450 Feb 11 10:24 post_platform_conf_controller.cfg
+-rw-r--r-- 1 builder cgts  722 Feb 11 10:24 post_platform_conf_storage.cfg
+-rw-r--r-- 1 builder cgts  903 Feb 11 10:24 post_platform_conf_worker.cfg
+-rw-r--r-- 1 builder cgts  914 Feb 11 10:24 post_platform_conf_worker_lowlatency.cfg
+-rw-r--r-- 1 builder cgts 4397 Feb 11 10:24 post_pxeboot_controller.cfg
+-rw-r--r-- 1 builder cgts 1200 Feb 11 10:24 post_system_aio.cfg
+-rw-r--r-- 1 builder cgts 2605 Feb 11 10:24 post_usb_controller.cfg
+-rw-r--r-- 1 builder cgts 4479 Feb 11 10:24 post_yow_controller.cfg
+-rw-r--r-- 1 builder cgts 1818 Feb 11 10:24 pre_common_head.cfg
+-rwxr-xr-x 1 builder cgts 4456 Feb 11 10:24 pre_disk_aio.cfg
+-rwxr-xr-x 1 builder cgts 1036 Feb 11 10:24 pre_disk_controller.cfg
+-rw-r--r-- 1 builder cgts 5286 Feb 11 10:24 pre_disk_setup_common.cfg
+-rwxr-xr-x 1 builder cgts 1069 Feb 11 10:24 pre_disk_storage.cfg
+-rwxr-xr-x 1 builder cgts 1471 Feb 11 10:24 pre_disk_worker.cfg
+-rw-r--r-- 1 builder cgts  215 Feb 11 10:24 pre_net_common.cfg
+-rw-r--r-- 1 builder cgts  311 Feb 11 10:24 pre_pkglist.cfg
+-rw-r--r-- 1 builder cgts  260 Feb 11 10:24 pre_pkglist_lowlatency.cfg
+```
+
+## [3]
+
+- [builder@a51007fb8bff stx-metal]$ git log bsp-files/
+
+```sh
+[builder@a51007fb8bff stx-metal]$ git show 8267e3ce994e224657b172775b68d1762ab14711
+
+    Add ntpd to installer, sync time from active controller during install
+    
+    To avoid potential issues due to large time jumps when NTP first syncs
+    the system time at runtime, this update adds ntpd to the installer
+    rootfs and adds a pre-script to the kickstarts to sync the time from
+    the active controller before starting to install the software. This
+    also ensures that any filesystem timestamps will be accurate right
+    from the node installation.
+
+```
+
+## [4]
+
+- [builder@a51007fb8bff starlingx]$ repo grep pxecontroller
+
+
+## [5] How are the different directories called?
+
+- installer/pxe-network-installer/
+- kickstart/
+
+## [6] Others
+
+- What is this file for?
+
+```
+bsp-files/upgrades/metadata.xml
+```
