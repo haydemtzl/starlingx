@@ -237,3 +237,35 @@ stx-tools/Dockerfile
 stx-tools/centos-mirror-tools/rpms_centos.lst
 stx-tools/centos-mirror-tools/utils_tests.sh
 ```
+
+```sh
+cgcs-root/build-tools/update-pxe-network-installer:mk_images_tool="$same_folder/make-installer-images.sh"
+cgcs-root/build-tools/make-installer-images.sh:## this script is called by "update-pxe-network-installer" and run in "sudo"
+stx-tools/centos-mirror-tools/download_mirror.sh:echo "running \"update-pxe-network-installer\" command after \"build-iso\""
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/helm/common.py:# Matches configassistant.py value => Should change to STARLINGX
+cgcs-root/build-tools/build-pkgs-parallel:   TARGETS_INSTALLER="$(find_targets centos_pkg_dirs_installer)"
+cgcs-root/build-tools/build-pkgs-serial:   TARGETS_INSTALLER="$(find_targets centos_pkg_dirs_installer)"
+cgcs-root/stx/stx-metal/bsp-files/centos-ks-gen.pl:                  "post_common.cfg",
+cgcs-root/stx/stx-metal/bsp-files/centos-ks-gen.pl:                  "post_net_controller.cfg",
+cgcs-root/stx/stx-metal/bsp-files/centos-ks-gen.pl:                  "post_pxeboot_controller.cfg");
+cgcs-root/stx/stx-metal/bsp-files/centos-ks-gen.pl:                      "post_yow_controller.cfg");
+```
+
+```sh
+[builder@a51007fb8bff starlingx]$ repo grep Dockerfile.in
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/debian-jessie/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/ubuntu-12.04/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/ubuntu-14.04/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/fedora-21/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/centos-6/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/centos-7/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/Makefile.in: $(srcdir)/test/opensuse-13.2/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/debian-jessie/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/ubuntu-12.04/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/ubuntu-14.04/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/fedora-21/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/centos-6/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/centos-7/Dockerfile.in \
+cgcs-root/stx/git/ceph/src/test/Makefile.am:    $(srcdir)/test/opensuse-13.2/Dockerfile.in \
+cgcs-root/stx/git/docker-distribution/BUILDING.md:People looking for advanced operational use cases might consider rolling their own image with a custom Dockerfile inheriting `FROM registry:
+```
