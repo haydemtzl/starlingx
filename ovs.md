@@ -90,17 +90,110 @@ Author: Steven Webster <steven.webster@windriver.com>
   - _get_host_lldp_config
 
 ```sh
-commit 99ef34d919a03c5b80f7ee1070a863c8acd13810                                                                                                                                               │···
-Author: Steven Webster <steven.webster@windriver.com>                                                                                                                                         │···
-Date:   Mon Oct 15 13:54:02 2018 -0400                                                                                                                                                        │···
-                                                                                                                                                                                              │···
-    Puppet: enforce OVS init/config order                                                                                                                                                     │···
-                                                                                                                                                                                              │···
-    During debugging of a separate, unrelated issue, it was found that                                                                                                                        │···
-    there were instances of ports being added to OVS bridges after                                                                                                                            │···
-    the dpdk-init config option was passed to OVS.                                                                                                                                            │···
-                                                                                                                                                                                              │···
-    Although there doesn't seem to be an actual execution error here,                                                                                                                         │···
-    it seems proper to ensure that the dpdk-init happens before DPDK                                                                                                                          │···
+commit 99ef34d919a03c5b80f7ee1070a863c8acd13810                                                                                                                                               Author: Steven Webster <steven.webster@windriver.com>                                                                                                                                         Date:   Mon Oct 15 13:54:02 2018 -0400
+
+    Puppet: enforce OVS init/config order
+    
+    During debugging of a separate, unrelated issue, it was found that
+    there were instances of ports being added to OVS bridges after
+    the dpdk-init config option was passed to OVS.
+
+    Although there doesn't seem to be an actual execution error here,
+    it seems proper to ensure that the dpdk-init happens before DPDK
     enabled ports are added.  
+```
+
+- puppet-manifests/src/modules/platform/manifests/vswitch.pp
+  - Vs_config<||> -> Platform::Vswitch::Ovs::Bridge<||>
+
+
+```sh
+commit 74baed87deef6c5565581b71875aa44d07271663                                                                                                                                               Author: Steven Webster <steven.webster@windriver.com>                                                                                                                                         Date:   Mon Dec 17 15:41:54 2018 -0500                                                                                                                                                        
+
+    Enable configurable vswitch memory
+    Currently, a DPDK enabled vswitch makes use of a fixed 1G hugepage to
+    enable an optimized datapath.
+    
+    In the case of OVS-DPDK, this can cause an issue when changing the
+    MTU of one or more interfaces, as a separate mempool is allocated
+    for each size.  If the minimal mempool size(s) cannot fit into the
+    1G page, DPDK memory initialization will fail.
+    
+    This commit allows an operator to configure the amount of hugepage
+    memory allocated to each socket on a host, which can enable
+    jumboframe support for OVS-DPDK.
+    
+        The system memory command has been modified to accept vswitch
+    hugepage configuration via the function flag. ie:
+    
+    system host-memory-modify -f vswitch -1G 4 <worker_name> <node>
+```
+
+- puppet-manifests/src/modules/platform/manifests/compute.pp
+  - g_hugepages
+  - number_of_numa_nodes
+- puppet-manifests/src/modules/platform/manifests/vswitch.pp
+  - ovsdb-server
+  - Service['openvswitch']
+  - platform/ovs.disable-dpdk-init.erb
+  - Service['ovsdb-server']
+
+```
++    # Since OVS socket memory is configurable, it is required to start the
++    # ovsdb server and disable DPDK initialization before the openvswitch
++    # service runs to prevent any previously stored OVSDB configuration from
++    # being used before the new Vs_config gets applied.
+```
+
+- puppet-manifests/src/modules/platform/templates/ovs.disable-dpdk-init.erb
+
+```sh
++# Disable DPDK initialization in ovsdb
++# ovs-vsctl is not used here as it can fail after the initial start of ovsdb
++# (even though the dpdk-init parameter actually gets applied).
++ovsdb-client -v transact '["Open_vSwitch", {"op" : "mutate", "table": "Open_vSwitch", "where": [], "mutations" : [["other_config","delete", ["map",[["dpdk-init", "true"]]]]]}]'
++ovsdb-client -v transact '["Open_vSwitch", {"op" : "mutate", "table": "Open_vSwitch", "where": [], "mutations" : [["other_config","insert", ["map",[["dpdk-init", "false"]]]]]}]'
+```
+
+- sysinv/cgts-client/cgts-client/cgtsclient/v1/iHost_shell.py
+  - do_host_apply_memprofile
+    - field_labels
+    - fields
+  - vm_hugepages_2M_pending
+  - vm_hugepages_1G_pending
+  - vswitch_hugepages_nr
+  - vswitch_hugepages_size_reqd
+  - vswitch_hugepages_size_mib
+- sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+  - _print_imemory_show
+    - vswitch_hugepages_reqd
+  - do_host_memory_list
+    - vswitch_hugepages_reqd
+  - do_host_memory_list
+    - vs_hp_reqd
+  - The number of 2M vm huge pages for the numa node
+  - The number of 1G vm huge pages for the numa node
+  - hugepages_nr_2M_pending
+  - hugepages_nr_1G_pending
+- sysinv/sysinv/sysinv/etc/sysinv/profileSchema.xsd
+  - vsHugePagesNr
+  - vsHugePagesSz
+- sysinv/sysinv/sysinv/sysinv/agent/node.py
+  - _get_vswitch_reserved_memory
+  - vswitch_hugepages_size_mib
+  - vswitch_hugepages_nr
+  - vswitch_hugepages_avail
+- sysinv/sysinv/sysinv/sysinv/api/controllers/v1/host.py
+  - vswitch_hugepages_reqd
+  - vswitch_hugepages_nr
+  - vswitch_hugepages_size_mib
+  - vswitch_hp_size
+  - pecan.request.dbapi.imemory_get_by_inode
+- sysinv/sysinv/sysinv/sysinv/api/controllers/v1/memory.py
+  - vswitch_hugepages_reqd
+  - vswitch_hugepages_size_mib
+  - _check_huge_values
+  
+```sh
+
 ```
