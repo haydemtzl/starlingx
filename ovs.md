@@ -249,6 +249,8 @@ Date:   Wed Jan 30 19:44:57 2019 +0800
 ```
 
 - controllerconfig/controllerconfig/controllerconfig/configassistant.py
+  - self.vswitch_type = "none"
+- kubernetes/applications/stx-openstack/stx-openstack-helm/stx-openstack-helm/manifests/manifest.yaml
 
 ```sh
  schema: armada/Chart/v1
