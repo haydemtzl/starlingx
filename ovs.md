@@ -1,3 +1,18 @@
+```
+[builder@a51007fb8bff stx-config]$ repo grep openvswitch | grep rpm
+cgcs-root/stx/git/ironic/devstack/files/rpms/ironic:openvswitch
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-check-with-condition.patch: SPECS/openvswitch.spec | 2 +-
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-check-with-condition.patch:diff --git a/SPECS/openvswitch.spec b/SPECS/openvswitch.spec
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-check-with-condition.patch:--- a/SPECS/openvswitch.spec
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-check-with-condition.patch:+++ b/SPECS/openvswitch.spec
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/srpm_path:mirror:/Source/openvswitch-2.9.0-3.el7.src.rpm
+stx-tools/centos-mirror-tools/rpms_centos.lst:openvswitch-2.9.0-3.el7.src.rpm
+```
+
+## openvswitch
+
+> [builder@a51007fb8bff stx-integ]$ 
+
 ```sh
 commit 9fafe08b65bb0b6832441ef3ab726b4d28e3601d
 Author: Matt Peters <matt.peters@windriver.com>                                                                                                                                                                                              │···
@@ -367,3 +382,22 @@ Date:   Wed Jan 30 19:44:57 2019 +0800
 ```
 
 
+## openvswitch
+
+> [builder@a51007fb8bff stx-integ]$ git log networking/openvswitch/
+
+- ovs_agent_service
+- neutron-openvswitch-agent
+- ovsdb-server.pmon.conf
+- openvswitch.service
+- ovsdb-server.service
+- ovs-vswitchd.service
+
+
+## openvswitch-config
+
+- filter_out_from_controller
+  - openstack-neutron-openvswitch
+  - openvswitch-config
+- filter_out_from_storage
+  - openvswitch-config
