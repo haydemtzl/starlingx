@@ -192,8 +192,176 @@ commit 74baed87deef6c5565581b71875aa44d07271663                                 
 - sysinv/sysinv/sysinv/sysinv/api/controllers/v1/memory.py
   - vswitch_hugepages_reqd
   - vswitch_hugepages_size_mib
+  - _check_vswitch_huge_values
   - _check_huge_values
+  - cannot provision 1G huge pages if the processor does not support
+  - max possible 2M VM pages
+  - No available space for 2M VM huge page allocation
+  - No available space for 1G VM huge page allocation
+  - No available space for new VM hugepage settings
+  - No available space for 1G VM huge page allocation
+  - No available space for 2M VM huge page allocation
+  - _check_vswitch_huge_values
+- sysinv/sysinv/sysinv/sysinv/api/controllers/v1/profile.py
+  - get_mem_assignment
+  - vsHugePagesNr
+  - vsHugePagesSz
+  - get_mem_size
+  - vswitch_hugepages_reqd
+  - vswitch_hugepages_size_mib
+  - vswitch_hugepages_nr
+  - vswitch_hugepages_size_mib
+- sysinv/sysinv/sysinv/sysinv/conductor/manager.py
+  - vswitch_hugepages_reqd
+- sysinv/sysinv/sysinv/sysinv/puppet/ovs.py
+  - vswitch_size
+  - vswitch_pages
+  - dpdk_socket_mem
+  - platform::vswitch::params::hugepage_dir
+- sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+  - vs_pages_updated
+  - vswitch_pages
+  - total_hugepages_1G
+  - grub_hugepages_1G
+  - platform::compute::grub::params::g_hugepages
+- sysinv/sysinv/sysinv/sysinv/tests/api/test_profile.py
+  - vm_hugepages_nr_2M_pending
+  - vm_hugepages_nr_1G_pending
+  - vswitch_hugepages_reqd
   
 ```sh
+commit 822b99c016c1f2bd0cb5236e46bfb6a55456bb3d
+Author: chengli3 <cheng1.li@intel.com>
+Date:   Wed Jan 30 19:44:57 2019 +0800
 
+    Support ovs in container                                                                                                                                                                  
+    
+    As stx cutovers to containerization, most openstack components run in
+    containers, but ovs-dpdk running on the host.
+    
+    This patch is to support ovs running in container, and make it the
+    default setting. We still support running ovs-dpdk on the host.
+    
+    For option ovs-dpdk on the host, run follow command before unlock.
+    ```
+    system modify --vswitch_type ovs-dpdk
+    ```
 ```
+
+- controllerconfig/controllerconfig/controllerconfig/configassistant.py
+
+```sh
+ schema: armada/Chart/v1
+ metadata:
+   schema: metadata/Document/v1
++  name: openstack-openvswitch
++data:
++  chart_name: openvswitch
++  release: openstack-openvswitch
++  namespace: openstack
++  # If we deploy ovs-dpdk on the host, ovs pod will not be created.
++  # We can use "native wait" instead. But it's not supported in current armada version.
++  # Before we upgrade armada to new version, we comment the wait
++  # https://github.com/openstack/airship-armada/blob/master/armada/schemas/armada-chart-schema.yaml#L81-L111
++  #wait:
++  #  timeout: 1800
++  install:
++    no_hooks: false
++  upgrade:
++    no_hooks: false
++    pre:
++      delete:
++        - type: job
++          labels:
++            release_group: osh-openstack-openvswitch
++  values:
++    labels:
++      ovs:
++        node_selector_key: openvswitch
++        node_selector_value: enabled
++  source:
++    type: tar
++    location: http://172.17.0.1/helm_charts/openvswitch-0.1.0.tgz
++    subpath: openvswitch
++    reference: master
++  dependencies:
++    - helm-toolkit
++---
++schema: armada/Chart/v1
++metadata:
++  schema: metadata/Document/v1
+   name: openstack-nova
+ data:
+   chart_name: nova
+
+
+   chart_group:
+     - openstack-libvirt
++    - openstack-openvswitch
+```
+
+- puppet-manifests/src/modules/platform/manifests/vswitch.pp
+  - enable_unsafe_noiommu_mode /sys/module/vfio/parameters/enable_unsafe_noiommu_mode
+  - vfio-iommu-mode
+- sysinv/sysinv/sysinv/sysinv/common/constants.py
+  - VSWITCH_TYPE_NONE
+- sysinv/sysinv/sysinv/sysinv/common/utils.py
+  - get_vswitch_type
+- sysinv/sysinv/sysinv/sysinv/helm/neutron.py
+  - # if ovs runs on host, auto bridge add is covered by sysinv
+  - constants.VSWITCH_TYPE_NONE
+  - auto_bridge_add
+  - _get_datapath_type
+  - _get_host_bridges
+  - constants.DATANETWORK_TYPE_FLAT
+  - constants.DATANETWORK_TYPE_VLAN
+  - constants.DATANETWORK_TYPE_VXLAN
+  - brname = 'br-phy%d' % index
+  - 'datapath_type': self._get_datapath_type()
+  - physical_device_mappings
+  - ifdatanets
+
+- sysinv/sysinv/sysinv/sysinv/helm/openvswitch.py
+
+```sh
+--- a/sysinv/sysinv/sysinv/sysinv/helm/openvswitch.py
++++ b/sysinv/sysinv/sysinv/sysinv/helm/openvswitch.py
+@@ -6,6 +6,7 @@
+ from sysinv.common import constants
+ from sysinv.common import exception
++from sysinv.common import utils
+ from sysinv.openstack.common import log as logging
+ from sysinv.helm import common
+ from sysinv.helm import openstack
+@@ -19,8 +20,18 @@ class OpenvswitchHelm(openstack.OpenstackBaseHelm):
+     CHART = constants.HELM_CHART_OPENVSWITCH
+ 
+     def get_overrides(self, namespace=None):
++        # helm has an issue with installing release of no pod
++        # https://github.com/helm/helm/issues/4295
++        # once this is fixed, we can use 'manifests' instead of 'label' to
++        # control ovs enable or not
+         overrides = {
+             common.HELM_NS_OPENSTACK: {
++                'labels': {
++                    'ovs': {
++                        'node_selector_key': 'openvswitch',
++                        'node_selector_value': self._ovs_label_value(),
++                    }
++                }
+             }
+         }
+ 
+@@ -31,3 +42,9 @@ class OpenvswitchHelm(openstack.OpenstackBaseHelm):
+                                                  namespace=namespace)
+         else:
+             return overrides
++
++    def _ovs_label_value(self):
++        if utils.get_vswitch_type(self.dbapi) == constants.VSWITCH_TYPE_NONE:
++            return "enabled"
++        else:
++            return "none"
+```
+
+
