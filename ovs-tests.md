@@ -97,7 +97,12 @@ cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/ovs.py
 
 > LLDP allows you to know exactly on which port is a server (and reciprocally). LLDP is an industry standard protocol designed to supplant proprietary Link-Layer protocols such as EDP or CDP. The goal of LLDP is to provide an inter-vendor compatible mechanism to deliver Link-Layer notifications to adjacent network devices.
 
-##
+## Armada
 
 > Armada is a complete solution for development, deployment, configuration and discovery of microservices.
 > Armada is more than just a tool, it defines conventions and good practices designed towards making your platform more service oriented.
+
+## Other
+
+> "When VSWITCH_TYPE is OVS-DPDK, NEUTRON service must "
+> "only be configured in REGION_2_SERVICES.")
