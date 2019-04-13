@@ -1,3 +1,9 @@
+! Important to study
+
+```
+[builder@a51007fb8bff stx-config]$ git log sysinv/sysinv/sysinv/sysinv/helm/
+```
+
 ```
 [builder@a51007fb8bff stx-config]$ repo grep openvswitch | grep rpm
 cgcs-root/stx/git/ironic/devstack/files/rpms/ironic:openvswitch
@@ -7,6 +13,49 @@ cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-chec
 cgcs-root/stx/stx-integ/networking/openvswitch/centos/meta_patches/0004-rpm-check-with-condition.patch:+++ b/SPECS/openvswitch.spec
 cgcs-root/stx/stx-integ/networking/openvswitch/centos/srpm_path:mirror:/Source/openvswitch-2.9.0-3.el7.src.rpm
 stx-tools/centos-mirror-tools/rpms_centos.lst:openvswitch-2.9.0-3.el7.src.rpm
+```
+
+```sh
+[builder@a51007fb8bff starlingx]$ repo grep ovsdb-server
+cgcs-root/stx/git/networking-odl/devstack/override-defaults:# neutron agent with native uses also 6640 to connect to ovsdb-server
+cgcs-root/stx/git/neutron/neutron/agent/common/ovs_lib.py:        """Have ovsdb-server listen for manager connections
+cgcs-root/stx/git/neutron/releasenotes/notes/ovsdb-native-by-default-38835d6963592396.yaml:    - The native interface configures ovsdb-server to listen for
+cgcs-root/stx/git/neutron/releasenotes/notes/ovsdb-native-by-default-38835d6963592396.yaml:      ovsdb-server has permissions to listen on the configured address.
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/vswitch.pp:    service { 'ovsdb-server':
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/vswitch.pp:      require  => Service['ovsdb-server']
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovsdb.clean.erb:ovs-vsctl -t ovsdb-server --no-wait del-manager
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovsdb.clean.erb:for bridge in $(ovs-vsctl -t ovsdb-server --timeout 10 list-br); do
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovsdb.clean.erb:    ovs-vsctl -t ovsdb-server --timeout 10 --no-wait del-br $bridge
+cgcs-root/stx/stx-integ/networking/openvswitch-config/centos/openvswitch-config.spec:install -m 0644 ovsdb-server.pmon.conf %{buildroot}%{_sysconfdir}/openvswitch/ovsdb-server.pmon.conf
+cgcs-root/stx/stx-integ/networking/openvswitch-config/centos/openvswitch-config.spec:%config(noreplace) %{_sysconfdir}/openvswitch/ovsdb-server.pmon.conf
+cgcs-root/stx/stx-integ/networking/openvswitch-config/files/ovsdb-server.pmon.conf:process  = ovsdb-server
+cgcs-root/stx/stx-integ/networking/openvswitch-config/files/ovsdb-server.pmon.conf:service  = ovsdb-server   ; The name of the process's systemd service file without the extension
+cgcs-root/stx/stx-integ/networking/openvswitch-config/files/ovsdb-server.pmon.conf:pidfile  = /var/run/openvswitch/ovsdb-server.pid
+cgcs-root/stx/stx-integ/networking/openvswitch/centos/patches/run-services-as-root-user.patch:           --no-ovsdb-server --no-monitor --system-id=random \
+cgcs-root/stx/stx-integ/networking/openvswitch/files/ovsdb-server.pmon.conf:process  = ovsdb-server
+cgcs-root/stx/stx-integ/networking/openvswitch/files/ovsdb-server.pmon.conf:service  = ovsdb-server   ; The name of the process's systemd service file without the extension
+cgcs-root/stx/stx-integ/networking/openvswitch/files/ovsdb-server.pmon.conf:pidfile  = /var/run/openvswitch/ovsdb-server.pid
+```
+
+```sh
+[builder@a51007fb8bff starlingx]$ ls cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs*
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs.add-bridge.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs.add-flow.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs.add-port.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs.clean.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovsdb.clean.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/ovs.disable-dpdk-init.erb
+```
+
+```sh
+[builder@a51007fb8bff starlingx]$ repo grep ovs.add-bridge.erb
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/vswitch.pp:    command => template('platform/ovs.add-bridge.erb')
+```
+
+```
+[builder@a51007fb8bff starlingx]$ repo grep  platform::vswitch::ovs
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/vswitch.pp:  $vswitch_class = ::platform::vswitch::ovs,
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/ovs.py:            'platform::vswitch::ovs::devices': ovs_devices,
 ```
 
 ## openvswitch
