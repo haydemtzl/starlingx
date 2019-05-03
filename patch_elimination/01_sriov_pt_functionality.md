@@ -213,6 +213,13 @@ Tests
   - ip link show p5p1_1
 - GRUB_CMDLINE_LINUX /etc/default/grub
   - grub2-mkconfig -o /boot/grub2/grub.cfg
+- echo ${num_of_ports} > /sys/class/net/${interface}/devices/sriov_numvfs
+  - sriov_numvfs
+    - neutron
+    - stx-config
+    - stx-gui
+    - stx-integ
+    - stx-metal
 
 API
 
