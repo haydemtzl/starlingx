@@ -191,6 +191,8 @@ Issues
 
 ### sriov_agent
 
+What part of source code it is found?
+
 - neutron
 - nova
 - stx-config
@@ -233,6 +235,8 @@ Tests
 - SR-IOV NIC AGENT: We can optionally configure the SR-IOV NIC agent to manage the admin state of the NICs. When a VF NIC is used by an instance and then released, sometimes the NIC goes into DOWN state and the admin manually has to bring it back to UP state. There’s an article that describes how to do this in the official Red Hat documentation: enable_the_openstack_networking_sr_iov_agent https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_openstack_platform/7/html-single/networking_guide/index#sr-iov-support-for-virtual-networking
 - Create the network
 - Create the port
+- Create the instance
+- Log in the instance as usual and you’ll notice two interfaces, eth0 and probably ens5, which is the SR-IOV NIC ready to be used.
 
 API
 
@@ -241,3 +245,7 @@ API
 Issues
 
 - https://bugzilla.redhat.com/show_bug.cgi?id=1344315
+
+Links
+
+- https://trickycloud.wordpress.com/2016/03/28/openstack-for-nfv-applications-sr-iov-and-pci-passthrough/
