@@ -215,11 +215,13 @@ Tests
   - grub2-mkconfig -o /boot/grub2/grub.cfg
 - echo ${num_of_ports} > /sys/class/net/${interface}/devices/sriov_numvfs
   - sriov_numvfs
-    - neutron
-    - stx-config
-    - stx-gui
-    - stx-integ
-    - stx-metal
+    - The number of VFs configured on the interfaces port; only applicable if ifclass : pci-sriov where only a single port is associated with the interface.
+    - Where it is found?
+      - neutron
+      - stx-config
+      - stx-gui
+      - stx-integ
+      - stx-metal
 
 API
 
