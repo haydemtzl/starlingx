@@ -92,6 +92,37 @@ Steps
 
 # Architecture
 
+- stx-config/sysinv
+- stx-metal/inventory
+
+## Network Types
+
+- PLATFORM_NETWORK_TYPES
+- PCI_NETWORK_TYPES
+
+## Interface Types
+
+- INTERFACE_TYPE_ETHERNET
+- INTERFACE_TYPE_VLAN
+- INTERFACE_TYPE_AE
+- INTERFACE_TYPE_VIRTUAL
+
+## Interface Class
+
+- INTERFACE_CLASS_NONE
+- INTERFACE_CLASS_PLATFORM
+- INTERFACE_CLASS_DATA
+- INTERFACE_CLASS_PCI_PASSTHROUGH
+- INTERFACE_CLASS_PCI_SRIOV
+
+## Mechanism Drivers
+
+- openvswitch
+- linuxbridge
+- macvtap
+- sriovnicswitch
+- openvswitch
+
 ## Agents
 
 - https://docs.openstack.org/neutron/latest/admin/config-sriov.html
@@ -109,6 +140,10 @@ What part of the source code it is found?
 - stx-config
 - stx-upstream
 
+What are key code definitions?
+
+- OPENVSWITCH_LABEL
+
 Tests
 
 - Tbd
@@ -123,6 +158,10 @@ Issues
 - nova
 - stx-config
 - stx-upstream
+
+What are key code definitions?
+
+- SRIOV_LABEL
 
 Tests
 
