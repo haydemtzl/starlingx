@@ -1,7 +1,7 @@
 # Glossary
 
-- Virtual Functions (VF)
 - Physical Functions (PF)
+  - Virtual Functions (VF)
 - Network Function Virtualisation (NFV)
   - Single Root I/O Virtualisation (SR-IOV)
   - PCI-Passthrough
@@ -126,7 +126,15 @@ Issues
 
 Tests
 
-- Tbd
+- Kernel Parameters
+  - intel_iommu=on
+  - ixgbe.max_vfs=5
+  - nomdmonddf
+  - nomdmonisw
+- ip link show p5p1
+  - ip link show p5p1_1
+- GRUB_CMDLINE_LINUX /etc/default/grub
+  - grub2-mkconfig -o /boot/grub2/grub.cfg
 
 Issues
 
