@@ -1,3 +1,14 @@
+# Glossary
+
+- Virtual Functions (VF)
+- Physical Functions (PF)
+- Network Function Virtualisation (NFV)
+  - Single Root I/O Virtualisation (SR-IOV)
+  - PCI-Passthrough
+  - DPDK
+  - CPU Pinning
+  - NUMA Nodes
+
 # Repo Grep
 
 ## sriov_numfs
@@ -68,6 +79,7 @@ cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v
 ## Neutron 
 
 - https://docs.openstack.org/neutron/latest/admin/config-sriov.html
+- https://docs.openstack.org/mitaka/networking-guide/config-sriov.html
 
 Steps
 
@@ -97,6 +109,14 @@ What part of the source code it is found?
 - stx-config
 - stx-upstream
 
+Tests
+
+- Tbd
+
+Issues
+
+- Tbd
+
 ### sriov_agent
 
 - neutron
@@ -104,3 +124,10 @@ What part of the source code it is found?
 - stx-config
 - stx-upstream
 
+Tests
+
+- Tbd
+
+Issues
+
+- https://bugzilla.redhat.com/show_bug.cgi?id=1344315
