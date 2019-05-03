@@ -80,9 +80,27 @@ Steps
 
 # Architecture
 
-## Agents 
+## Agents
 
 - https://docs.openstack.org/neutron/latest/admin/config-sriov.html
 
 1. openvswitch_agent
 2. sriov_agent
+
+
+### openvswitch_agent
+
+What part of the source code it is found?
+
+- neutron
+- nova
+- stx-config
+- stx-upstream
+
+### sriov_agent
+
+- neutron
+- nova
+- stx-config
+- stx-upstream
+
