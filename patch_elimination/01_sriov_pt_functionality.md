@@ -1,3 +1,7 @@
+# Repo Grep
+
+## sriov_numfs
+
 ```sh
 $ repo grep sriov_numvfs
 ```
@@ -72,3 +76,13 @@ Steps
 3. Configure neutron-server (Controller)
 4. Configure nova-scheduler (Controller)
 5. Enable neutron sriov-agent (Compute)
+
+
+# Architecture
+
+## Agents 
+
+- https://docs.openstack.org/neutron/latest/admin/config-sriov.html
+
+1. openvswitch_agent
+2. sriov_agent
