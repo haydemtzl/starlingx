@@ -90,6 +90,15 @@ Steps
 5. Enable neutron sriov-agent (Compute)
 
 
+## NUMA
+
+- https://specs.openstack.org/openstack/nova-specs/specs/queens/implemented/share-pci-between-numa-nodes.html
+
+What part of the source code it is found?
+
+- stx-config
+- stx-metal
+
 # Architecture
 
 - stx-config/sysinv
@@ -167,6 +176,10 @@ Tests
 
 - Tbd
 
+API
+
+- Tbd
+
 Issues
 
 - Tbd
@@ -189,10 +202,16 @@ Tests
   - ixgbe.max_vfs=5
   - nomdmonddf
   - nomdmonisw
+  - default_hugepagesz=1G hugepagesz=1G hugepages=8
+  - iommu=pt
 - ip link show p5p1
   - ip link show p5p1_1
 - GRUB_CMDLINE_LINUX /etc/default/grub
   - grub2-mkconfig -o /boot/grub2/grub.cfg
+
+API
+
+- Tbd
 
 Issues
 
