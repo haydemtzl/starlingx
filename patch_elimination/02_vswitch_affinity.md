@@ -1,3 +1,9 @@
+# Vswitch Affinity
+
+- Virtual NUMA to Physical NUMA
+- NUMA Affinity PCI Devices
+- NUMA Affinity (strict/best-effort)
+
 # Terminology
 
 # Source Code
