@@ -99,6 +99,11 @@ What part of the source code it is found?
 - stx-config
 - stx-metal
 
+What are key functions?
+
+- get_minimum_platform_reserved_memory
+- get_required_platform_reserved_memory
+
 # Architecture
 
 - stx-config/sysinv
