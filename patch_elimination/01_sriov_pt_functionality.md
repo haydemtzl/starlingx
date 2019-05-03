@@ -230,6 +230,9 @@ Tests
 - __Neutron__: SR-IOV works with the VLAN type driver in Neutron. We enable it...
 - __Nova Scheduler__: We need to tell the Nova scheduler about the SR-IOV so that it can schedule instances to compute nodes with SR-IOV support. In the [DEFAULT] section of /etc/nova/nova.conf adding the PciPassthroughFilter. Also ensure scheduler_available_filters is set as follows:
 - __Nova Compute__: Nova compute needs to know which PFs can be used for SR-IOV so that VFs are exposed – actually via PCI-passthrough – to the instances. Also, it needs to know that when we create a network with Neutron specifying the physical network physnet_sriov  – configured before in Neutron with network_vlan_ranges – it will use the SR-IOV NIC. That’s done by the config flag pci_passthrough_whitelist...
+- SR-IOV NIC AGENT: We can optionally configure the SR-IOV NIC agent to manage the admin state of the NICs. When a VF NIC is used by an instance and then released, sometimes the NIC goes into DOWN state and the admin manually has to bring it back to UP state. There’s an article that describes how to do this in the official Red Hat documentation: enable_the_openstack_networking_sr_iov_agent https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_openstack_platform/7/html-single/networking_guide/index#sr-iov-support-for-virtual-networking
+- Create the network
+- Create the port
 
 API
 
