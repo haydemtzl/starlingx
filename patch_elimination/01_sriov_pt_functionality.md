@@ -58,3 +58,17 @@ cgcs-root/stx/stx-metal/inventory/inventory/inventory/systemconfig/plugin.py
 cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/pci_device_shell.py
 cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/port_shell.py
 ```
+
+# Documentation
+
+## Neutron 
+
+- https://docs.openstack.org/neutron/latest/admin/config-sriov.html
+
+Steps
+
+1. Create Virtual Functions (Compute)
+2. Whitelist PCI devices in nova-compute (Compute)
+3. Configure neutron-server (Controller)
+4. Configure nova-scheduler (Controller)
+5. Enable neutron sriov-agent (Compute)
