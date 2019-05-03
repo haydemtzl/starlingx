@@ -214,14 +214,18 @@ Tests
 - GRUB_CMDLINE_LINUX /etc/default/grub
   - grub2-mkconfig -o /boot/grub2/grub.cfg
 - echo ${num_of_ports} > /sys/class/net/${interface}/devices/sriov_numvfs
-  - sriov_numvfs
-    - The number of VFs configured on the interfaces port; only applicable if ifclass : pci-sriov where only a single port is associated with the interface.
+  - sriov_numvfs: The number of VFs configured on the interfaces port; only applicable if ifclass : pci-sriov where only a single port is associated with the interface.
     - Where it is found?
+      - Interfaces
+      - PCI Devices
       - neutron
       - stx-config
       - stx-gui
       - stx-integ
       - stx-metal
+  - sriov_totalvfs: Indicates the maximum number of VFs that this device can support
+  - sriov_numvfs: Indicates the actual number of VFs configured for the interface using this device
+  - sriov_vfs_pci_address: A comma-separated list of the PCI addresses of the configured VFs
 
 API
 
