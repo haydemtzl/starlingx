@@ -209,12 +209,10 @@ Tests
   - nomdmonisw
   - default_hugepagesz=1G hugepagesz=1G hugepages=8
   - iommu=pt
-- ip link show p5p1
-  - ip link show p5p1_1
 - GRUB_CMDLINE_LINUX /etc/default/grub
   - grub2-mkconfig -o /boot/grub2/grub.cfg
 - echo ${num_of_ports} > /sys/class/net/${interface}/devices/sriov_numvfs
-  - sriov_numvfs: The number of VFs configured on the interfaces port; only applicable if ifclass : pci-sriov where only a single port is associated with the interface.
+  - __sriov_numvfs__: The number of VFs configured on the interfaces port; only applicable if ifclass : pci-sriov where only a single port is associated with the interface.
     - Where it is found?
       - Interfaces
       - PCI Devices
@@ -223,9 +221,15 @@ Tests
       - stx-gui
       - stx-integ
       - stx-metal
-  - sriov_totalvfs: Indicates the maximum number of VFs that this device can support
-  - sriov_numvfs: Indicates the actual number of VFs configured for the interface using this device
-  - sriov_vfs_pci_address: A comma-separated list of the PCI addresses of the configured VFs
+  - __sriov_totalvfs__: Indicates the maximum number of VFs that this device can support
+  - __sriov_numvfs__: Indicates the actual number of VFs configured for the interface using this device
+  - __sriov_vfs_pci_address__: A comma-separated list of the PCI addresses of the configured VFs
+- ip link show p5p1
+  - ip link show p5p1_1
+- lspci
+- __Neutron__: SR-IOV works with the VLAN type driver in Neutron. We enable it...
+- __Nova Scheduler__: We need to tell the Nova scheduler about the SR-IOV so that it can schedule instances to compute nodes with SR-IOV support. In the [DEFAULT] section of /etc/nova/nova.conf adding the PciPassthroughFilter. Also ensure scheduler_available_filters is set as follows:
+- __Nova Compute__: Nova compute needs to know which PFs can be used for SR-IOV so that VFs are exposed – actually via PCI-passthrough – to the instances. Also, it needs to know that when we create a network with Neutron specifying the physical network physnet_sriov  – configured before in Neutron with network_vlan_ranges – it will use the SR-IOV NIC. That’s done by the config flag pci_passthrough_whitelist...
 
 API
 
