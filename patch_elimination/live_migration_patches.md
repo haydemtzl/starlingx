@@ -86,12 +86,37 @@ Why
 - Upgrade n-Cpu
 - Re-balance Workload
 
+Virtual Machine
+
+- CPU / Memory
+- Network
+- Disk
+  - Remote
+  - Local
+
 Links
 
 - [OpenStack Nova](https://docs.openstack.org/nova/latest/admin/live-migration-usage.html)
 
 Details
 
+- Phases
+  - Runs at source node
+    - Setup, sync disk
+    - Copy memory
+    - Flush
+  - Pause
+    - Downtime
+    - Copy memory: dirty memory
+  - Runs at destination node
+    - Activate network
+    - Arrange source
+- Tradeoffs
+  - Minimize downtime
+  - Complete quickly
+- Features
+  - Auto-Converged
+  - Post-Copy
 - Types
   - Block live migration: or simply block migration. The instance has ephemeral disks that are not shared between the source and destination hosts. Block migration is incompatible with read-only devices such as CD-ROMs and Configuration Drive (config_drive).
     - Ephemeral Disk
@@ -112,6 +137,8 @@ Details
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
   - Flavor extra specifications, image metadata, or instance metadata.
   - Instance Boot Type and Ephemeral and Swap Disks from flavor
+- Output
+  - Timeout
 - Procedures
   - Images
     - Linux
@@ -131,6 +158,10 @@ Details
     - Block Migration
   - Fault Management
     - Alarm ID 700.008
+    - Timeout
+  - Performance
+    - How much downtime
+    - How long to pause
 
 ### Training
 
