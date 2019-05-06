@@ -12,5 +12,11 @@
 - 0039-dhcp-handle-concurrent-port-creation-error.patch
   - http://lists.starlingx.io/pipermail/starlingx-discuss/2019-February/003222.html
   - https://bugs.launchpad.net/neutron/+bug/1760047
+- 0065-dvr-do-not-create-agent-gateway-ports-unle.patch (2857911)
+  - http://lists.starlingx.io/pipermail/starlingx-discuss/2019-February/003222.html
+  - http://lists.starlingx.io/pipermail/starlingx-discuss/2018-November/002051.html
+- 0077-api-reject-routes-with-invalid-network-val.patch (6ed8fe6)
+  - http://lists.starlingx.io/pipermail/starlingx-discuss/2019-January/002544.html
+  - http://lists.starlingx.io/pipermail/starlingx-discuss/2018-November/002051.html
 - 0040-rpc-removing-timeout-backoff-multiplier.patch (2e4ca00)
   - http://lists.starlingx.io/pipermail/starlingx-discuss/2019-January/002544.html
