@@ -2,6 +2,10 @@
 
 - https://etherpad.openstack.org/p/stx-networking
 
+# Terminology
+
+- Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable.
+
 # Patches
 
 - 01 Enable delete bound trunk for linux bridge agent
@@ -28,3 +32,10 @@
   - http://lists.starlingx.io/pipermail/starlingx-discuss/2018-November/002051.html
 - 0014-add-support-for-querying-quotas-with-usage.patch (71c07d7)
   - Tbd
+
+# Trunk
+
+- Network Management
+- Tenant
+  - It
+- User Guide
