@@ -4,14 +4,14 @@
 
 # Terminology
 
-- Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable. [Openstack Operations Guide](https://docs.openstack.org/operations-guide/ops-projects-users.html).
+- __Tenant__: A group of users is referred to as a project or tenant. There terms are interchangeable. [Openstack Operations Guide](https://docs.openstack.org/operations-guide/ops-projects-users.html).
 - StarlingX Nova scheduler: A modified version of the OpenStack Nova scheduler.
-- NUMA: Non-uniform memory access (NUMA) is a computer memory design used in multiprocessing, where the memory access time depends on the memory location relative to the processor. [Wikipedia](https://en.wikipedia.org/wiki/Non-uniform_memory_access)
-- Live Migration: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
-- PCI pass through allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
-- Glance: The Image service (glance) project provides a service where users can upload and discover data assets that are meant to be used with other services. This currently includes images and metadata definitions. [Homepage](https://docs.openstack.org/glance/latest/)
-- Nova: Nova is the OpenStack project that provides a way to provision compute instances (aka virtual servers). Nova supports creating virtual machines, baremetal servers (through the use of ironic), and has limited support for system containers. Nova runs as a set of daemons on top of existing Linux servers to provide that service. [Homepage](https://docs.openstack.org/nova/latest/)
-- NFV: Manage patch orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of patch strategies. Manage upgrade orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of upgrade strategies. [Homepage](https://docs.starlingx.io/stx-nfv/index.html)
+- __NUMA__: Non-uniform memory access (NUMA) is a computer memory design used in multiprocessing, where the memory access time depends on the memory location relative to the processor. [Wikipedia](https://en.wikipedia.org/wiki/Non-uniform_memory_access)
+- __Live Migration__: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
+- __PCI pass through__: Allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
+- __Glance__: The Image service (glance) project provides a service where users can upload and discover data assets that are meant to be used with other services. This currently includes images and metadata definitions. [Homepage](https://docs.openstack.org/glance/latest/)
+- __Nova__: Nova is the OpenStack project that provides a way to provision compute instances (aka virtual servers). Nova supports creating virtual machines, baremetal servers (through the use of ironic), and has limited support for system containers. Nova runs as a set of daemons on top of existing Linux servers to provide that service. [Homepage](https://docs.openstack.org/nova/latest/)
+- __NFV__: Manage patch orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of patch strategies. Manage upgrade orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of upgrade strategies. [Homepage](https://docs.starlingx.io/stx-nfv/index.html)
 
 ## General
 
