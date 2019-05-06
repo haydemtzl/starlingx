@@ -81,9 +81,22 @@ Details
   - PCI Alias?
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
 - Procedures
-  - Linux based images
-  - Windows based images
-    - --property os_type=windows
+  - Images
+    - Linux
+    - Windows
+      - --property os_type=windows
+  - Parameters
+    - Affinity
+    - Anti-Affinity
+    - Best Effort
+    - Boot Configuration
+  - Virtual Machine
+    - Single
+    - Server Groups
+  - UI
+    - Current Host
+    - New Host
+    - Block Migration
 
 Training
 
