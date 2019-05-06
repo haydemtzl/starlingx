@@ -72,6 +72,12 @@ Details
 
 - https://docs.openstack.org/nova/latest/admin/configuring-migrations.html
 
+Types
+
+- Live Migration
+- Cold Migration
+- Evacuation
+
 ## Cold Migration
 
 > Non-live migration, also known as cold migration or simply migration. The instance is shut down, then moved to another hypervisor and restarted. The instance recognizes that it was rebooted, and the application running on the instance is disrupted.
@@ -168,6 +174,10 @@ Details
     - Anti-Affinity
     - Best Effort
     - Boot Configuration
+  - Network
+    - DPDK
+    - SR-IOV No support
+    - PCI Passthrough No support
   - Virtual Machine
     - Single
     - Server Groups
