@@ -175,7 +175,7 @@ Details
   - Images
     - Nova Ephemeral Block Storage
       - CoW-image backed storage ???
-    - Remote Ephemeral
+    - Remote Ephemeral, Storage Hosts
       - Ephemeral, Swap, Boot from Image Root Disk ???
     - Linux
     - Windows
