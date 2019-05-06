@@ -201,6 +201,26 @@ Details
 ### Source Code
 
 ```sh
+cgcs-root/stx/git/ceph
+cgcs-root/stx/git/cinder
+cgcs-root/stx/git/glance
+cgcs-root/stx/git/horizon
+cgcs-root/stx/git/ironic
+cgcs-root/stx/git/kubernetes
+cgcs-root/stx/git/libvirt
+cgcs-root/stx/git/neutron
+cgcs-root/stx/git/nova
+cgcs-root/stx/git/python-novaclient
+cgcs-root/stx/git/python-openstackclient
+cgcs-root/stx/git/python-openstacksdk
+cgcs-root/stx/git/qemu
+cgcs-root/stx/stx-config
+cgcs-root/stx/stx-fault
+cgcs-root/stx/stx-integ
+cgcs-root/stx/stx-nfv
+```
+
+```sh
 cgcs-root/stx/git/ceph/doc/changelog/v0.67.10.txt
 cgcs-root/stx/git/ceph/doc/changelog/v0.80.6.txt
 cgcs-root/stx/git/ceph/doc/man/8/rbd.rst
