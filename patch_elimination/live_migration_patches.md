@@ -9,6 +9,8 @@
 - NUMA: Non-uniform memory access (NUMA) is a computer memory design used in multiprocessing, where the memory access time depends on the memory location relative to the processor. [Wikipedia](https://en.wikipedia.org/wiki/Non-uniform_memory_access)
 - Live Migration: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
 - PCI pass through allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
+- Glance: The Image service (glance) project provides a service where users can upload and discover data assets that are meant to be used with other services. This currently includes images and metadata definitions. [Homepage](https://docs.openstack.org/glance/latest/)
+- 
 
 ## General
 
@@ -236,6 +238,10 @@ Details
 - _max_live_migration_downtime_in_ms
 
 ```sh
+$ repo grep max | grep downtime
+```
+
+```sh
 cgcs-root/stx/git/ceph/qa/qa_scripts/openstack/files/nova.template.conf
 cgcs-root/stx/git/glance/etc/metadefs/compute-tis-flavor.json
 cgcs-root/stx/git/glance/etc/metadefs/tis-live-migration-image.json
@@ -295,6 +301,36 @@ cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_image.py
 cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance.py
 cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance_type.py
 cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/rpc/_rpc_message_instance.py
+```
+
+##### live_migration_max_downtime
+
+Found at:
+
+```sh
+cgcs-root/stx/git/glance
+cgcs-root/stx/stx-nfv
+```
+
+##### hw_wrs_live_migration_max_downtime
+
+Found at:
+
+```sh
+cgcs-root/stx/git/glance
+cgcs-root/stx/stx-nfv
+```
+
+##### migrate_configure_max_downtime
+
+```sh
+cgcs-root/stx/git/nova
+```
+
+#####  _max_live_migration_downtime_in_ms
+
+```sh
+cgcs-root/stx/stx-nfv
 ```
 
 ### Training
