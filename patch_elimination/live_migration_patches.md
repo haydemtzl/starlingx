@@ -55,6 +55,8 @@ Details
 - Relationship with:
   - CPU Pinning
   - Hugepages
+- Affinity
+  - Strict
   - Best Effort
 
 # Live Migration
