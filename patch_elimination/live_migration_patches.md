@@ -10,7 +10,8 @@
 - Live Migration: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
 - PCI pass through allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
 - Glance: The Image service (glance) project provides a service where users can upload and discover data assets that are meant to be used with other services. This currently includes images and metadata definitions. [Homepage](https://docs.openstack.org/glance/latest/)
-- 
+- Nova: Nova is the OpenStack project that provides a way to provision compute instances (aka virtual servers). Nova supports creating virtual machines, baremetal servers (through the use of ironic), and has limited support for system containers. Nova runs as a set of daemons on top of existing Linux servers to provide that service. [Homepage](https://docs.openstack.org/nova/latest/)
+- NFV: Manage patch orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of patch strategies. Manage upgrade orchestration with the StarlingX NFV VIM API. This includes creation, application and querying of upgrade strategies. [Homepage](https://docs.starlingx.io/stx-nfv/index.html)
 
 ## General
 
