@@ -59,19 +59,32 @@ Details
   - Strict
   - Best Effort
 
-# Live Migration
+# Migration
+
+- https://docs.openstack.org/nova/latest/admin/configuring-migrations.html
+
+## Cold Migration
+
+> Non-live migration, also known as cold migration or simply migration. The instance is shut down, then moved to another hypervisor and restarted. The instance recognizes that it was rebooted, and the application running on the instance is disrupted.
+
+## Live Migration
+
+> The instance keeps running throughout the migration. This is useful when it is not possible or desirable to stop the application running on the instance.
 
 - [OpenStack Nova](https://docs.openstack.org/nova/latest/admin/live-migration-usage.html)
 
 Details
 
 - Types
-  - Block
+  - Block live migration: or simply block migration. The instance has ephemeral disks that are not shared between the source and destination hosts. Block migration is incompatible with read-only devices such as CD-ROMs and Configuration Drive (config_drive).
     - Ephemeral Disk
-  - Volume-backed
+    - Live migration is not always supported for VM disks using local ephemeral storage.
+  - Volume-backed live migration: Instances use volumes rather than ephemeral disks.
     - Attached Cinder Volumes
     - Ephemeral Disks backed by Ceph via RBD
-  - Shared storage
+  - Shared storage-based live migration: The instance has ephemeral disks that are located on storage shared between the source and destination hosts.
+- Hosts
+  - KVM-libvirt
 - Policies
   - Affinity: 
   - Non-Affinity
