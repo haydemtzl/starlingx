@@ -5,6 +5,7 @@
 # Terminology
 
 - Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable.
+- StarlingX Nova scheduler: A modified version of the OpenStack Nova scheduler.
 
 # Patches
 
@@ -34,6 +35,8 @@
   - Tbd
 
 # Trunk
+
+"Trunk" has some relationship with the following terminology:
 
 - Network Management
 - Tenant
