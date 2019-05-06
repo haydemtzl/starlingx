@@ -10,6 +10,37 @@
 - Live Migration: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
 - PCI pass through allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
 
+## General
+
+- Storage Configuration
+  - Migration
+  - Resize
+  - Evacuation
+- Resource Monitoring
+  - NUMA node resources on a host
+
+## Trunk
+
+"Trunk" has some relationship with the following terminology:
+
+- Network Management
+- Tenant
+  - It
+- User Guide
+
+## NUMA
+
+- https://specs.openstack.org/openstack/nova-specs/specs/rocky/approved/numa-aware-live-migration.html
+
+Details
+
+- Relationship with:
+  - CPU Pinning
+  - Hugepages
+- Affinity
+  - Strict
+  - Best Effort
+
 # Patches
 
 - 01 Enable delete bound trunk for linux bridge agent
@@ -37,37 +68,6 @@
 - 0014-add-support-for-querying-quotas-with-usage.patch (71c07d7)
   - Tbd
 
-# General
-
-- Storage Configuration
-  - Migration
-  - Resize
-  - Evacuation
-- Resource Monitoring
-  - NUMA node resources on a host
-
-# Trunk
-
-"Trunk" has some relationship with the following terminology:
-
-- Network Management
-- Tenant
-  - It
-- User Guide
-
-# NUMA
-
-- https://specs.openstack.org/openstack/nova-specs/specs/rocky/approved/numa-aware-live-migration.html
-
-Details
-
-- Relationship with:
-  - CPU Pinning
-  - Hugepages
-- Affinity
-  - Strict
-  - Best Effort
-
 # Migration
 
 - https://docs.openstack.org/nova/latest/admin/configuring-migrations.html
@@ -79,6 +79,14 @@ Details
 ## Live Migration
 
 > The instance keeps running throughout the migration. This is useful when it is not possible or desirable to stop the application running on the instance.
+
+Why
+
+- Upgrade Host
+- Upgrade n-Cpu
+- Re-balance Workload
+
+Links
 
 - [OpenStack Nova](https://docs.openstack.org/nova/latest/admin/live-migration-usage.html)
 
@@ -124,7 +132,7 @@ Details
   - Fault Management
     - Alarm ID 700.008
 
-Training
+### Training
 
 - Definition
 - Limitations
