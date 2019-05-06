@@ -173,6 +173,10 @@ Details
     - Medium
     - Large
   - Images
+    - Nova Ephemeral Block Storage
+      - CoW-image backed storage ???
+    - Remote Ephemeral
+      - Ephemeral, Swap, Boot from Image Root Disk ???
     - Linux
     - Windows
       - --property os_type=windows
@@ -219,16 +223,17 @@ Details
        - Metadata
          - Image
          - Instance
+       - Settings
+         - Timeout
+         - Maximum Downtime
+         - Auto-Converge
 
 #### Maximum Downtime
 
-- cgcs-root/stx/git/glance/stx-patches/0001-Pike-Rebase-Validate-image-properties.patch
-  - hw_wrs_live_migration_max_downtime
-- cgcs-root/stx/stx-nfv/nfv/nfv-plugins/nfv_plugins/nfvi_plugins/nfvi_compute_api.py
-
-```sh
-
-```
+- live_migration_max_downtime
+- hw_wrs_live_migration_max_downtime
+- migrate_configure_max_downtime
+- _max_live_migration_downtime_in_ms
 
 ```sh
 cgcs-root/stx/git/ceph/qa/qa_scripts/openstack/files/nova.template.conf
