@@ -419,22 +419,25 @@ cgcs-root/stx/git/qemu/migration/socket.c
 cgcs-root/stx/git/qemu/migration/socket.h
 cgcs-root/stx/git/qemu/migration/xbzrle.h
 cgcs-root/stx/git/qemu/qapi/migration.json
-cgcs-root/stx/git/qemu/qemu-deprecated.texi:These machine types are very old and likely can not be used for live migration
-cgcs-root/stx/git/qemu/qemu-options.hx:For architectures which aim to support live migration compatibility
-cgcs-root/stx/git/qemu/qemu-options.hx:To allow live migration of guests from QEMU version 2.8.0, to QEMU
-cgcs-root/stx/git/qemu/target/i386/machine.c:     * Fixing it will allow live migration to host with unrestricted guest
-cgcs-root/stx/git/qemu/target/i386/machine.c:     * Fixing it will allow live migration from such host that don't have
-cgcs-root/stx/git/qemu/target/s390x/cpu.h:    /* needed for live migration */
-cgcs-root/stx/git/qemu/tests/qemu-iotests/091:echo "vm1: live migration started"
-cgcs-root/stx/git/qemu/tests/qemu-iotests/091:echo "vm1: live migration completed"
-cgcs-root/stx/git/qemu/tests/qemu-iotests/091.out:vm1: live migration started
-cgcs-root/stx/git/qemu/tests/qemu-iotests/091.out:vm1: live migration completed
-cgcs-root/stx/git/qemu/tests/qemu-iotests/181:# Test postcopy live migration with shared storage
-cgcs-root/stx/git/qemu/tests/qemu-iotests/181:# Formats that do not support live migration
-cgcs-root/stx/git/qemu/tests/qemu-iotests/201:# Test savevm and loadvm after live migration with postcopy flag
-cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/tests/events_for_testing.yaml:    Proposed_Repair_Action: Wait for live migration to complete; if problem persists contact next level of 
-cgcs-root/stx/stx-fault/fm-doc/fm_doc/events.yaml:    Proposed_Repair_Action: Wait for live migration to complete; if problem persists contact next level of support
-cgcs-root/stx/stx-integ/tools/vm-topology/vm-topology/vm_topology/exec/vm_topology.py:        # live migration
-cgcs-root/stx/stx-integ/virt/libvirt/centos/libvirt.spec:## Set auth_tcp to "none" for now to enable live migration.
-
+cgcs-root/stx/git/qemu/qemu-deprecated.texi
+cgcs-root/stx/git/qemu/qemu-options.hx
+cgcs-root/stx/git/qemu/target/i386/machine.c
+cgcs-root/stx/git/qemu/target/s390x/cpu.h
+cgcs-root/stx/git/qemu/tests/qemu-iotests/091
+cgcs-root/stx/git/qemu/tests/qemu-iotests/181
+cgcs-root/stx/git/qemu/tests/qemu-iotests/201
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/tests/events_for_testing.yaml
+cgcs-root/stx/stx-fault/fm-doc/fm_doc/events.yaml
+cgcs-root/stx/stx-integ/tools/vm-topology/vm-topology/vm_topology/exec/vm_topology.py
+cgcs-root/stx/stx-integ/virt/libvirt/centos/libvirt.spec
+cgcs-root/stx/stx-integ/virt/qemu/centos/qemu-kvm.spec
+cgcs-root/stx/stx-nfv/nfv/nfv-plugins/nfv_plugins/nfvi_plugins/nfvi_compute_api.py
+cgcs-root/stx/stx-nfv/nfv/nfv-plugins/nfv_plugins/nfvi_plugins/openstack/nova.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/alarm/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/directors/_instance_director.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/instance_fsm/_instance_state_live_migrate.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/instance_fsm/_instance_task_work.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_image.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance.py
 ```
