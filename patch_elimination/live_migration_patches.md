@@ -34,7 +34,7 @@
 
 Details
 
-- Relationship with:
+- Relation with:
   - CPU Pinning
   - Hugepages
 - Affinity
