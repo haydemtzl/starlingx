@@ -118,6 +118,7 @@ Details
   - Auto-Converged
   - Post-Copy
 - Types
+  - Shared storage is quicker, but local storage is possible
   - Block live migration: or simply block migration. The instance has ephemeral disks that are not shared between the source and destination hosts. Block migration is incompatible with read-only devices such as CD-ROMs and Configuration Drive (config_drive).
     - Ephemeral Disk
     - Live migration is not always supported for VM disks using local ephemeral storage.
@@ -139,10 +140,12 @@ Details
   - Instance Boot Type and Ephemeral and Swap Disks from flavor
 - Output
   - Timeout
+  - Tradeoffs
 - Procedures
   - From
     - Manual
     - Tempest
+    - Single / Parallel
   - Flavors
     - Small
     - Medium
