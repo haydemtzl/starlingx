@@ -4,15 +4,17 @@
 
 # Terminology
 
-- Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable.
+- Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable. [Openstack Operations Guide](https://docs.openstack.org/operations-guide/ops-projects-users.html).
 - StarlingX Nova scheduler: A modified version of the OpenStack Nova scheduler.
 - NUMA: Non-uniform memory access (NUMA) is a computer memory design used in multiprocessing, where the memory access time depends on the memory location relative to the processor. [Wikipedia](https://en.wikipedia.org/wiki/Non-uniform_memory_access)
+- Live Migration: Live-migrating an instance means moving its virtual machine to a different OpenStack Compute server while the instance continues running. [Openstack Compute Nova](https://docs.openstack.org/nova/pike/admin/live-migration-usage.html)
+- PCI pass through allows compute nodes to pass a physical PCI device to a hosted VM. This can be used for direct access to a PCI device inside the VM. [OpenStack Charms Deployment Guide](https://docs.openstack.org/project-deploy-guide/charm-deployment-guide/latest/app-pci-passthrough-gpu.html)
 
 # Patches
 
 - 01 Enable delete bound trunk for linux bridge agent
   - http://lists.starlingx.io/pipermail/starlingx-discuss/2018-August/000698.html
-- 02 Prevent DHCP from processing stale RPC messages
+- 02 Prevent DHCP from OpenStack Charms Deployment Guideprocessing stale RPC messages
   - https://bugs.launchpad.net/neutron/+bug/1795212
   - http://lists.starlingx.io/pipermail/starlingx-discuss/2018-December/002364.html
 - 0039-dhcp-handle-concurrent-port-creation-error.patch
@@ -43,3 +45,17 @@
 - Tenant
   - It
 - User Guide
+
+# Live Migration
+
+- [OpenStack Nova](https://docs.openstack.org/nova/latest/admin/live-migration-usage.html)
+
+- Types
+  - Block
+  - Volume-backed
+  - Shared storage
+- Limitations
+  - iso9660 is not migratable
+  - PCI passthrough?
+  - PCI Alias?
+  - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
