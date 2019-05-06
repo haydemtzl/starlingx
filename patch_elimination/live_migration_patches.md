@@ -140,6 +140,13 @@ Details
 - Output
   - Timeout
 - Procedures
+  - From
+    - Manual
+    - Tempest
+  - Flavors
+    - Small
+    - Medium
+    - Large
   - Images
     - Linux
     - Windows
@@ -162,6 +169,11 @@ Details
   - Performance
     - How much downtime
     - How long to pause
+    - Metrics
+      - Average non-block storage duration
+      - Min/Max non-block storage duration
+      - Average block storage duration
+      - Min/Max block storage duration
 
 ### Training
 
