@@ -138,6 +138,15 @@ Details
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
   - Flavor extra specifications, image metadata, or instance metadata.
   - Instance Boot Type and Ephemeral and Swap Disks from flavor
+  - Search under StarlingX for "does not support live migration"
+    - cgcs-root/stx/git/qemu/block/parallels.c
+    - cgcs-root/stx/git/qemu/block/qcow.c
+    - cgcs-root/stx/git/qemu/block/vdi.c
+    - cgcs-root/stx/git/qemu/block/vhdx.c
+    - cgcs-root/stx/git/qemu/block/vmdk.c
+    - cgcs-root/stx/git/qemu/block/vpc.c
+    - cgcs-root/stx/git/qemu/block/vvfat.c
+    - cgcs-root/stx/git/qemu/contrib/vhost-user-blk/vhost-user-blk.c
 - Output
   - Timeout
   - Tradeoffs
@@ -166,6 +175,10 @@ Details
     - Current Host
     - New Host
     - Block Migration
+  - Workload Activity
+    - Indefinite Ping
+  - Admin > Panel > Instances
+    - Live Migrate Instance
   - Fault Management
     - Alarm ID 700.008
     - Timeout
@@ -184,3 +197,244 @@ Details
 - Limitations
 - Virtual Machines
 - Fault Management
+
+### Source Code
+
+```sh
+cgcs-root/stx/git/ceph/doc/changelog/v0.67.10.txt
+cgcs-root/stx/git/ceph/doc/changelog/v0.80.6.txt
+cgcs-root/stx/git/ceph/doc/man/8/rbd.rst
+cgcs-root/stx/git/ceph/doc/rbd/qemu-rbd.rst
+cgcs-root/stx/git/ceph/doc/rbd/rbd-openstack.rst
+cgcs-root/stx/git/ceph/qa/qa_scripts/openstack/files/cinder.template.conf
+cgcs-root/stx/git/ceph/qa/qa_scripts/openstack/files/nova.template.conf
+cgcs-root/stx/git/ceph/src/include/rbd/librbd.h
+cgcs-root/stx/git/cinder/cinder/locale/ja/LC_MESSAGES/cinder.po
+cgcs-root/stx/git/cinder/cinder/volume/drivers/dell_emc/ps.py
+cgcs-root/stx/git/cinder/cinder/volume/drivers/dell_emc/vmax/common.py
+cgcs-root/stx/git/cinder/cinder/volume/drivers/dell_emc/vmax/fc.py
+cgcs-root/stx/git/cinder/cinder/volume/drivers/dell_emc/vmax/iscsi.py
+cgcs-root/stx/git/cinder/cinder/volume/drivers/dell_emc/vmax/masking.py
+cgcs-root/stx/git/cinder/cinder/volume/drivers/netapp/options.py
+cgcs-root/stx/git/cinder/doc/source/configuration/block-storage/drivers/dell-emc-unity-driver.rst
+cgcs-root/stx/git/cinder/doc/source/configuration/block-storage/drivers/emc-vmax-driver.rst
+cgcs-root/stx/git/cinder/doc/source/configuration/block-storage/drivers/emc-vnx-driver.rst
+cgcs-root/stx/git/cinder/doc/source/configuration/tables/cinder-netapp_eseries_iscsi.inc
+cgcs-root/stx/git/cinder/releasenotes/notes/live_migration_v3-ae98c0d00e64c954.yaml
+cgcs-root/stx/git/cinder/releasenotes/notes/ps-duplicate-ACL-5aa447c50f2474e7.yaml
+cgcs-root/stx/git/glance/doc/source/glossary.rst
+cgcs-root/stx/git/glance/etc/metadefs/compute-tis-flavor.json
+cgcs-root/stx/git/glance/etc/metadefs/tis-live-migration-image.json
+cgcs-root/stx/git/glance/etc/metadefs/tis-live-migration-instance.json
+cgcs-root/stx/git/glance/stx-patches/0009-Pike-Rebase-Update-metadefs.patch
+cgcs-root/stx/git/horizon/openstack_dashboard/dashboards/admin/instances/forms.py
+cgcs-root/stx/git/horizon/openstack_dashboard/locale/cs/LC_MESSAGES/django.po
+...
+cgcs-root/stx/git/horizon/openstack_dashboard/locale/zh_TW/LC_MESSAGES/django.po
+cgcs-root/stx/git/ironic/doc/source/user/index.rst
+cgcs-root/stx/git/kubernetes/vendor/google.golang.org/api/compute/v0.alpha/compute-api.json
+cgcs-root/stx/git/kubernetes/vendor/google.golang.org/api/compute/v0.alpha/compute-gen.go
+cgcs-root/stx/git/libvirt/docs/apps.html.in
+cgcs-root/stx/git/libvirt/docs/formatcaps.html.in
+cgcs-root/stx/git/libvirt/docs/internals/locking.html.in
+cgcs-root/stx/git/libvirt/docs/news-2010.html.in
+cgcs-root/stx/git/libvirt/include/libvirt/libvirt-domain.h
+cgcs-root/stx/git/libvirt/po/as.mini.po
+...
+cgcs-root/stx/git/libvirt/po/zh_CN.mini.po
+cgcs-root/stx/git/libvirt/src/conf/capabilities.c
+cgcs-root/stx/git/libvirt/src/libvirt-domain.c
+cgcs-root/stx/git/libvirt/tools/virsh.pod
+cgcs-root/stx/git/neutron/doc/source/contributor/internals/images/live-mig-ovs-hybrid.txt
+cgcs-root/stx/git/neutron/doc/source/contributor/internals/images/live-mig.txt
+cgcs-root/stx/git/neutron/neutron/db/l3_dvr_db.py
+cgcs-root/stx/git/neutron/neutron/notifiers/nova.py
+cgcs-root/stx/git/neutron/neutron/plugins/ml2/drivers/macvtap/mech_driver/mech_macvtap.py
+cgcs-root/stx/git/neutron/neutron/plugins/ml2/rpc.py
+cgcs-root/stx/git/neutron/neutron/services/trunk/drivers/openvswitch/agent/ovsdb_handler.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/l3/test_dvr_router.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/services/l3_router/test_l3_dvr_router_plugin.py
+cgcs-root/stx/git/neutron/releasenotes/notes/dvr-support-live-migration-b818b12bd9cbb518.yaml
+cgcs-root/stx/git/neutron/releasenotes/notes/macvtap-l2-agent-2b551d8ec341196d.yaml
+cgcs-root/stx/git/nova/.zuul.yaml
+cgcs-root/stx/git/nova/api-guide/source/server_concepts.rst
+cgcs-root/stx/git/nova/api-ref/source/parameters.yaml
+cgcs-root/stx/git/nova/api-ref/source/server-migrations.inc
+cgcs-root/stx/git/nova/doc/source/admin/configuration/hypervisor-hyper-v.rst
+cgcs-root/stx/git/nova/doc/source/admin/configuration/hypervisor-kvm.rst
+cgcs-root/stx/git/nova/doc/source/admin/configuration/hypervisor-xen-api.rst
+cgcs-root/stx/git/nova/doc/source/admin/configuration/schedulers.rst
+cgcs-root/stx/git/nova/doc/source/admin/configuring-migrations.rst
+cgcs-root/stx/git/nova/doc/source/admin/live-migration-usage.rst
+cgcs-root/stx/git/nova/doc/source/admin/node-down.rst
+cgcs-root/stx/git/nova/doc/source/admin/secure-live-migration-with-qemu-native-tls.rst
+cgcs-root/stx/git/nova/doc/source/admin/security.rst
+cgcs-root/stx/git/nova/doc/source/admin/support-compute.rst
+cgcs-root/stx/git/nova/doc/source/admin/virtual-gpu.rst
+cgcs-root/stx/git/nova/doc/source/common/numa-live-migration-warning.txt
+cgcs-root/stx/git/nova/doc/source/reference/index.rst
+cgcs-root/stx/git/nova/doc/source/user/cellsv2-layout.rst
+cgcs-root/stx/git/nova/doc/source/user/support-matrix.ini
+cgcs-root/stx/git/nova/nova/api/openstack/api_version_request.py
+cgcs-root/stx/git/nova/nova/api/openstack/compute/rest_api_version_history.rst
+cgcs-root/stx/git/nova/nova/api/openstack/compute/server_migrations.py
+cgcs-root/stx/git/nova/nova/compute/api.py
+cgcs-root/stx/git/nova/nova/compute/manager.py
+cgcs-root/stx/git/nova/nova/compute/resource_tracker.py
+cgcs-root/stx/git/nova/nova/conductor/tasks/live_migrate.py
+cgcs-root/stx/git/nova/nova/conf/compute.py
+cgcs-root/stx/git/nova/nova/conf/hyperv.py
+cgcs-root/stx/git/nova/nova/conf/libvirt.py
+cgcs-root/stx/git/nova/nova/conf/rpc.py
+cgcs-root/stx/git/nova/nova/conf/workarounds.py
+cgcs-root/stx/git/nova/nova/db/sqlalchemy/models.py
+cgcs-root/stx/git/nova/nova/exception.py
+cgcs-root/stx/git/nova/nova/locale/cs/LC_MESSAGES/nova.po
+...
+cgcs-root/stx/git/nova/nova/locale/zh_TW/LC_MESSAGES/nova.po
+cgcs-root/stx/git/nova/nova/network/base_api.py
+cgcs-root/stx/git/nova/nova/network/neutronv2/api.py
+cgcs-root/stx/git/nova/nova/objects/migrate_data.py
+cgcs-root/stx/git/nova/nova/objects/service.py
+cgcs-root/stx/git/nova/nova/policies/servers_migrations.py
+cgcs-root/stx/git/nova/nova/scheduler/utils.py
+cgcs-root/stx/git/nova/nova/tests/functional/regressions/test_bug_1797580.py
+cgcs-root/stx/git/nova/nova/tests/functional/test_availability_zones.py
+cgcs-root/stx/git/nova/nova/tests/functional/test_server_group.py
+cgcs-root/stx/git/nova/nova/tests/functional/test_servers.py
+cgcs-root/stx/git/nova/nova/tests/unit/api/openstack/compute/test_migrations.py
+cgcs-root/stx/git/nova/nova/tests/unit/api/openstack/compute/test_server_migrations.py
+cgcs-root/stx/git/nova/nova/tests/unit/compute/test_compute.py
+cgcs-root/stx/git/nova/nova/tests/unit/compute/test_compute_mgr.py
+cgcs-root/stx/git/nova/nova/tests/unit/conductor/test_conductor.py
+cgcs-root/stx/git/nova/nova/tests/unit/virt/libvirt/test_driver.py
+cgcs-root/stx/git/nova/nova/tests/unit/virt/test_virt_drivers.py
+cgcs-root/stx/git/nova/nova/virt/driver.py
+cgcs-root/stx/git/nova/nova/virt/fake.py
+cgcs-root/stx/git/nova/nova/virt/hyperv/livemigrationops.py
+cgcs-root/stx/git/nova/nova/virt/hyperv/volumeops.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/driver.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/guest.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/host.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/migration.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/utils.py
+cgcs-root/stx/git/nova/nova/virt/powervm/host.py
+cgcs-root/stx/git/nova/nova/virt/vmwareapi/driver.py
+cgcs-root/stx/git/nova/nova/virt/vmwareapi/vmops.py
+cgcs-root/stx/git/nova/nova/virt/xenapi/driver.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/guest.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/host.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/migration.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/utils.py
+cgcs-root/stx/git/nova/nova/virt/powervm/host.py
+cgcs-root/stx/git/nova/nova/virt/vmwareapi/driver.py
+cgcs-root/stx/git/nova/nova/virt/vmwareapi/vmops.py
+cgcs-root/stx/git/nova/nova/virt/xenapi/driver.py
+cgcs-root/stx/git/nova/nova/virt/xenapi/vmops.py
+cgcs-root/stx/git/nova/playbooks/legacy/nova-grenade-live-migration/run.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/abort-live-migration-cb902bb0754b11b6.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/abort-live-migration-in-queue-0c917f415d6dac5a.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/add-live-migration-support-in-xapi-pool-5ac42c2468c3616e.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/automatic-live-migration-completion-auto-converge-3ddd3a40eaf3ef5b.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/automatic-live-migration-completion-post-copy-a7a3a986961c93d8.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/bp-split-network-plane-for-live-migration-40bc127734173759.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/bug-1712008-4ab2538211b8c3d9.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/disable-live-migration-with-numa-bc710a1bcde25957.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/force-live-migration-be5a10cd9c8eb981.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt-change-default-value-of-live-migration-tunnelled-4248cf76df605fdf.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt-live-migration-speed-limit-revert-81a9d29d60b0df4b.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt_fix_ipv6_live_migration-bbcde8f3b7d17921.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/live_migration_wait_for_vif_plug-c9dcb034067890d8.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/mutable-config-e7e82b3d7c38f3a5.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/qemu-native-luks-decryption-6e9ad8cc658be14d.yaml
+cgcs-root/stx/git/nova/nova/virt/xenapi/driver.py
+cgcs-root/stx/git/nova/nova/virt/xenapi/vmops.py
+cgcs-root/stx/git/nova/playbooks/legacy/nova-grenade-live-migration/run.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/abort-live-migration-cb902bb0754b11b6.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/abort-live-migration-in-queue-0c917f415d6dac5a.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/add-live-migration-support-in-xapi-pool-5ac42c2468c3616e.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/automatic-live-migration-completion-auto-converge-3ddd3a40eaf3ef5b.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/automatic-live-migration-completion-post-copy-a7a3a986961c93d8.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/bp-split-network-plane-for-live-migration-40bc127734173759.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/bug-1712008-4ab2538211b8c3d9.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/disable-live-migration-with-numa-bc710a1bcde25957.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/force-live-migration-be5a10cd9c8eb981.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt-change-default-value-of-live-migration-tunnelled-4248cf76df605fdf.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt-live-migration-speed-limit-revert-81a9d29d60b0df4b.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/libvirt_fix_ipv6_live_migration-bbcde8f3b7d17921.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/live_migration_wait_for_vif_plug-c9dcb034067890d8.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/mutable-config-e7e82b3d7c38f3a5.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/qemu-native-luks-decryption-6e9ad8cc658be14d.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/rocky-prelude-b78b51b9026ed336.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/rpc_timeout_changes-6b7e365bb44f7f3a.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/server_migrations-30519b35d3ea6763.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/stein-prelude-b5fe92310e1e725e.yaml
+cgcs-root/stx/git/nova/releasenotes/notes/vmware-live-migration-c09cce337301cab0.yaml
+cgcs-root/stx/git/nova/releasenotes/source/locale/ja/LC_MESSAGES/releasenotes.po
+cgcs-root/stx/git/nova/releasenotes/source/mitaka.rst
+cgcs-root/stx/git/nova/releasenotes/source/newton.rst
+cgcs-root/stx/git/python-novaclient/doc/source/cli/nova.rst
+cgcs-root/stx/git/python-novaclient/novaclient/v2/server_migrations.py
+cgcs-root/stx/git/python-novaclient/novaclient/v2/servers.py
+cgcs-root/stx/git/python-novaclient/novaclient/v2/shell.py
+cgcs-root/stx/git/python-novaclient/releasenotes/notes/microversion-v2_65-3c89c5932f4391cb.yaml
+cgcs-root/stx/git/python-openstackclient/doc/source/cli/data/nova.csv
+cgcs-root/stx/git/python-openstackclient/openstackclient/compute/v2/server.py
+cgcs-root/stx/git/python-openstackclient/openstackclient/locale/tr_TR/LC_MESSAGES/openstackclient.po
+cgcs-root/stx/git/python-openstacksdk/openstack/compute/v2/_proxy.py
+cgcs-root/stx/git/qemu/Changelog
+cgcs-root/stx/git/qemu/block/file-posix.c
+cgcs-root/stx/git/qemu/block/parallels.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/qcow.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/vdi.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/vhdx.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/vmdk.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/vpc.c:               "does not support live migration",
+cgcs-root/stx/git/qemu/block/vvfat.c:                   "does not support live migration",
+cgcs-root/stx/git/qemu/contrib/vhost-user-blk/vhost-user-blk.c:    /* don't support live migration */
+cgcs-root/stx/git/qemu/docs/devel/memory.txt
+cgcs-root/stx/git/qemu/docs/devel/migration.rst
+cgcs-root/stx/git/qemu/docs/devel/qapi-code-gen.txt
+cgcs-root/stx/git/qemu/docs/interop/vhost-user.txt
+cgcs-root/stx/git/qemu/docs/multi-thread-compression.txt
+cgcs-root/stx/git/qemu/docs/rdma.txt
+cgcs-root/stx/git/qemu/docs/xbzrle.txt
+cgcs-root/stx/git/qemu/hw/block/virtio-blk.c
+cgcs-root/stx/git/qemu/hw/char/sclpconsole-lm.c
+cgcs-root/stx/git/qemu/hw/i386/pc_piix.c
+cgcs-root/stx/git/qemu/hw/net/can/can_sja1000.c
+cgcs-root/stx/git/qemu/hw/net/vmxnet3.c
+cgcs-root/stx/git/qemu/hw/usb/hcd-xhci.h
+cgcs-root/stx/git/qemu/include/hw/mem/pc-dimm.h
+cgcs-root/stx/git/qemu/migration/channel.c
+cgcs-root/stx/git/qemu/migration/channel.h
+cgcs-root/stx/git/qemu/migration/exec.c
+cgcs-root/stx/git/qemu/migration/exec.h
+cgcs-root/stx/git/qemu/migration/fd.c
+cgcs-root/stx/git/qemu/migration/fd.h
+cgcs-root/stx/git/qemu/migration/migration.c
+cgcs-root/stx/git/qemu/migration/migration.h
+cgcs-root/stx/git/qemu/migration/savevm.c
+cgcs-root/stx/git/qemu/migration/socket.c
+cgcs-root/stx/git/qemu/migration/socket.h
+cgcs-root/stx/git/qemu/migration/xbzrle.h
+cgcs-root/stx/git/qemu/qapi/migration.json
+cgcs-root/stx/git/qemu/qemu-deprecated.texi:These machine types are very old and likely can not be used for live migration
+cgcs-root/stx/git/qemu/qemu-options.hx:For architectures which aim to support live migration compatibility
+cgcs-root/stx/git/qemu/qemu-options.hx:To allow live migration of guests from QEMU version 2.8.0, to QEMU
+cgcs-root/stx/git/qemu/target/i386/machine.c:     * Fixing it will allow live migration to host with unrestricted guest
+cgcs-root/stx/git/qemu/target/i386/machine.c:     * Fixing it will allow live migration from such host that don't have
+cgcs-root/stx/git/qemu/target/s390x/cpu.h:    /* needed for live migration */
+cgcs-root/stx/git/qemu/tests/qemu-iotests/091:echo "vm1: live migration started"
+cgcs-root/stx/git/qemu/tests/qemu-iotests/091:echo "vm1: live migration completed"
+cgcs-root/stx/git/qemu/tests/qemu-iotests/091.out:vm1: live migration started
+cgcs-root/stx/git/qemu/tests/qemu-iotests/091.out:vm1: live migration completed
+cgcs-root/stx/git/qemu/tests/qemu-iotests/181:# Test postcopy live migration with shared storage
+cgcs-root/stx/git/qemu/tests/qemu-iotests/181:# Formats that do not support live migration
+cgcs-root/stx/git/qemu/tests/qemu-iotests/201:# Test savevm and loadvm after live migration with postcopy flag
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/tests/events_for_testing.yaml:    Proposed_Repair_Action: Wait for live migration to complete; if problem persists contact next level of 
+cgcs-root/stx/stx-fault/fm-doc/fm_doc/events.yaml:    Proposed_Repair_Action: Wait for live migration to complete; if problem persists contact next level of support
+cgcs-root/stx/stx-integ/tools/vm-topology/vm-topology/vm_topology/exec/vm_topology.py:        # live migration
+cgcs-root/stx/stx-integ/virt/libvirt/centos/libvirt.spec:## Set auth_tcp to "none" for now to enable live migration.
+
+```
