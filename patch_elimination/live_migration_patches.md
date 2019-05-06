@@ -88,8 +88,10 @@ Types
 
 Why
 
-- Upgrade Host
-- Upgrade n-Cpu
+- Cloud maintenance
+  - Upgrade Host
+  - Patching
+  - Upgrade n-Cpu
 - Re-balance Workload
 
 Virtual Machine
@@ -109,8 +111,9 @@ Details
 - Phases
   - Runs at source node
     - Setup, sync disk
-    - Copy memory
+    - Transfer memory
     - Flush
+    - Dirtying memory
   - Pause
     - Downtime
     - Copy memory: dirty memory
@@ -121,8 +124,9 @@ Details
   - Minimize downtime
   - Complete quickly
 - Features
-  - Auto-Converged
+  - Auto-Converged (VM Throttling)
   - Post-Copy
+  - Maximum Downtime per VM
 - Types
   - Shared storage is quicker, but local storage is possible
   - Block live migration: or simply block migration. The instance has ephemeral disks that are not shared between the source and destination hosts. Block migration is incompatible with read-only devices such as CD-ROMs and Configuration Drive (config_drive).
@@ -132,6 +136,7 @@ Details
     - Attached Cinder Volumes
     - Ephemeral Disks backed by Ceph via RBD
   - Shared storage-based live migration: The instance has ephemeral disks that are located on storage shared between the source and destination hosts.
+  - Mix of local qcow2 and cinder volumes
 - Hosts
   - KVM-libvirt
 - Policies
@@ -160,7 +165,9 @@ Details
   - From
     - Manual
     - Tempest
-    - Single / Parallel
+    - Single
+    - Parallel
+      - 2 Compute hosts
   - Flavors
     - Small
     - Medium
@@ -192,6 +199,10 @@ Details
   - Fault Management
     - Alarm ID 700.008
     - Timeout
+      - 800 seconds
+      - 180 seconds
+    - Maximum Downtime
+      - 500 msec
   - Performance
     - How much downtime
     - How long to pause
@@ -200,6 +211,86 @@ Details
       - Min/Max non-block storage duration
       - Average block storage duration
       - Min/Max block storage duration
+   - Optimization
+     - 10 Gb Management / Infrastructure Network
+     - StarlingX API to 
+     - Tune
+       - Flavor Extra Specs
+       - Metadata
+         - Image
+         - Instance
+
+#### Maximum Downtime
+
+- cgcs-root/stx/git/glance/stx-patches/0001-Pike-Rebase-Validate-image-properties.patch
+  - hw_wrs_live_migration_max_downtime
+- cgcs-root/stx/stx-nfv/nfv/nfv-plugins/nfv_plugins/nfvi_plugins/nfvi_compute_api.py
+
+```sh
+
+```
+
+```sh
+cgcs-root/stx/git/ceph/qa/qa_scripts/openstack/files/nova.template.conf
+cgcs-root/stx/git/glance/etc/metadefs/compute-tis-flavor.json
+cgcs-root/stx/git/glance/etc/metadefs/tis-live-migration-image.json
+cgcs-root/stx/git/glance/etc/metadefs/tis-live-migration-instance.json
+cgcs-root/stx/git/glance/glance/api/v1/images.py
+cgcs-root/stx/git/glance/stx-patches/0001-Pike-Rebase-Validate-image-properties.patch
+cgcs-root/stx/git/glance/stx-patches/0009-Pike-Rebase-Update-metadefs.patch
+cgcs-root/stx/git/libvirt/docs/news-2010.html.in
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_instance_director.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_sw_upgrade_strategy.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/utils.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/api/controllers/v1/virtualised_resources/_computes_api.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/audits/_vim_nfvi_audits.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/database/_database_compute_module.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/database/model/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/directors/_instance_director.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/events/_vim_instance_api_events.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_image.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_image.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/rpc/_rpc_message_instance.py
+cgcs-root/stx/git/nova/doc/source/admin/configuring-migrations.rst
+cgcs-root/stx/git/nova/doc/source/contributor/testing/zero-downtime-upgrade.rst
+cgcs-root/stx/git/nova/doc/source/contributor/testing/zero-downtime-upgrade.rst
+cgcs-root/stx/git/nova/nova/conf/libvirt.py
+cgcs-root/stx/git/nova/nova/tests/unit/virt/libvirt/test_guest.py
+cgcs-root/stx/git/nova/nova/tests/unit/virt/libvirt/test_migration.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/driver.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/guest.py
+cgcs-root/stx/git/nova/nova/virt/libvirt/migration.py
+cgcs-root/stx/git/qemu/hmp-commands.hx
+cgcs-root/stx/git/qemu/hw/i386/kvm/clock.c
+cgcs-root/stx/git/qemu/hw/ppc/ppc.c
+cgcs-root/stx/git/qemu/migration/block.c
+cgcs-root/stx/git/qemu/migration/migration.h
+cgcs-root/stx/git/qemu/qapi/migration.json
+cgcs-root/stx/stx-nfv/nfv/nfv-plugins/nfv_plugins/nfvi_plugins/nfvi_compute_api.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/test_data/nfv_vim_db_15.12_patch002
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_instance_director.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/test_sw_patch_strategy.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/tests/utils.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/api/controllers/v1/virtualised_resources/_computes_api.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/audits/_vim_nfvi_audits.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/database/_database_compute_module.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/database/model/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/directors/_instance_director.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/events/_vim_instance_api_events.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_image.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/nfvi/objects/v1/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_image.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/objects/_instance_type.py
+cgcs-root/stx/stx-nfv/nfv/nfv-vim/nfv_vim/rpc/_rpc_message_instance.py
+```
 
 ### Training
 
