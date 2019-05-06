@@ -37,6 +37,15 @@
 - 0014-add-support-for-querying-quotas-with-usage.patch (71c07d7)
   - Tbd
 
+# General
+
+- Storage Configuration
+  - Migration
+  - Resize
+  - Evacuation
+- Resource Monitoring
+  - NUMA node resources on a host
+
 # Trunk
 
 "Trunk" has some relationship with the following terminology:
@@ -93,6 +102,8 @@ Details
   - PCI passthrough?
   - PCI Alias?
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
+  - Flavor extra specifications, image metadata, or instance metadata.
+  - Instance Boot Type and Ephemeral and Swap Disks from flavor
 - Procedures
   - Images
     - Linux
@@ -110,9 +121,12 @@ Details
     - Current Host
     - New Host
     - Block Migration
+  - Fault Management
+    - Alarm ID 700.008
 
 Training
 
 - Definition
 - Limitations
 - Virtual Machines
+- Fault Management
