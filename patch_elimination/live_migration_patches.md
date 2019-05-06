@@ -6,6 +6,7 @@
 
 - Tenant: A group of users is referred to as a project or tenant. There terms are interchangeable.
 - StarlingX Nova scheduler: A modified version of the OpenStack Nova scheduler.
+- NUMA: Non-uniform memory access (NUMA) is a computer memory design used in multiprocessing, where the memory access time depends on the memory location relative to the processor. [Wikipedia](https://en.wikipedia.org/wiki/Non-uniform_memory_access)
 
 # Patches
 
