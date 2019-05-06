@@ -46,14 +46,33 @@
   - It
 - User Guide
 
+# NUMA
+
+- https://specs.openstack.org/openstack/nova-specs/specs/rocky/approved/numa-aware-live-migration.html
+
+Details
+
+- Relationship with:
+  - CPU Pinning
+  - Hugepages
+  - Best Effort
+
 # Live Migration
 
 - [OpenStack Nova](https://docs.openstack.org/nova/latest/admin/live-migration-usage.html)
 
+Details
+
 - Types
   - Block
+    - Ephemeral Disk
   - Volume-backed
+    - Attached Cinder Volumes
+    - Ephemeral Disks backed by Ceph via RBD
   - Shared storage
+- Policies
+  - Affinity: 
+  - Non-Affinity
 - Limitations
   - iso9660 is not migratable
   - PCI passthrough?
