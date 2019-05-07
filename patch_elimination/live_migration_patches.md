@@ -351,6 +351,8 @@ $ openstack flavor set m1.large \  # configure guest node 1
 
 ## CPU Pinning
 
+> Related to NUMA
+
 From Glance source code:
 
 ```sh
@@ -363,6 +365,8 @@ Date:   Fri Jul 3 09:41:42 2015 +0100
     This metadef adds CPU pinning namespace and property to Nova::Flavor,
     Glance::Image, Cinder::Volume(image) resource types metadata.
 ```
+
+
 
 ## CPU
 
