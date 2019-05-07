@@ -67,6 +67,11 @@ cgcs-root/stx/git/nova
 cgcs-root/stx/git/nova
 ```
 
+#### hw:numa_mem
+
+```sh
+cgcs-root/stx/git/nova
+```
 
 ### Source Code
 
