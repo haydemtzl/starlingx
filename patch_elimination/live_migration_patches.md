@@ -160,6 +160,113 @@ Date:   Sat May 19 21:28:10 2018 -0700
     Signed-off-by: Dean Troyer <dtroyer@gmail.com>
 ```
 
+- stx-patches/0001-Pike-Rebase-Validate-image-properties.patch
+  - glance/api/v1/images.py
+  - glance/api/v2/images.py
+  - Extra Properties
+    - hw_wrs_live_migration_max_downtime
+    - hw_wrs_live_migration_timeout
+    - sw_wrs_auto_recovery
+- glance/api/v1/images.py
+- glance/api/v2/images.py
+- stx-patches/0002-Pike-Rebase-Enhanced-error-messages.patch
+  - glance/api/v1/upload_utils.py
+  - glance/tests/unit/fake_rados.py
+  - glance/tests/unit/v1/test_api.py
+  - glance/tests/unit/v1/test_upload_utils.py
+- glance/api/v1/upload_utils.py
+- glance/tests/unit/fake_rados.py
+- glance/tests/unit/v1/test_api.py
+- glance/tests/unit/v1/test_upload_utils.py
+- stx-patches/0003-Pike-Rebase-RAW-image-caching-support.patch
+  - Add RAW caching image feature
+- etc/glance-api.conf
+- glance/api/v1/images.py
+- glance/api/v2/image_data.py
+- glance/api/v2/images.py
+- glance/cache_raw.py
+- glance/cmd/api.py
+- glance/common/exception.py
+- glance/common/imageutils.py
+- glance/common/wsgi.py
+- glance/tests/integration/legacy_functional/test_v1_api.py
+- glance/tests/unit/fake_cache_raw.py
+- glance/tests/unit/v1/test_api.py
+
+```sh
+commit ab1c3ba413a3785aebd1c088124ba4e51b9762b3
+Author: Daniel Chavolla <daniel.chavolla@windriver.com>
+Date:   Wed Sep 19 17:05:26 2018 -0400
+
+    add the ability to request HPET support
+    
+    Updated HPET timer extra spec name to “hw:hpet” to match
+    changes in nova. Also, some minor formatting fixes.
+    
+    Closes bug: 1790961
+    https://bugs.launchpad.net/starlingx/+bug/1790961
+    
+    To be upstreamed along with stx-nova commit e0e80c8024a
+    and with internal glance commit 6aa614c7
+```
+
+- High Precision Event Timer (HPET)
+- etc/metadefs/compute-tis-flavor.json
+- __Question?__ Do we have an issue? Nope! 
+  - Under Glance, it is called:
+    - hw:hpet
+  - Under Nova, it is found as:
+    - hw_time_hpet (image property)
+    - hpet (flag)
+
+```sh
+commit 47c1d756a547122e29b43b008d94f264389cc7f4
+Author: Sun Austin <austin.sun@intel.com>
+Date:   Wed Nov 14 13:17:24 2018 +0800
+
+    update 'hw:cpu_model' meta data to support *-IBRS vcpu type
+    
+    after libvirt upgraded to 4.7.0, there are some new vcpu types for
+    instance vcpu_model, if compute node is using *-IBRS cpu,
+    Passthrough favor can not be used for creating instance.
+    it will cause some like below error
+    "No valid host was found. There are not enough hosts available.
+     computer-0: (VCpuModelFilter) Host VCPU model Skylake-Server-IBRS
+     required Passthrough
+     Code 501"
+    
+    Partial-Bug: 1803280
+```
+
+- etc/metadefs/compute-tis-flavor.json
+  - Nehalem-IBRS
+  - ...
+  - Skylake-Server-IBRS
+
+```sh
+commit d8ab19da86a28a6369656d3b9284e30bf267ec8d
+Author: Jim Gauld <james.gauld@windriver.com>
+Date:   Tue Nov 27 17:44:23 2018 -0400
+
+    Remove support for nova-local lvm backend for compute hosts
+    
+    This story tracks the removal of the nova-local lvm backend for compute
+    hosts. The lvm backend is no longer required; nova-local storage will
+    continue to support settings of "image" or "remote" backends.
+    
+    This story will remove custom code related to lvm nova-local storage:
+    - this removes local_lvm from /etc/metadefs/compute-tis-flavor.json
+    
+    DocImpact
+    Story: 2004427
+    Task: 28083
+```
+
+- etc/metadefs/compute-tis-flavor.json
+  - remote
+  - local_lvm
+  - local_image
+
 Interesting Links
 
 - [Power off commands should give guests a chance to shutdown](https://review.opendev.org/#/c/68942/)
@@ -388,6 +495,10 @@ Details
     - Enhanced NUMA scheduling options
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
   - Flavor extra specifications, image metadata, or instance metadata.
+    - Extra Properties, From Glance
+      - hw_wrs_live_migration_max_downtime
+      - hw_wrs_live_migration_timeout
+      - sw_wrs_auto_recovery
   - Instance Boot Type and Ephemeral and Swap Disks from flavor
   - Search under StarlingX for "does not support live migration"
     - cgcs-root/stx/git/qemu/block/parallels.c
@@ -455,7 +566,7 @@ Details
       - Min/Max non-block storage duration
       - Average block storage duration
       - Min/Max block storage duration
-   - Love Migration Optimization
+   - Live Migration Optimization
      - 10 Gb Management / Infrastructure Network
      - StarlingX API to 
      - Tune
