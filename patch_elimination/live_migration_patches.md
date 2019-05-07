@@ -1,3 +1,12 @@
+# Others
+
+- Still having source code references for "compute" nodes, instead of "worker" nodes.
+- Same for Documentation
+
+```
+[user@ecfb67fa2760 starlingx]$ repo grep "compute nodes"
+```
+
 # General
 
 - https://etherpad.openstack.org/p/stx-networking
@@ -46,6 +55,10 @@ See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/
 ### Documentation
 
 What those documentations says about NUMA?
+
+### StarlingX
+
+- numa_node
 
 ### Details
 
@@ -354,10 +367,39 @@ Date:   Fri Jul 3 09:41:42 2015 +0100
 ## Large Pages (Huge Pages)
 
 - https://docs.openstack.org/nova/latest/admin/huge-pages.html
+- http://lists.starlingx.io/pipermail/starlingx-discuss/2019-January/002884.html
 
 ### Documentation
 
 What those documentations says about NUMA?
+
+### StarlingX Terminology
+
+- Memory
+  - Host Memory Provisioning
+    - Commnand Line Interface
+      - system host-memory-list
+        - do_host_memory_list
+      - system host-memory-show
+        - do_host_memory_show
+      - system host-memory-modify
+        - do_host_memory_modify
+    - User Interface
+      - Host Inventory > Memory
+- vSwitch Huge Pages
+- VM Pages
+
+
+### Process
+
+1. Set Huge Pages
+   - Host Name
+     - Memory
+     - Update Memory (do_host_memory_modify)
+       - Page Size for a VM
+         - VM 2M Hugeages
+         - VM 1G Hugepages
+2. Save Memory Profile to apply ton other hosts
 
 ### Source Code
 
@@ -401,6 +443,227 @@ cgcs-root/stx/git/nova/nova/tests/unit/virt/test_hardware.py
 stx-tools/deployment/provision/simplex_stage_2.sh
 ```
 
+#### do_host_memory
+
+- Reserved
+  - platform_reserved_mib
+- 2M
+  - hugepages_nr_2M_pending
+    - vswitch_hp_size_mib = 2
+  - vm_hugepages_nr_2M_pending
+- 1G
+  - hugepages_nr_1G_pending
+    - vswitch_hp_size_mib = 1024
+  - vm_hugepages_nr_1G_pending
+
+
+##### stx-config
+
+###### vswitch
+
+```
+$ system host-cpu-modify compute-0 -f vswitch -p0 1
+```
+
+From
+
+- https://wiki.openstack.org/wiki/StarlingX/Containers/Installation
+
+```sh
+Configure the vswitch type (optional)
+
+    As of March 29th 2019, OVS running in a container is deployed by default.
+
+To deploy OVS-DPDK (supported only on baremetal hardware), please run the following commands:
+
+system modify --vswitch_type ovs-dpdk
+system host-cpu-modify -f vswitch -p0 1 controller-0
+# To set the vswitch type back to the default (i.e. OVS running in a container), run:
+# system modify --vswitch_type none
+
+    NOTE: For virtual environments, only OVS running in a container is supported.
+    NOTE: The vswitch type cannot be modified after controller-0 is unlocked.
+    IMPORTANT: When deploying OVS-DPDK, VMs must be configured to use a flavor with property: hw:mem_page_size=large
+```
+
+From
+
+- https://wiki.openstack.org/wiki/StarlingX/Installation_Guide_Virtual_Environment/Dedicated_Storage
+
+```sh
+VSwitch Virtual Environment
+
+Only in Virtual Environment. If the compute has more than 4 cpus, the system will auto-configure the vswitch to use 2 cores. However some virtual environments do not properly support multi-queue required in a multi-cpu environment. Therefore run the following command to reduce the vswitch cores to 1:
+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-cpu-modify compute-0 -f vswitch -p0 1
+```
+
+Where is affinity happening?:
+
+- cgcs-root/stx/stx-config/worker-utils/worker-utils/cpumap_functions.sh
+- cgcs-root/stx/stx-config/worker-utils/worker-utils/task_affinity_functions.sh
+
+How number of cores is related?
+
+- N_CORES_IN_PKG
+- /etc/platform/platform.conf
+  - ./cgcs-root/stx/stx-metal/devstack/files/platform.conf
+  - PLATFORM_CORES
+  - PLATFORM_CPULIST
+- /etc/vswitch/vswitch.conf
+  - AVP_CORES
+  - AVP_CPULIST
+- /etc/platform/worker_reserved.conf
+  - ./cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
+
+```sh
+./cgcs-root/stx/stx-metal/devstack/files/platform.conf
+
+nodetype=controller
+subfunction=@SUBFUNCTION@
+system_type=@SYS_TYPE@
+security_profile=standard
+INSTALL_UUID=b4c47f98-1fe6-4959-b031-e4a71a261526
+management_interface=@MGMT_ETH@
+UUID=1be42dc6-a072-4364-9b51-c8535ff16644
+oam_interface=@OAM_ETH@
+sdn_enabled=no
+region_config=no
+system_mode=@SYS_MODE@
+sw_version=@SW_VERSION@
+security_feature="nopti nospectre_v2"
+vswitch_type=ovs-dpdk
+```
+
+```sh
+WORKER_CPU_LIST="0-1"
+WORKER_BASE_RESERVED=("node0:8000MB:1" "node1:2000MB:0" "node2:2000MB:0" "node3:2000MB:0")
+WORKER_VSWITCH_MEMORY=("node0:1048576kB:1" "node1:1048576kB:1" "node2:1048576kB:1" "node3:1048576kB:1")
+WORKER_VSWITCH_CORES=("node0:2" "node1:0" "node2:0" "node3:0")
+```
+
+```sh
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+
+def do_host_memory_modify(cc, args):
+    """Modify platform reserved and/or application huge page memory attributes for worker nodes.""" 
+
+...
+
+        if function == 'vswitch':
+            if k == 'hugepages_nr_2M_pending':
+                vswitch_hp_size_mib = 2
+                k = 'vswitch_hugepages_reqd'
+            elif k == 'hugepages_nr_1G_pending':
+                vswitch_hp_size_mib = 1024
+                k = 'vswitch_hugepages_reqd'
+        else:
+            if k == 'hugepages_nr_2M_pending':
+                k = 'vm_hugepages_nr_2M_pending'
+            elif k == 'hugepages_nr_1G_pending':
+                k = 'vm_hugepages_nr_1G_pending'
+
+        patch.append({'op': 'replace', 'path': '/' + k, 'value': v})
+
+    if patch:
+        if vswitch_hp_size_mib:
+            patch.append({'op': 'replace', 'path': '/' + 'vswitch_hugepages_size_mib', 'value': vswitch_hp_size_mib})
+```
+
+###### Vswitch
+
+Where it is founder in source code?
+
+```sh
+cgcs-root/stx/git/libvirt
+cgcs-root/stx/git/neutron
+cgcs-root/stx/stx-config
+cgcs-root/stx/stx-gui
+cgcs-root/stx/stx-integ
+cgcs-root/stx/stx-metal
+cgcs-root/stx/stx-nfv
+```
+
+```sh
+cgcs-root/stx/git/libvirt/docs/news-2012.html.in
+cgcs-root/stx/git/neutron/devstack/lib/ovs
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/l2/base.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/linux/openvswitch_firewall/test_firewall.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/linux/test_dhcp.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/test_firewall.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/test_l2_ovs_agent.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/test_ovs_flows.py:from neutron.plugins.ml2.drivers.openvswitch.agent.common import constants
+cgcs-root/stx/git/neutron/neutron/tests/functional/agent/test_ovs_flows.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/scheduler/test_dhcp_agent_scheduler.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/services/trunk/drivers/openvswitch/agent/test_ovsdb_handler.py
+cgcs-root/stx/git/neutron/neutron/tests/functional/services/trunk/test_plugin.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/icpu_shell.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/etc/sysinv/sampleProfile.xml
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/agent/node.py
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/api/controllers/v1/cpu_utils.py
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/api/controllers/v1/host.py
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/api/controllers/v1/profile.py
+cgcs-root/stx/stx-config/worker-utils/worker-utils/cpumap_functions.sh
+cgcs-root/stx/stx-config/worker-utils/worker-utils/task_affinity_functions.sh
+cgcs-root/stx/stx-gui/starlingx-dashboard/starlingx-dashboard/starlingx_dashboard/dashboards/admin/inventory/cpu_functions/forms.py
+cgcs-root/stx/stx-gui/starlingx-dashboard/starlingx-dashboard/starlingx_dashboard/dashboards/admin/inventory/cpu_functions/utils.py
+cgcs-root/stx/stx-gui/starlingx-dashboard/starlingx-dashboard/starlingx_dashboard/dashboards/admin/inventory/cpu_functions/views.py
+cgcs-root/stx/stx-gui/starlingx-dashboard/starlingx-dashboard/starlingx_dashboard/dashboards/admin/inventory/memories/tables.py
+cgcs-root/stx/stx-gui/starlingx-dashboard/starlingx-dashboard/starlingx_dashboard/dashboards/admin/inventory/templates/inventory/memorys/_vswitchfunction_hugepages.html
+cgcs-root/stx/stx-integ/tools/engtools/hostdata-collectors/scripts/vswitch.sh
+cgcs-root/stx/stx-metal/api-ref/source/api-ref-sysinv-v1-metal.rst
+cgcs-root/stx/stx-metal/inventory/inventory/inventory/agent/node.py
+cgcs-root/stx/stx-metal/inventory/inventory/inventory/api/controllers/v1/cpu_utils.py
+cgcs-root/stx/stx-nfv/nfv/nfv-tests/nfv_unit_tests/test_data/nfv_vim_db_18.03_GA
+```
+
+##### stx-metal
+
+```sh
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/memory_shell.py
+
+def do_host_memory_modify(cc, args):
+    """Modify platform reserved and/or libvirt vm huge page memory
+       attributes for compute nodes.
+    """
+```
+
+```sh
+    host = host_utils._find_host(cc, args.hostnameorid)
+    nodes = cc.node.list(host.uuid)
+    memorys = cc.memory.list(host.uuid)
+    mem = None
+    for m in memorys:
+        for n in nodes:
+            if m.node_uuid == n.uuid:
+                if int(n.numa_node) == int(args.numa_node):
+                    mem = m
+                    break
+```
+
+- do_host_memory_list
+  - imemorys Vs memorys
+
+```sh
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/memory_shell.py
+```
+
+- do_host_memory_show
+
+```sh
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/memory_shell.py
+```
+
+- do_host_memory_modify
+
+```sh
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/imemory_shell.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/memory_shell.py
+```
+
 From Glance source code:
 
 ```sh
@@ -418,6 +681,10 @@ Date:   Tue Sep 29 22:32:10 2015 +0000
 
 ### Tests
 
+- Modification
+  - A existing instance, Huge pages configuration & Memory reserved for platform on compute node.
+  - A new instance
+
 ```sh
 $ openstack flavor set m1.large --property hw:mem_page_size=large
 ```
@@ -425,6 +692,16 @@ $ openstack flavor set m1.large --property hw:mem_page_size=large
 Links
 
 - https://docs.openstack.org/nova/pike/admin/huge-pages.html
+
+### Workshop
+
+```sh
+
+usage: system host-memory-modify [-m <Platform Reserved MiB>]
+                                 [-2M <2M hugepages number>]
+                                 [-1G <1G hugepages number>]
+                                 <hostname or id> <processor>
+```
 
 # Patches
 
