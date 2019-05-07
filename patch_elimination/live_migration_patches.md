@@ -516,6 +516,22 @@ How number of cores is related?
 - /etc/platform/worker_reserved.conf
   - ./cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
 
+Question? How this type of functions are called?
+
+```sh
+[user@ecfb67fa2760 starlingx]$ repo grep affine_tasks_to_idle_cores
+cgcs-root/stx/stx-config/worker-utils/worker-utils/task_affinity_functions.sh:function affine_tasks_to_idle_cores {
+cgcs-root/stx/stx-ha/service-mgmt/sm-1.0.0/src/sm_task_affining_thread.c:           system("source /etc/init.d/task_affinity_functions.sh; affine_tasks_to_idle_cores 2>/dev/null");
+```
+
+```sh
+[user@ecfb67fa2760 starlingx]$ repo grep affine_tasks_to_platform_cores
+cgcs-root/stx/stx-config/worker-utils/worker-utils/affine-tasks.sh:    ##affine_tasks_to_platform_cores
+cgcs-root/stx/stx-config/worker-utils/worker-utils/task_affinity_functions.sh:# calling function affine_tasks_to_platform_cores to re-affine platform tasks
+cgcs-root/stx/stx-config/worker-utils/worker-utils/task_affinity_functions.sh:function affine_tasks_to_platform_cores {
+cgcs-root/stx/stx-ha/service-mgmt/sm-1.0.0/src/sm_task_affining_thread.c:            system("source /etc/init.d/task_affinity_functions.sh; affine_tasks_to_platform_cores 2>/dev/null");
+```
+
 ```sh
 ./cgcs-root/stx/stx-metal/devstack/files/platform.conf
 
