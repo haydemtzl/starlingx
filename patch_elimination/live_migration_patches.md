@@ -40,6 +40,7 @@ See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/
 ## NUMA
 
 > NUMA is a derivative of the SMP design that is found in many multi-socket systems. In a NUMA system, system memory is divided into cells or nodes that are associated with particular CPUs. Requests for memory on other nodes are possible through an interconnect bus. However, bandwidth across this shared bus is limited. As a result, competition for this resource can incur performance penalties.
+
 > In OpenStack, SMP CPUs are known as cores, NUMA cells or nodes are known as sockets, and SMT CPUs are known as threads.
 
 ### Details
