@@ -364,6 +364,103 @@ Date:   Fri Jul 3 09:41:42 2015 +0100
     Glance::Image, Cinder::Volume(image) resource types metadata.
 ```
 
+## CPU
+
+> Shared physical CPU on Worker hosts
+
+CPU Core Assignments:
+
+- platform: platform to use N cores for each NUME node
+- vswitch: avs cores for each processor
+- shared: used by multiple VMs, low load workloads
+  
+CLI
+
+```sh
+$ system host-cpu-modify -f shared -pprocessor use_shared hostname
+$ system host-cpu-modify -f shared -p0 1 compute-0
+```
+
+UI
+
+1. Lock
+2. Inventory Detail
+3. Host Name
+4. Processor
+5. Edit CPU Assignments
+6. Shared Function: 1 Shared / 0 Not Shared
+7. Unlock
+
+### do_host_cpu_modify
+
+```
+[user@ecfb67fa2760 starlingx]$ repo grep do_host_cpu_modify
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/common/utils.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/icpu_shell.py
+cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/common/utils.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/common/utils.py
+```
+
+- do_host_cpu_modify under _does_command_need_no_wrap is called from:
+  - cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/common/utils.py
+  - cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/common/utils.py
+  - cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/common/utils.py
+- and used at the function:
+  - define_commands_from_module found at:
+
+```
+[user@ecfb67fa2760 starlingx]$ repo grep define_commands_from_module
+cgcs-root/stx/git/python-ironicclient/ironicclient/common/utils.py
+cgcs-root/stx/git/python-ironicclient/ironicclient/shell.py
+cgcs-root/stx/git/python-ironicclient/ironicclient/v1/shell.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/common/utils.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/shell.py
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/shell.py
+cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/common/utils.py
+cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/shell.py
+cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/v1/shell.py
+cgcs-root/stx/stx-ha/service-mgmt-client/sm-client/sm_client/common/utils.py
+cgcs-root/stx/stx-ha/service-mgmt-client/sm-client/sm_client/shell.py
+cgcs-root/stx/stx-ha/service-mgmt-client/sm-client/sm_client/v1/shell.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/common/utils.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/shell.py
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/shell.py
+```
+
+Question? Why do_host_cpu_modify only appears under stx-config and not under stx-metal?
+
+```sh
+[user@ecfb67fa2760 starlingx]$ repo grep do_host_cpu
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/common/utils.py:             'do_host_cpu_modify',
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/icpu_shell.py:def do_host_cpu_show(cc, args):
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/icpu_shell.py:def do_host_cpu_list(cc, args):
+cgcs-root/stx/stx-config/sysinv/cgts-client/cgts-client/cgtsclient/v1/icpu_shell.py:def do_host_cpu_modify(cc, args):
+cgcs-root/stx/stx-fault/python-fmclient/fmclient/fmclient/common/utils.py:             'do_host_cpu_modify',
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/common/utils.py:             'do_host_cpu_modify',
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/cpu_shell.py:def do_host_cpu_show(cc, args):
+cgcs-root/stx/stx-metal/python-inventoryclient/inventoryclient/inventoryclient/v1/cpu_shell.py:def do_host_cpu_list(cc, args):
+```
+
+## Memory
+
+Inventory Memory Tab
+
+- Memory: all host memory
+- vSwitch Huge Pages: Workers: Size, Total, Available Huge Pages
+- VM Pages: Workers: Size, Total, Available Pages
+
+Allocation
+
+- Platform Memory
+- # of VM 2M Hugepages
+- # of VM 1G Hugepages
+
+
+```sh
+$ system host-memory-modify hostname processor [-m reserved] [-2M 2Mpages] [-1G 1Gpages]
+$ system host-memory-modify compute-0 1 -2M 4
+```
+
 ## Large Pages (Huge Pages)
 
 - https://docs.openstack.org/nova/latest/admin/huge-pages.html
@@ -388,7 +485,6 @@ What those documentations says about NUMA?
       - Host Inventory > Memory
 - vSwitch Huge Pages
 - VM Pages
-
 
 ### Process
 
