@@ -43,6 +43,10 @@ See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/
 
 > In OpenStack, SMP CPUs are known as cores, NUMA cells or nodes are known as sockets, and SMT CPUs are known as threads.
 
+### Documentation
+
+What those documentations says about NUMA?
+
 ### Details
 
 - Relation with:
@@ -347,7 +351,55 @@ Date:   Fri Jul 3 09:41:42 2015 +0100
     Glance::Image, Cinder::Volume(image) resource types metadata.
 ```
 
-## Large Pages
+## Large Pages (Huge Pages)
+
+- https://docs.openstack.org/nova/latest/admin/huge-pages.html
+
+### Documentation
+
+What those documentations says about NUMA?
+
+### Source Code
+
+Keywords
+
+- hw:mem_page_size
+
+Files
+
+```sh
+[user@ecfb67fa2760 starlingx]$ repo grep hw:mem_page_size
+cgcs-root/stx/git/neutron
+cgcs-root/stx/git/nova
+stx-tools/deployment/
+```
+
+```sh
+[user@ecfb67fa2760 starlingx]$ repo grep hw:mem_page_size
+cgcs-root/stx/git/neutron/doc/source/admin/config-ovs-dpdk.rst
+cgcs-root/stx/git/nova/api-guide/source/down_cells.rst
+cgcs-root/stx/git/nova/doc/api_samples/flavors/v2.61/flavors-detail-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.47/server-get-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.47/servers-details-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.63/server-action-rebuild-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.63/server-get-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.63/server-update-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.63/servers-details-resp.json
+cgcs-root/stx/git/nova/doc/api_samples/servers/v2.66/servers-details-with-changes-before.json
+cgcs-root/stx/git/nova/doc/source/admin/huge-pages.rst
+cgcs-root/stx/git/nova/doc/source/user/flavors.rst
+cgcs-root/stx/git/nova/nova/tests/fixtures.py
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/flavors/v2.61/flavors-detail-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.47/server-get-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.47/servers-details-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.63/server-action-rebuild-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.63/server-get-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.63/server-update-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.63/servers-details-resp.json.tpl
+cgcs-root/stx/git/nova/nova/tests/functional/api_sample_tests/api_samples/servers/v2.66/servers-details-with-changes-before.json.tpl
+cgcs-root/stx/git/nova/nova/tests/unit/virt/test_hardware.py
+stx-tools/deployment/provision/simplex_stage_2.sh
+```
 
 From Glance source code:
 
@@ -363,6 +415,16 @@ Date:   Tue Sep 29 22:32:10 2015 +0000
     Glance::Image, Cinder::Volume(image)
     resource types metadata
 ```
+
+### Tests
+
+```sh
+$ openstack flavor set m1.large --property hw:mem_page_size=large
+```
+
+Links
+
+- https://docs.openstack.org/nova/pike/admin/huge-pages.html
 
 # Patches
 
