@@ -61,6 +61,123 @@ cgcs-root/stx/git/glance/stx-patches/0009-Pike-Rebase-Update-metadefs.patch
 cgcs-root/stx/git/nova
 ```
 
+```sh
+$ glance/etc/metadefs/
+```
+
+```sh
+commit 1c242032fbb26fed3a82691abb030583b4f8940b
+Author: Wayne Okuma <wayne.okuma@hp.com>
+Date:   Thu Aug 28 04:33:53 2014 -0400
+
+    Glance Metadata Definitions Catalog - Seed
+    
+    Implements: blueprint metadata-schema-catalog
+    
+    A common API hosted by the Glance service for vendors, admins,
+    services, and users to meaningfully define available key / value
+    pair and tag metadata. The intent is to enable better metadata
+    collaboration across artifacts, services, and projects for
+    OpenStack users.
+    
+    This is about the definition of the available metadata that can
+    be used on different types of resources (images, artifacts,
+    volumes, flavors, aggregates, etc). A definition includes the
+    properties type, its key, it's description, and it's constraints.
+    This catalogue will not store the values for specific instance
+    properties.
+```
+
+```sh
+commit 01ace04438282b5b5602bcdedc02d55b9b120c5f
+Author: Travis Tripp <travis.tripp@hp.com>
+Date:   Fri Jan 16 14:48:15 2015 -0700
+
+    Software Metadata Definitions
+    
+    The will provide a base library of metadata definitions for
+    various common software products, components, and libraries that
+    may exist on particular image (or volume or instance). These
+    metadata definitions will make it easier for end users and
+    admins to easily describe the software and its properties.
+    This information will enable an improved and faster user
+    experience for applying software metadata, searching based
+    on software metadata, and viewing the software information
+    about an image.
+    
+    Various improvements in horizon are underway to take
+    advantage of this metadata. For example, a user launching
+    an instance will be able to expand the image row to see
+    additional information about the image.  This will include
+    providing the metadata definition for properties on the image.
+    This same information will also be visible from the image and
+    instance details page.
+```
+
+```sh
+commit 85de1149b61eb43ac085afe7b0e26d7e71456b93
+Author: Waldemar Znoinski <waldemar.znoinski@intel.com>
+Date:   Fri Jul 3 09:41:42 2015 +0100
+
+    Add CPU Pinning in metadata definitions
+    
+    This metadef adds CPU pinning namespace and property to Nova::Flavor,
+    Glance::Image, Cinder::Volume(image) resource types metadata.
+```
+
+```sh
+commit 788e8ad69b09d1005dc916aec90bfbffb486af9a
+Author: NAO NISHIJIMA <nao.nishijima.xt@hitachi.com>
+Date:   Mon Dec 7 11:50:42 2015 +0900
+
+    Add missing CPU features to Glance Metadata Catalog
+    
+    This patch adds missing CPU features to Glance Metadata Catalog.
+    CPU features based on linux v4.4-rc4 kernel source code in
+    arch/x86/include/asm/cpufeature.h and picked up Intel&AMD vender.
+```
+
+```sh
+commit 411418b04449f53afcbd103efcc0231fc825b0a7
+Author: Stephen Finucane <sfinucan@redhat.com>
+Date:   Thu Aug 11 17:32:58 2016 +0100
+
+    Add CPU thread pinning to metadata defs
+    
+    CPU pinning policy is defined, but CPU thread pinning policy is not.
+    Resolve this.
+```
+
+StarlingX Related
+
+```sh
+commit 1ec64167057e3368f27a1a81aca294b771e79c5e
+Author: Dean Troyer <dtroyer@gmail.com>
+Date:   Sat May 19 21:28:10 2018 -0700
+
+    StarlingX open source release updates
+    
+    Signed-off-by: Dean Troyer <dtroyer@gmail.com>
+```
+
+Interesting Links
+
+- [Power off commands should give guests a chance to shutdown](https://review.opendev.org/#/c/68942/)
+
+```sh
+commit 5fcb3aa2e35e9af17cb8be9e24c6613626036f2b
+Author: Travis Tripp <travis.tripp@hp.com>
+Date:   Fri Sep 12 11:55:52 2014 -0600
+
+    Add missing metadefs for shutdown behavior
+    
+    The following Nova patch adds support for graceful shutdown
+    of a guest VM and allows setting timeout properties on images.
+    The properties should be updated in the Metadata Definitions catalog.
+    
+    https://review.openstack.org/#/c/68942/
+```
+
 #### hw:numa_cpus
 
 ```sh
@@ -107,6 +224,37 @@ $ openstack flavor set m1.large \  # configure guest node 1
   --property hw:numa_mem.1=4096
 ```
 
+## CPU Pinning
+
+From Glance source code:
+
+```sh
+commit 85de1149b61eb43ac085afe7b0e26d7e71456b93
+Author: Waldemar Znoinski <waldemar.znoinski@intel.com>
+Date:   Fri Jul 3 09:41:42 2015 +0100
+
+    Add CPU Pinning in metadata definitions
+    
+    This metadef adds CPU pinning namespace and property to Nova::Flavor,
+    Glance::Image, Cinder::Volume(image) resource types metadata.
+```
+
+## Large Pages
+
+From Glance source code:
+
+```sh
+commit 3e35dd0033acd8249e4b2fd9b37c5914b755cba6
+Author: Waldemar Znoinski <waldemar.znoinski@intel.com>
+Date:   Tue Sep 29 22:32:10 2015 +0000
+
+    Add Large pages meta definition
+    
+    This metadef enables Guest Memory backing namespace
+    and large pagesize property in Nova::Flavor,
+    Glance::Image, Cinder::Volume(image)
+    resource types metadata
+```
 
 # Patches
 
@@ -248,7 +396,7 @@ Details
     - cgcs-root/stx/git/qemu/block/vhdx.c
     - cgcs-root/stx/git/qemu/block/vmdk.c
     - cgcs-root/stx/git/qemu/block/vpc.c
-    - cgcs-root/stx/git/qemu/block/vvfat.c
+    - cgcs-root/stx/git/qemu/block/vvfat.ccgcs-root/stx/git/glance/
     - cgcs-root/stx/git/qemu/contrib/vhost-user-blk/vhost-user-blk.c
 - Output
   - Timeout
@@ -299,7 +447,7 @@ Details
       - 180 seconds
     - Maximum Downtime
       - 500 msec
-  - Performance
+  - Performancecgcs-root/stx/git/glance/
     - How much downtime
     - How long to pause
     - Metrics
