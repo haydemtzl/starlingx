@@ -243,7 +243,7 @@ Details
       - Min/Max non-block storage duration
       - Average block storage duration
       - Min/Max block storage duration
-   - Optimization
+   - Love Migration Optimization
      - 10 Gb Management / Infrastructure Network
      - StarlingX API to 
      - Tune
