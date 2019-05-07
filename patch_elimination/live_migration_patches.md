@@ -2,7 +2,9 @@
 
 - https://etherpad.openstack.org/p/stx-networking
 
-# Terminology
+# Background
+
+## Terminology
 
 - __Tenant__: A group of users is referred to as a project or tenant. There terms are interchangeable. [Openstack Operations Guide](https://docs.openstack.org/operations-guide/ops-projects-users.html).
 - StarlingX Nova scheduler: A modified version of the OpenStack Nova scheduler.
@@ -31,11 +33,16 @@
   - It
 - User Guide
 
+# CPU Topologies
+
+See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/latest/admin/cpu-topologies.html)
+
 ## NUMA
 
-- https://specs.openstack.org/openstack/nova-specs/specs/rocky/approved/numa-aware-live-migration.html
+> NUMA is a derivative of the SMP design that is found in many multi-socket systems. In a NUMA system, system memory is divided into cells or nodes that are associated with particular CPUs. Requests for memory on other nodes are possible through an interconnect bus. However, bandwidth across this shared bus is limited. As a result, competition for this resource can incur performance penalties.
+> In OpenStack, SMP CPUs are known as cores, NUMA cells or nodes are known as sockets, and SMT CPUs are known as threads.
 
-Details
+### Details
 
 - Relation with:
   - CPU Pinning
@@ -43,6 +50,58 @@ Details
 - Affinity
   - Strict
   - Best Effort
+
+### Extra Specs
+
+#### hw:numa_nodes
+
+```sh
+cgcs-root/stx/git/glance/etc/metadefs/compute-tis-flavor.json
+cgcs-root/stx/git/glance/stx-patches/0009-Pike-Rebase-Update-metadefs.patch
+cgcs-root/stx/git/nova
+```
+
+#### hw:numa_cpus
+
+```sh
+cgcs-root/stx/git/nova
+```
+
+
+### Source Code
+
+- vcpu_pin_set
+
+### Links
+
+- https://specs.openstack.org/openstack/nova-specs/specs/rocky/approved/numa-aware-live-migration.html
+- http://lists.openstack.org/pipermail/openstack-dev/2016-March/090367.html
+- https://docs.openstack.org/nova/latest/user/flavors.html#extra-specs-numa-topology
+
+### Tasks
+
+An instance’s vCPUs to spread across one host NUMA node:
+
+```sh
+$ openstack flavor set m1.large --property hw:numa_nodes=1
+```
+
+An instance’s vCPUs across two host NUMA nodes:
+
+```
+$ openstack flavor set m1.large --property hw:numa_nodes=2
+
+```
+
+```
+$ openstack flavor set m1.large \  # configure guest node 0
+  --property hw:numa_cpus.0=0,1 \
+  --property hw:numa_mem.0=2048
+$ openstack flavor set m1.large \  # configure guest node 1
+  --property hw:numa_cpus.1=2,3,4,5 \
+  --property hw:numa_mem.1=4096
+```
+
 
 # Patches
 
