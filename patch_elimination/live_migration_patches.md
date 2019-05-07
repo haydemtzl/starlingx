@@ -74,12 +74,31 @@ Details
 # Migration
 
 - https://docs.openstack.org/nova/latest/admin/configuring-migrations.html
+- https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/virtualization/chap-virtualization-kvm_live_migration
 
 Types
 
-- Live Migration
-- Cold Migration
+- Live Migration, Live
+- Cold Migration, Offline
 - Evacuation
+
+## Migration Requirements
+
+- Storage
+  - Settings
+    - Flavor extra specifications
+    - Image metadata
+    - Instance metadata
+  - Migration
+    - Local Ephemeral
+      - Not all supported
+    - Remote Ephemeral
+      - VM ephemeral
+      -  Swap Disks
+      - Boot-from-image Root Disks
+  - Resize
+  - Evacuation
+- Network
 
 ## Cold Migration
 
@@ -96,6 +115,9 @@ Why
   - Patching
   - Upgrade n-Cpu
 - Re-balance Workload
+- Hardware Failover
+- Energy Saving
+- Georaphic Migration
 
 Virtual Machine
 
@@ -130,7 +152,7 @@ Details
   - Auto-Converged (VM Throttling)
   - Post-Copy
   - Maximum Downtime per VM
-- Types
+- Storage Types
   - Shared storage is quicker, but local storage is possible
   - Block live migration: or simply block migration. The instance has ephemeral disks that are not shared between the source and destination hosts. Block migration is incompatible with read-only devices such as CD-ROMs and Configuration Drive (config_drive).
     - Ephemeral Disk
@@ -147,8 +169,11 @@ Details
   - Non-Affinity
 - Limitations
   - iso9660 is not migratable
-  - PCI passthrough?
   - PCI Alias?
+  - Direct Guest Access to NICs
+    - PCI passthrough
+    - SR-IOV
+    - Enhanced NUMA scheduling options
   - Live migration is not supported for instances with SR-IOV ports. [Here](https://docs.openstack.org/newton/networking-guide/config-sriov.html)
   - Flavor extra specifications, image metadata, or instance metadata.
   - Instance Boot Type and Ephemeral and Swap Disks from flavor
