@@ -537,9 +537,28 @@ vswitch_type=ovs-dpdk
 
 ```sh
 WORKER_CPU_LIST="0-1"
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/worker_reserved.conf.erb
+cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
+cgcs-root/stx/stx-metal/bsp-files/kickstarts/post_system_aio.cfg
+
 WORKER_BASE_RESERVED=("node0:8000MB:1" "node1:2000MB:0" "node2:2000MB:0" "node3:2000MB:0")
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/worker_reserved.conf.erb
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/agent/node.py
+cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
+cgcs-root/stx/stx-metal/bsp-files/kickstarts/post_system_aio.cfg
+
+Question? Why the following two variables are not used in any other place?
+
 WORKER_VSWITCH_MEMORY=("node0:1048576kB:1" "node1:1048576kB:1" "node2:1048576kB:1" "node3:1048576kB:1")
+
+cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
+
 WORKER_VSWITCH_CORES=("node0:2" "node1:0" "node2:0" "node3:0")
+
+cgcs-root/stx/stx-config/worker-utils/worker-utils/worker_reserved.conf
+
 ```
 
 ```sh
