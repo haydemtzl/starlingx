@@ -413,7 +413,7 @@ UI
 5. Edit CPU Assignments
 6. Shared Function: 1 Shared / 0 Not Shared
 7. Unlock
-
+https://docs.openstack.org/nova/latest/admin/huge-pages.html
 ### do_host_cpu_modify
 
 ```
@@ -484,20 +484,95 @@ $ system host-memory-modify hostname processor [-m reserved] [-2M 2Mpages] [-1G 
 $ system host-memory-modify compute-0 1 -2M 4
 ```
 
-## Large Pages (Huge Pages)
+## Huge Pages (Large Pages)
 
-- https://docs.openstack.org/nova/latest/admin/huge-pages.html
+- [OpenStack Compute \(nova\) Huge Pages](https://docs.openstack.org/nova/latest/admin/huge-pages.html)
 - http://lists.starlingx.io/pipermail/starlingx-discuss/2019-January/002884.html
+
+### Terminology
+
+- Pages
+- Translation Lookaside Buffer (TLB)
+- Huge Pages
+- Persistent Huge Pages
+- Transparent Huge Pages (THP)
 
 ### Documentation
 
-What those documentations says about NUMA?
+What those documentations says about Huge PAges?
+
+### Processes
+
+- Enabling
+  - hugepagesz
+  - hugepages
+  - transparent_hugepages=never
+- Customizing
+
+#### Processes > Enabling > hugepagesz
+
+```sh
+$ repo grep hugepagesz
+cgcs-root/stx/git/libvirt/src/util/virfile.c
+cgcs-root/stx/git/nova/doc/source/admin/huge-pages.rst
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+cgcs-root/stx/stx-metal/bsp-files/kickstarts/post_kernel_aio_and_worker.cfg
+```
+
+From cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+
+```sh
+class platform::compute::grub::params
+
+# Mounts virtual hugetlbfs filesystems for each supported page size
+class platform::compute::hugetlbf {
+
+# lint:ignore:variable_is_lowercase
+class platform::compute::hugepage::params (
+
+# Allocates HugeTLB memory according to the attributes specified in the
+# nr_hugepages_2M and nr_hugepages_1G
+class platform::compute::allocate
+```
+
+Keywords
+
+- m_hugepages
+- g_hugepages
+- gb_hugepages
+- hugepagesz
+- hugepages
+- default_hugepagesz
+- nr_hugepages_2M
+- nr_hugepages_1G
+
+#### Processes > Enabling > hugepages
+
+```sh
+
+```
+
+#### Processes > Enabling > transparent_hugepages
+
+```sh
+$ repo grep transparent_hugepages
+cgcs-root/stx/git/nova/doc/source/admin/huge-pages.rst:``hugepages``, and ``transparent_hugepages=never`` arguments to
+```
+
+#### Processes > Enabling > Sysfs Hugepages
+
+```sh
+$ repo grep /sys/devices/system/node/ | grep hugepages
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/agent/node.py
+cgcs-root/stx/stx-metal/inventory/inventory/inventory/agent/node.py
+```
 
 ### StarlingX Terminology
 
 - Memory
   - Host Memory Provisioning
-    - Commnand Line Interface
+    - Command Line Interface
       - system host-memory-list
         - do_host_memory_list
       - system host-memory-show
