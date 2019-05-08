@@ -7,6 +7,11 @@
 [user@ecfb67fa2760 starlingx]$ repo grep "compute nodes"
 ```
 
+# Agenda
+
+- Hardware Architecture
+  - 
+
 # General
 
 - https://etherpad.openstack.org/p/stx-networking
@@ -46,11 +51,23 @@
 
 See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/latest/admin/cpu-topologies.html)
 
+- SMP: In SMP, all memory access was tied to a singular shared physical bus.
+- NUMA: NUMA was created to limit the number of CPUs tied to a single memory bus and as a result defines what is construed as a NUMA node.
+
 ## NUMA
 
 > NUMA is a derivative of the SMP design that is found in many multi-socket systems. In a NUMA system, system memory is divided into cells or nodes that are associated with particular CPUs. Requests for memory on other nodes are possible through an interconnect bus. However, bandwidth across this shared bus is limited. As a result, competition for this resource can incur performance penalties.
 
 > In OpenStack, SMP CPUs are known as cores, NUMA cells or nodes are known as sockets, and SMT CPUs are known as threads.
+
+### Links
+
+- https://www.exitthefastlane.com/2016/04/vsphere-design-for-numa-architecture.html
+
+### Key Things
+
+- The maximum vCPU value assignable to a VM is dictated by the total number of logical cores available in all NUMA nodes. 
+- To design your virtual environment to be NUMA aligned means ensuring that your VMs receive vCPUs and RAM tied to a single physical CPU (pCPU), thus ensuring the memory and pCPU cores they access are directly connected and not accessed via traversal of a CPU interconnect (QPI).
 
 ### Documentation
 
