@@ -592,6 +592,15 @@ cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
 ```
 
 ```sh
+$vm_2M_pages = '',
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/compute_extend.conf.erb
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+$vm_1G_pages = '',
 
 cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
 cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/compute_extend.conf.erb
