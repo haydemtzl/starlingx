@@ -53,6 +53,8 @@ See [OpenStack Compute \(nova\) CPU topologies](https://docs.openstack.org/nova/
 
 - SMP: In SMP, all memory access was tied to a singular shared physical bus.
 - NUMA: NUMA was created to limit the number of CPUs tied to a single memory bus and as a result defines what is construed as a NUMA node.
+- Simultaneous Multi-Threading (SMT)
+- Non-Uniform I/O Access (NUMA I/O)
 
 ## NUMA
 
