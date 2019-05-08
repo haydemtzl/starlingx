@@ -500,6 +500,11 @@ $ system host-memory-modify compute-0 1 -2M 4
   - In StarlingX, stx-config / sysinv / puppet / platform.py
 - Transparent Huge Pages (THP)
 
+Hue Pages at Workers
+
+- https://review.opendev.org/#/c/646038/19
+- https://review.opendev.org/#/c/655495/
+
 ### Documentation
 
 What those documentations says about Huge PAges?
