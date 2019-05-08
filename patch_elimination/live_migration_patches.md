@@ -540,10 +540,6 @@ class platform::compute::allocate
 
 Where do these hugepage params are used?
 
-- nr_hugepages_2M, nr_hugepages_1G: 
-- vswitch_2M_pages, vswitch_1G_pages: VSwitch
-- vm_4K_pages, vm_2M_pages, vm_1G_pages: 
-
 ```sh
 # lint:ignore:variable_is_lowercase
 class platform::compute::hugepage::params (
@@ -555,6 +551,51 @@ class platform::compute::hugepage::params (
   $vm_2M_pages = '',
   $vm_1G_pages = '',
 ) {}
+```
+
+```sh
+$nr_hugepages_2M = undef,
+$nr_hugepages_1G = undef,
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+$nr_hugepages_1G = undef,
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+$vswitch_2M_pages = '',
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+$vswitch_1G_pages = '',
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/compute_extend.conf.erb
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+$vm_4K_pages = '',
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/compute_extend.conf.erb
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
+```
+
+```sh
+
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/manifests/compute.pp
+cgcs-root/stx/stx-config/puppet-manifests/src/modules/platform/templates/compute_extend.conf.erb
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/puppet/platform.py
 ```
 
 Keywords
