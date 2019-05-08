@@ -494,7 +494,9 @@ $ system host-memory-modify compute-0 1 -2M 4
 - Pages
 - Translation Lookaside Buffer (TLB)
 - Huge Pages
+  - In StarlingX, stx-config / sysinv / puppet / platform.py
 - Persistent Huge Pages
+  - In StarlingX, stx-config / sysinv / puppet / platform.py
 - Transparent Huge Pages (THP)
 
 ### Documentation
@@ -536,6 +538,25 @@ class platform::compute::hugepage::params (
 class platform::compute::allocate
 ```
 
+Where do these hugepage params are used?
+
+- nr_hugepages_2M, nr_hugepages_1G: 
+- vswitch_2M_pages, vswitch_1G_pages: VSwitch
+- vm_4K_pages, vm_2M_pages, vm_1G_pages: 
+
+```sh
+# lint:ignore:variable_is_lowercase
+class platform::compute::hugepage::params (
+  $nr_hugepages_2M = undef,
+  $nr_hugepages_1G = undef,
+  $vswitch_2M_pages = '',
+  $vswitch_1G_pages = '',
+  $vm_4K_pages = '',
+  $vm_2M_pages = '',
+  $vm_1G_pages = '',
+) {}
+```
+
 Keywords
 
 - m_hugepages
@@ -566,6 +587,48 @@ cgcs-root/stx/git/nova/doc/source/admin/huge-pages.rst:``hugepages``, and ``tran
 $ repo grep /sys/devices/system/node/ | grep hugepages
 cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/agent/node.py
 cgcs-root/stx/stx-metal/inventory/inventory/inventory/agent/node.py
+```
+
+#### Processes > Enabling > Kernel Arguments
+
+```sh
+class platform::compute::grub::params (
+  $n_cpus = '',
+  $cpu_options = '',
+  $m_hugepages = 'hugepagesz=2M hugepages=0',
+  $g_hugepages = undef,
+  $default_pgsz = 'default_hugepagesz=2M',
+  $keys = [
+    'kvm-intel.eptad',
+    'default_hugepagesz',
+    'hugepagesz',
+    'hugepages',
+    'isolcpus',
+    'nohz_full',
+    'rcu_nocbs',
+    'kthread_cpus',
+    'irqaffinity',
+  ],
+) {
+
+  if $::is_broadwell_processor {
+    $eptad = 'kvm-intel.eptad=0'
+  } else {
+    $eptad = ''
+  }
+
+  if $::is_gb_page_supported and $::platform::params::vswitch_type != 'none' {
+    if $g_hugepages != undef {
+      $gb_hugepages = $g_hugepages
+    } else {
+      $gb_hugepages = "hugepagesz=1G hugepages=${::number_of_numa_nodes}"
+    }
+  } else {
+    $gb_hugepages = ''
+  }
+
+  $grub_updates = strip("${eptad} ${$gb_hugepages} ${m_hugepages} ${default_pgsz} ${cpu_options}")
+}
 ```
 
 ### StarlingX Terminology
