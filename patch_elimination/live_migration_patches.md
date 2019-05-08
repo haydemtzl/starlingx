@@ -2,6 +2,7 @@
 
 - Still having source code references for "compute" nodes, instead of "worker" nodes.
 - Same for Documentation
+- Whye do we have a reference of "openstack-compute-node"?
 
 ```
 [user@ecfb67fa2760 starlingx]$ repo grep "compute nodes"
@@ -502,6 +503,75 @@ $ system host-memory-modify compute-0 1 -2M 4
 ### Documentation
 
 What those documentations says about Huge PAges?
+
+### StarlingX
+
+What services are using Huge Pages?
+
+#### Terminology
+
+> __Armadada__ Armada is a tool for managing multiple Helm charts with dependencies by centralizing all configurations in a single Armada YAML and providing life-cycle hooks for all Helm releases. [Homepage](https://airshipit.readthedocs.io/projects/armada/en/latest/readme.html)
+
+```sh
+[user@ecfb67fa2760 stx-config]$ git show 9c5bf5771e2431cad11dfdbf3ad64d6671e6fad0
+```
+
+- Platform
+  - mib_reserved_node
+  - pending_2M_memory
+  - pending_1G_memory
+  - mib_reserved_disk_io
+  - DISK_IO_RESIDENT_SET_SIZE_MIB
+  - PLATFORM_CORE_MEMORY_RESERVED_MIB_VBOX
+  - COMBINED_NODE_CONTROLLER_MEMORY_RESERVED_MIB_VBO
+  - mib_platform_reserved_no_io
+- Libvirt Helm Chart
+  - Libvirt
+  - Libvirt hugepages can be 1G and 2M
+  - SIZE_1G_MB
+- K8
+  - k8s_hugepage
+  - KUBELET_EXTRA_ARGS=--feature-gates=HugePages=<%= @k8s_hugepage %>
+  - # Only set k8s_hugepage true when subfunction is worker and openstack-compute-node is not in host_labels
+    - Types of node_selector_key?
+      - openstack-control-plane
+      - openstack-compute-node
+      - openvswitch
+      - linuxbridge
+  - what is an openstack-compute-node? 
+    Where does it appears under cgcs-root/stx/stx-config/kubernetes/applications/stx-openstack/stx-openstack-helm/stx-openstack-helm/manifests/manifest.yaml?
+    - openstack-garbd
+      - docker.io/starlingx/stx-mariadb
+    - openstack-libvirt
+      - docker.io/starlingx/stx-libvirt
+    - openstack-nova
+      - docker.io/starlingx/stx-heat
+      - docker.io/starlingx/stx-nova
+    - openstack-neutron
+      - docker.io/starlingx/stx-heat
+      - docker.io/starlingx/stx-neutron
+- DPDK
+  - Bare Metal
+- Open VSwitch
+  - Virtual
+  - vswitch_hugepages_size_mib
+  - vswitch_hugepages_nr
+  - vswitch_hugepages_avail
+  - _update_huge_pages
+  - vswitch_hp_size
+
+To grep?
+
+- , host_labels, KUBELET_EXTRA_ARGS, VSWITCH_MEMORY_MB, Libvirt
+
+```sh
+[user@ecfb67fa2760 starlingx]$ cat cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/api/controllers/v1/host.py | grep def | grep worker
+    def _check_worker(patched_ihost, hostupdate=None):
+    def _semantic_check_worker_cpu_assignments(self, host):
+    def check_unlock_worker(self, hostupdate, force_unlock=False):
+    def check_lock_worker(self, hostupdate, force=False):
+    def _handle_unlock_worker_host(self, hostupdate):
+```
 
 ### Processes
 
