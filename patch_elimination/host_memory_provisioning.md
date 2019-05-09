@@ -32,9 +32,9 @@ hugepages-2048kB
 
 
 - Platform Memory for Node 0
-- # of Application 2M Hugepages Node 0
-- # of Application 1G Hugepages Node 0
-- # of vSwitch 1G Hugepages Node 0
+- \# of Application 2M Hugepages Node 0
+- \# of Application 1G Hugepages Node 0
+- \# of vSwitch 1G Hugepages Node 0
 - vSwitch Hugepage Size Node 0
 
 ## Command Host Memory * Source Code
