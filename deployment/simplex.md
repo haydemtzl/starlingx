@@ -547,3 +547,14 @@ Please use 'system application-list' or 'system application-show stx-openstack' 
 | stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | applying | retrieving docker images |
 +---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
 ```
+
+```sh
+Every 5.0s: system application-list                                                                                                                                   Wed May  8 17:31:42 2019
+
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------------------------------------------------+
+| application   | version                     | manifest name   | manifest file | status   | progress                                                           |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------------------------------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | applying | processing chart: osh-openstack-neutron, overall completion: 63.0% |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------------------------------------------------+
+```
+
