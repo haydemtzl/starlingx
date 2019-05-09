@@ -11,12 +11,26 @@
 GRUB_CMDLINE_LINUX="security_profile=standard module_blacklist=integrity,ima audit=0 tboot=false crashkernel=auto biosdevname=0 console=tty0 iommu=pt usbcore.autosuspend=-1 hugepagesz=2M hugepages=0 default_hugepagesz=2M isolcpus=2,3 rcu_nocbs=2-5 kthread_cpus=0,1 irqaffinity=0,1 selinux=0 enforcing=0 nmi_watchdog=panic,1 softlockup_panic=1 intel_iommu=on user_namespace.enable=1"
 ```
 
+## Filesystem
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ mount | grep huge
 cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb)
 none on /dev/huge-2048kB type hugetlbfs (rw,relatime,pagesize=2048kB)
 none on /mnt/huge-2048kB type hugetlbfs (rw,relatime,pagesize=2048kB)
 none on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ls /sys/kernel/mm/hugepages/
+hugepages-2048kB
+```
+
+## Command Host Memory * Source Code
+
+```sh
+cgcs-root/stx/stx-config/sysinv/sysinv/sysinv/sysinv/api/controllers/v1/memory.py
+cgcs-root/stx/stx-metal/inventory/inventory/inventory/api/controllers/v1/memory.py
 ```
 
 ## Command Host Memory Show
@@ -58,6 +72,21 @@ none on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
 +-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
 | 0         | 10258   | 7600       | 10258   | True           | 2      | 0      | 0      | None  | 2626048  | 0      | 0      | None     | 0      | None   | None      | False        |
 +-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+```
+
+## Command Host Memory Modify 1G 1 Huge Page
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-0
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-modify controller-0 0 -1G 5
+Processor 0:Processor does not support 1G huge pages.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
 ```
 
 ## Command Host Memory Modify 2M 1 Huge Page
