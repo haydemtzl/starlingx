@@ -426,3 +426,124 @@ Root disk: /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0, UUID: fe191367-e34b-4d7d-
 | vim_progress_status | None                                       |
 +---------------------+--------------------------------------------+
 ```
+
+```sh
+WARNING: Unauthorized access to this system is forbidden and will be
+prosecuted by law. By accessing this system, you agree that your
+actions may be monitored if unauthorized usage is suspected.
+
+controller-0:~$ source /etc/platform/openrc
+[wrsroot@controller-0 ~(keystone_admin)]$ 
+```
+
+## After the host unlocks, test that the ceph cluster is operational 
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool set {} size 1
+set pool 1 size to 1
+set pool 2 size to 1
+set pool 3 size to 1
+set pool 4 size to 1
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     1c820e4d-5d2a-42b3-ab19-78e823dde62b
+    health: HEALTH_OK
+ 
+  services:
+    mon: 1 daemons, quorum controller-0
+    mgr: controller-0(active)
+    osd: 1 osds: 1 up, 1 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   4 pools, 256 pgs
+    objects: 1.13 k objects, 1.1 KiB
+    usage:   115 MiB used, 199 GiB / 199 GiB avail
+    pgs:     256 active+clean
+```
+
+```sh
+user@workstation:~/stx-tools/deployment/libvirt$ #wget http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/latest_docker_image_build/outputs/helm-charts/stx-openstack-1.0-11-centos-stable-latest.tgz
+user@workstation:~/stx-tools/deployment/libvirt$ #scp stx-openstack-1.0-11-centos-stable-latest.tgz wrsroot@10.10.10.3:/home/wrsroot
+```
+
+## Stage application for deployment
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ls
+stx-openstack-1.0-11-centos-stable-latest.tgz
+````
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-upload stx-openstack-1.0-11-centos-stable-latest.tgz
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| app_version   | 1.0-11-centos-stable-latest      |
+| created_at    | 2019-05-08T17:02:48.062194+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | uploading                        |
+| updated_at    | None                             |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+| application   | version                     | manifest name   | manifest file | status    | progress                        |
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | uploading | validating and uploading charts |
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ watch -n1 system application-list
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+| application   | version                     | manifest name   | manifest file | status   | progress  |
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | uploaded | completed |
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+```
+
+## Bring Up Services
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-apply stx-openstack
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| app_version   | 1.0-11-centos-stable-latest      |
+| created_at    | 2019-05-08T17:02:48.062194+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | applying                         |
+| updated_at    | 2019-05-08T17:03:03.774569+00:00 |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+| application   | version                     | manifest name   | manifest file | status   | progress                 |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | applying | retrieving docker images |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+```
