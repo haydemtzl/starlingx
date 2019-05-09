@@ -1180,3 +1180,272 @@ Configuring interface for: compute-1
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
+
+Once rebooted... after some time
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | compute-0    | worker      | unlocked       | enabled     | degraded     |
+| 4  | compute-1    | worker      | unlocked       | enabled     | degraded     |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     d2143f4f-b092-4ba7-8d91-81c942a4c6ee
+    health: HEALTH_WARN
+            Reduced data availability: 64 pgs inactive
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,compute-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 0 osds: 0 up, 0 in
+ 
+  data:
+    pools:   1 pools, 64 pgs
+    objects: 0  objects, 0 B
+    usage:   0 B used, 0 B / 0 B avail
+    pgs:     100.000% pgs unknown
+             64 unknown
+```
+
+# Add Ceph OSDs to controllers
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ HOST=controller-0
+[wrsroot@controller-0 ~(keystone_admin)]$ DISKS=$(system host-disk-list ${HOST})
+[wrsroot@controller-0 ~(keystone_admin)]$ TIERS=$(system storage-tier-list ceph_cluster)
+[wrsroot@controller-0 ~(keystone_admin)]$ OSDs="/dev/sdb"
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for OSD in $OSDs; do
+>     system host-stor-add ${HOST} $(echo "$DISKS" | grep "$OSD" | awk '{print $2}') --tier-uuid $(echo "$TIERS" | grep storage | awk '{print $2}')
+>     while true; do system host-stor-list ${HOST} | grep ${OSD} | grep configuring; if [ $? -ne 0 ]; then break; fi; sleep 1; done
+> done
++------------------+--------------------------------------------------+
+| Property         | Value                                            |
++------------------+--------------------------------------------------+
+| osdid            | 0                                                |
+| function         | osd                                              |
+| state            | configuring                                      |
+| journal_location | 15db1dc9-5ce7-40db-915e-8375c7b13317             |
+| journal_size_gib | 1024                                             |
+| journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
+| journal_node     | /dev/sdb2                                        |
+| uuid             | 15db1dc9-5ce7-40db-915e-8375c7b13317             |
+| ihost_uuid       | dd87579c-9945-4ae1-8de0-ce8cb3622eeb             |
+| idisk_uuid       | d425149a-c53a-4251-92ff-f2389ef033d8             |
+| tier_uuid        | afa14fa8-7105-4793-979b-2a70b33c9f2a             |
+| tier_name        | storage                                          |
+| created_at       | 2019-05-09T10:45:20.234727+00:00                 |
+| updated_at       | None                                             |
++------------------+--------------------------------------------------+
+| 15db1dc9-5ce7-40db-915e-8375c7b13317 | osd      | 0     | configuring | d425149a-c53a-4251-92ff-f2389ef033d8 | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
+...
+...
+| 15db1dc9-5ce7-40db-915e-8375c7b13317 | osd      | 0     | configuring | d425149a-c53a-4251-92ff-f2389ef033d8 | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-list $HOST
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| uuid                                 | function | osdid | state      | idisk_uuid                           | journal_path                                     | journal_node | journal_size_gib | tier_name |
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| 15db1dc9-5ce7-40db-915e-8375c7b13317 | osd      | 0     | configured | d425149a-c53a-4251-92ff-f2389ef033d8 | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ HOST=controller-1
+[wrsroot@controller-0 ~(keystone_admin)]$ DISKS=$(system host-disk-list ${HOST})
+[wrsroot@controller-0 ~(keystone_admin)]$ TIERS=$(system storage-tier-list ceph_cluster)
+[wrsroot@controller-0 ~(keystone_admin)]$ OSDs="/dev/sdb"
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for OSD in $OSDs; do
+>     system host-stor-add ${HOST} $(echo "$DISKS" | grep "$OSD" | awk '{print $2}') --tier-uuid $(echo "$TIERS" | grep storage | awk '{print $2}')
+>     while true; do system host-stor-list ${HOST} | grep ${OSD} | grep configuring; if [ $? -ne 0 ]; then break; fi; sleep 1; done
+> done
++------------------+--------------------------------------------------+
+| Property         | Value                                            |
++------------------+--------------------------------------------------+
+| osdid            | 1                                                |
+| function         | osd                                              |
+| state            | configuring                                      |
+| journal_location | 4fea2e08-c416-44b3-a50a-a8de4e81bedb             |
+| journal_size_gib | 1024                                             |
+| journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
+| journal_node     | /dev/sdb2                                        |
+| uuid             | 4fea2e08-c416-44b3-a50a-a8de4e81bedb             |
+| ihost_uuid       | ab52f735-0833-457c-a94f-777c12d103d9             |
+| idisk_uuid       | 0093e9c8-a9b9-446c-9e9e-5110fd6c2fad             |
+| tier_uuid        | afa14fa8-7105-4793-979b-2a70b33c9f2a             |
+| tier_name        | storage                                          |
+| created_at       | 2019-05-09T10:47:18.255989+00:00                 |
+| updated_at       | None                                             |
++------------------+--------------------------------------------------+
+| 4fea2e08-c416-44b3-a50a-a8de4e81bedb | osd      | 1     | configuring | 0093e9c8-a9b9-446c-9e9e-5110fd6c2fad | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
+...
+...
+| 4fea2e08-c416-44b3-a50a-a8de4e81bedb | osd      | 1     | configuring | 0093e9c8-a9b9-446c-9e9e-5110fd6c2fad | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-list $HOST
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| uuid                                 | function | osdid | state      | idisk_uuid                           | journal_path                                     | journal_node | journal_size_gib | tier_name |
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+| 4fea2e08-c416-44b3-a50a-a8de4e81bedb | osd      | 1     | configured | 0093e9c8-a9b9-446c-9e9e-5110fd6c2fad | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 | /dev/sdb2    | 1                | storage   |
++--------------------------------------+----------+-------+------------+--------------------------------------+--------------------------------------------------+--------------+------------------+-----------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     d2143f4f-b092-4ba7-8d91-81c942a4c6ee
+    health: HEALTH_WARN
+            Degraded data redundancy: 233/2264 objects degraded (10.292%), 13 pgs degraded
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,compute-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   4 pools, 256 pgs
+    objects: 1.13 k objects, 1.1 KiB
+    usage:   224 MiB used, 398 GiB / 398 GiB avail
+    pgs:     233/2264 objects degraded (10.292%)
+             242 active+clean
+             12  active+recovery_wait+degraded
+             1   active+recovery_wait
+             1   active+recovering+degraded
+ 
+  io:
+    recovery: 0 B/s, 17 objects/s
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd tree
+ID CLASS WEIGHT  TYPE NAME                 STATUS REWEIGHT PRI-AFF 
+-1       0.38840 root storage-tier                                 
+-2       0.38840     chassis group-0                               
+-4       0.19420         host controller-0                         
+ 0   hdd 0.19420             osd.0             up  1.00000 1.00000 
+-3       0.19420         host controller-1                         
+ 1   hdd 0.19420             osd.1             up  1.00000 1.00000 
+```
+
+After some time...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     d2143f4f-b092-4ba7-8d91-81c942a4c6ee
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,compute-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   4 pools, 256 pgs
+    objects: 1.13 k objects, 1.1 KiB
+    usage:   226 MiB used, 398 GiB / 398 GiB avail
+    pgs:     256 active+clean
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd tree
+ID CLASS WEIGHT  TYPE NAME                 STATUS REWEIGHT PRI-AFF 
+-1       0.38840 root storage-tier                                 
+-2       0.38840     chassis group-0                               
+-4       0.19420         host controller-0                         
+ 0   hdd 0.19420             osd.0             up  1.00000 1.00000 
+-3       0.19420         host controller-1                         
+ 1   hdd 0.19420             osd.1             up  1.00000 1.00000 
+```
+
+# Using sysinv to bring up/down the containerized services
+
+```sh
+user@workstation:~/stx-tools/deployment/libvirt$ scp stx-openstack-1.0-11-centos-stable-latest.tgz wrsroot@10.10.10.3:~/
+wrsroot@10.10.10.3's password: 
+stx-openstack-1.0-11-centos-stable-latest.tgz                                                                                                               100% 1120KB   1.1MB/s   00:00    
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ls
+stx-openstack-1.0-11-centos-stable-latest.tgz
+```
+
+## Stage application for deployment
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-upload stx-openstack-1.0-11-centos-stable-latest.tgz
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| app_version   | 1.0-11-centos-stable-latest      |
+| created_at    | 2019-05-09T10:51:42.591439+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | uploading                        |
+| updated_at    | None                             |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+| application   | version                     | manifest name   | manifest file | status   | progress  |
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | uploaded | completed |
++---------------+-----------------------------+-----------------+---------------+----------+-----------+
+```
+
+## Bring Up Services
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-apply stx-openstack
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| app_version   | 1.0-11-centos-stable-latest      |
+| created_at    | 2019-05-09T10:51:42.591439+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | applying                         |
+| updated_at    | 2019-05-09T10:52:02.557043+00:00 |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+| application   | version                     | manifest name   | manifest file | status   | progress                 |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | applying | retrieving docker images |
++---------------+-----------------------------+-----------------+---------------+----------+--------------------------+
+```
+
+```sh
+
+```
