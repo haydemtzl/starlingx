@@ -925,3 +925,333 @@ controller-0:/home/wrsroot# openstack network create --project ${ADMINID} --prov
 | updated_at                | 2019-05-08T18:36:54Z                                                                                                                                                                                      |
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
+
+```sh
+controller-0:/home/wrsroot# openstack network create --project ${ADMINID} --provider-network-type=vlan --provider-physical-network=${PHYSNET1} --provider-segment=500 ${PRIVATENET}
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------+
+| Field                     | Value                                                                                                                                                           
+                                          |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------+
+| admin_state_up            | UP                                                                                                                                                              
+                                          |
+| availability_zone_hints   |                                                                                                                                                                                                           |
+| availability_zones        |                                                                                                                                                                                                           |
+| created_at                | 2019-05-08T18:38:38Z                                                                                                                                                                                      |
+| description               |                                                                                                                                                                                                           |
+| dns_domain                | None                                                                                                                                                                                                      |
+| id                        | e23245d4-f5cb-4b9e-ad3e-888fb104a30b                                                                                                                                                                      |
+| ipv4_address_scope        | None                                                                                                                                                                                                      |
+| ipv6_address_scope        | None                                                                                                                                                                                                      |
+| is_default                | False                                                                                                                                                                                                     |
+| is_vlan_transparent       | False                                                                                                                                                                                                     |
+| location                  | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| mtu                       | 1500                                                                                                                                                                                                      |
+| name                      | private-net0                                                                                                                                                                                              |
+| port_security_enabled     | True                                                                                                                                                                                                      |
+| project_id                | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| provider:network_type     | vlan                                                                                                                                                                                                      |
+| provider:physical_network | physnet1                                                                                                                                                                                                  |
+| provider:segmentation_id  | 500                                                                                                                                                                                                       |
+| qos_policy_id             | None                                                                                                                                                                                                      |
+| revision_number           | 1                                                                                                                                                                                                         |
+| router:external           | Internal                                                                                                                                                                                                  |
+| segments                  | None                                                                                                                                                                                                      |
+| shared                    | False                                                                                                                                                                                                     |
+| status                    | ACTIVE                                                                                                                                                                                                    |
+| subnets                   |                                                                                                                                                                                                           |
+| tags                      |                                                                                                                                                                                                           |
+| updated_at                | 2019-05-08T18:38:38Z                                                                                                                                                                                      |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack network create --project ${ADMINID} ${INTERNALNET}
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------+
+| Field                     | Value                                                                                                                                                           
+                                          |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------+
+| admin_state_up            | UP                                                                                                                                                                                                        |
+| availability_zone_hints   |                                                                                                                                                                                                           |
+| availability_zones        |                                                                                                                                                                                                           |
+| created_at                | 2019-05-08T18:40:07Z                                                                                                                                                                                      |
+| description               |                                                                                                                                                                                                           |
+| dns_domain                | None                                                                                                                                                                                                      |
+| id                        | 82cb9679-045d-4cca-a788-55e2442a7fc1                                                                                                                                                                      |
+| ipv4_address_scope        | None                                                                                                                                                                                                      |
+| ipv6_address_scope        | None                                                                                                                                                                                                      |
+| is_default                | False                                                                                                                                                                                                     |
+| is_vlan_transparent       | False                                                                                                                                                                                                     |
+| location                  | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', $region_name': 'RegionOne', 'zone': None}) |
+| mtu                       | 1500                                                                                                                                                                                                      |
+| name                      | internal-net0                                                                                                                                                                                             |
+| port_security_enabled     | True                                                                                                                                                                                                      |
+| project_id                | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| provider:network_type     | vlan                                                                                                                                                                                                      |
+| provider:physical_network | physnet1                                                                                                                                                                                                  |
+| provider:segmentation_id  | 512                                                                                                                                                                                                       |
+| qos_policy_id             | None                                                                                                                                                                                                      |
+| revision_number           | 1                                                                                                                                                                                                         |
+| router:external           | Internal                                                                                                                                                                                                  |
+| segments                  | None                                                                                                                                                            
+|
+| shared                    | False                                                                                                                                                                                                     |
+| status                    | ACTIVE                                                                                                                                                                                                    |
+| subnets                   |                                                                                                                                                                                                           |
+| tags                      |                                                                                                                                                                                                           |
+| updated_at                | 2019-05-08T18:40:07Z                                                                                                                                                                                      |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# PUBLICNETID=`openstack network list | grep ${PUBLICNET} | awk '{print $2}'`
+controller-0:/home/wrsroot# PRIVATENETID=`openstack network list | grep ${PRIVATENET} | awk '{print $2}'`
+controller-0:/home/wrsroot# INTERNALNETID=`openstack network list | grep ${INTERNALNET} | awk '{print $2}'`
+controller-0:/home/wrsroot# EXTERNALNETID=`openstack network list | grep ${EXTERNALNET} | awk '{print $2}'`
+```
+
+```sh
+controller-0:/home/wrsroot# openstack subnet create --project ${ADMINID} ${PUBLICSUBNET} --network ${PUBLICNET} --subnet-range 192.168.101.0/24
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                     |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 192.168.101.2-192.168.101.254                                                                                                                                                                             |
+| cidr              | 192.168.101.0/24                                                                                                                                                                                          |
+| created_at        | 2019-05-08T18:41:28Z                                                                                                                                                                                      |
+| description       |                                                                                                                                                                                                           |
+| dns_nameservers   |                                                                                                                                                                                                           |
+| enable_dhcp       | True                                                                                                                                                                                                      |
+| gateway_ip        | 192.168.101.1                                                                                                                                                                                             |
+| host_routes       |                                                                                                                                                                                                           |
+| id                | d88b4952-7060-4e33-9a4e-ea0f86b16a16                                                                                                                                                                      |
+| ip_version        | 4                                                                                                                                                                                                         |
+| ipv6_address_mode | None                                                                                                                                                                                                      |
+| ipv6_ra_mode      | None                                                                                                                                                                                                      |
+| location          | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | public-subnet0                                                                                                                                                                                            |
+| network_id        | 2d6b387c-58b8-4a7e-ba22-7085def824bd                                                                                                                                                                      |
+| prefix_length     | None                                                                                                                                                                                                      |
+| project_id        | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number   | 0                                                                                                                                                                                                         |
+| segment_id        | None                                                                                                                                                                                                      |
+| service_types     |                                                                                                                                                                                                           |
+| subnetpool_id     | None                                                                                                                                                                                                      |
+| tags              |                                                                                                                                                                                                           |
+| updated_at        | 2019-05-08T18:41:28Z                                                                                                                                                                                      |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack subnet create --project ${ADMINID} ${PRIVATESUBNET} --network ${PRIVATENET} --subnet-range 192.168.201.0/24
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                     |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 192.168.201.2-192.168.201.254                                                                                                                                                                             |
+| cidr              | 192.168.201.0/24                                                                                                                                                                                          |
+| created_at        | 2019-05-08T18:42:00Z                                                                                                                                                                                      |
+| description       |                                                                                                                                                                                                           |
+| dns_nameservers   |                                                                                                                                                                                                           |
+| enable_dhcp       | True                                                                                                                                                                                                      |
+| gateway_ip        | 192.168.201.1                                                                                                                                                                                             |
+| host_routes       |                                                                                                                                                                                                           |
+| id                | 122b53e8-0de4-4a86-ad43-ef82ec259c12                                                                                                                                                                      |
+| ip_version        | 4                                                                                                                                                                                                         |
+| ipv6_address_mode | None                                                                                                                                                                                                      |
+| ipv6_ra_mode      | None                                                                                                                                                                                                      |
+| location          | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | private-subnet0                                                                                                                                                                                           |
+| network_id        | e23245d4-f5cb-4b9e-ad3e-888fb104a30b                                                                                                                                                                      |
+| prefix_length     | None                                                                                                                                                                                                      |
+| project_id        | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number   | 0                                                                                                                                                                                                         |
+| segment_id        | None                                                                                                                                                                                                      |
+| service_types     |                                                                                                                                                                                                           |
+| subnetpool_id     | None                                                                                                                                                                                                      |
+| tags              |                                                                                                                                                                                                           |
+| updated_at        | 2019-05-08T18:42:00Z                                                                                                                                                                                      |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack subnet create --project ${ADMINID} ${INTERNALSUBNET} --gateway none --network ${INTERNALNET} --subnet-range 10.1.1.0/24
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                     |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 10.1.1.1-10.1.1.254                                                                                                                                                                                       |
+| cidr              | 10.1.1.0/24                                                                                                                                                                                               |
+| created_at        | 2019-05-08T18:42:19Z                                                                                                                                                                                      |
+| description       |                                                                                                                                                                                                           |
+| dns_nameservers   |                                                                                                                                                                                                           |
+| enable_dhcp       | True                                                                                                                                                                                                      |
+| gateway_ip        | None                                                                                                                                                                                                      |
+| host_routes       |                                                                                                                                                                                                           |
+| id                | 9f5f6e53-0f00-416f-8e15-5ac066af48a5                                                                                                                                                                      |
+| ip_version        | 4                                                                                                                                                                                                         |
+| ipv6_address_mode | None                                                                                                                                                                                                      |
+| ipv6_ra_mode      | None                                                                                                                                                                                                      |
+| location          | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | internal-subnet0                                                                                                                                                                                          |
+| network_id        | 82cb9679-045d-4cca-a788-55e2442a7fc1                                                                                                                                                                      |
+| prefix_length     | None                                                                                                                                                                                                      |
+| project_id        | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number   | 0                                                                                                                                                                                                         |
+| segment_id        | None                                                                                                                                                                                                      |
+| service_types     |                                                                                                                                                                                                           |
+| subnetpool_id     | None                                                                                                                                                                                                      |
+| tags              |                                                                                                                                                                                                           |
+| updated_at        | 2019-05-08T18:42:19Z                                                                                                                                                                                      |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack subnet create --project ${ADMINID} ${EXTERNALSUBNET} --gateway 192.168.1.1 --no-dhcp --network ${EXTERNALNET} --subnet-range 192.168.51.0/24 --ip-version 4
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field             | Value                                                                                                                                                                                                     |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| allocation_pools  | 192.168.51.1-192.168.51.254                                                                                                                                                                               |
+| cidr              | 192.168.51.0/24                                                                                                                                                                                           |
+| created_at        | 2019-05-08T18:42:40Z                                                                                                                                                                                      |
+| description       |                                                                                                                                                                                                           |
+| dns_nameservers   |                                                                                                                                                                                                           |
+| enable_dhcp       | False                                                                                                                                                                                                     |
+| gateway_ip        | 192.168.1.1                                                                                                                                                                                               |
+| host_routes       |                                                                                                                                                                                                           |
+| id                | 5021df1d-ae71-41bd-856e-3177f31a0a5c                                                                                                                                                                      |
+| ip_version        | 4                                                                                                                                                                                                         |
+| ipv6_address_mode | None                                                                                                                                                                                                      |
+| ipv6_ra_mode      | None                                                                                                                                                                                                      |
+| location          | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name              | external-subnet0                                                                                                                                                                                          |
+| network_id        | 6a1d94cb-325e-4f22-8564-835a7c9c8602                                                                                                                                                                      |
+| prefix_length     | None                                                                                                                                                                                                      |
+| project_id        | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number   | 0                                                                                                                                                                                                         |
+| segment_id        | None                                                                                                                                                                                                      |
+| service_types     |                                                                                                                                                                                                           |
+| subnetpool_id     | None                                                                                                                                                                                                      |
+| tags              |                                                                                                                                                                                                           |
+| updated_at        | 2019-05-08T18:42:40Z                                                                                                                                                                                      |
++-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack router create ${PUBLICROUTER}
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                     |
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                        |
+| availability_zone_hints |                                                                                                                                                                                                           |
+| availability_zones      |                                                                                                                                                                                                           |
+| created_at              | 2019-05-08T18:43:08Z                                                                                                                                                                                      |
+| description             |                                                                                                                                                                                                           |
+| distributed             | False                                                                                                                                                                                                     |
+| external_gateway_info   | None                                                                                                                                                                                                      |
+| flavor_id               | None                                                                                                                                                                                                      |
+| ha                      | False                                                                                                                                                                                                     |
+| id                      | b7e48744-5372-4a73-9faa-3ba3678ee28d                                                                                                                                                                      |
+| location                | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | public-router0                                                                                                                                                                                            |
+| project_id              | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number         | 1                                                                                                                                                                                                         |
+| routes                  |                                                                                                                                                                                                           |
+| status                  | ACTIVE                                                                                                                                                                                                    |
+| tags                    |                                                                                                                                                                                                           |
+| updated_at              | 2019-05-08T18:43:08Z                                                                                                                                                                                      |
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# openstack router create ${PRIVATEROUTER}
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                   | Value                                                                                                                                                                                                     |
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up          | UP                                                                                                                                                                                                        |
+| availability_zone_hints |                                                                                                                                                                                                           |
+| availability_zones      |                                                                                                                                                                                                           |
+| created_at              | 2019-05-08T18:43:29Z                                                                                                                                                                                      |
+| description             |                                                                                                                                                                                                           |
+| distributed             | False                                                                                                                                                                                                     |
+| external_gateway_info   | None                                                                                                                                                                                                      |
+| flavor_id               | None                                                                                                                                                                                                      |
+| ha                      | False                                                                                                                                                                                                     |
+| id                      | 70c0292d-a686-49c7-9b10-ce1f61540400                                                                                                                                                                      |
+| location                | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'17ac3fb8b9b24081a1aaa95cd1fa2d74'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| name                    | private-router0                                                                                                                                                                                           |
+| project_id              | 17ac3fb8b9b24081a1aaa95cd1fa2d74                                                                                                                                                                          |
+| revision_number         | 1                                                                                                                                                                                                         |
+| routes                  |                                                                                                                                                                                                           |
+| status                  | ACTIVE                                                                                                                                                                                                    |
+| tags                    |                                                                                                                                                                                                           |
+| updated_at              | 2019-05-08T18:43:29Z                                                                                                                                                                                      |
++-------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:/home/wrsroot# PRIVATEROUTERID=`openstack router list | grep ${PRIVATEROUTER} | awk '{print $2}'`
+controller-0:/home/wrsroot# PUBLICROUTERID=`openstack router list | grep ${PUBLICROUTER} | awk '{print $2}'`
+```
+
+```sh
+controller-0:/home/wrsroot# openstack router set ${PUBLICROUTER} --external-gateway ${EXTERNALNETID} --disable-snat
+controller-0:/home/wrsroot# openstack router set ${PRIVATEROUTER} --external-gateway ${EXTERNALNETID} --disable-snat
+```
+
+```sh
+controller-0:/home/wrsroot# openstack router add subnet ${PUBLICROUTER} ${PUBLICSUBNET}
+controller-0:/home/wrsroot# openstack router add subnet ${PRIVATEROUTER} ${PRIVATESUBNET}
+```
+
+## Additional Setup Instructions
+
+```sh
+controller-0:/home/wrsroot# exit
+exit
+controller-0:~$ source /etc/platform/openrc
+[wrsroot@controller-0 ~(keystone_admin)]$ 
+```
+
+```sh
+controller-0:~$ source /etc/platform/openrc
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-remove stx-openstack
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| app_version   | 1.0-11-centos-stable-latest      |
+| created_at    | 2019-05-08T17:02:48.062194+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | removing                         |
+| updated_at    | 2019-05-08T17:48:33.476005+00:00 |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+----------+-------------------------------+
+| application   | version                     | manifest name   | manifest file | status   | progress                      |
++---------------+-----------------------------+-----------------+---------------+----------+-------------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | removing | deleting application manifest |
++---------------+-----------------------------+-----------------+---------------+----------+-------------------------------+
+```
+
+## Horizon access
+
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get services -n openstack | grep horizon
+horizon                       ClusterIP   10.108.237.164   <none>        80/TCP,443/TCP                 7m33s
+horizon-int                   NodePort    10.98.52.151     <none>        80:31000/TCP                   7m33s
+[wrsroot@controller-0 ~(keystone_admin)]$ curl -L http://10.10.10.3:8080 -so - | egrep '(PlugIn|<title>)'
+    <title>Login - StarlingX</title>
+    global.horizonPlugInModules = ['horizon.dashboard.project', 'horizon.dashboard.dc_admin', 'horizon.dashboard.fault_management', 'horizon.dashboard.identity'];
+[wrsroot@controller-0 ~(keystone_admin)]$ curl -L http://10.10.10.3:31000 -so - | egrep '(PlugIn|<title>)'
+    <title>Login - StarlingX</title>
+    global.horizonPlugInModules = ['horizon.dashboard.project', 'horizon.dashboard.identity'];
+[wrsroot@controller-0 ~(keystone_admin)]$ 
+```
