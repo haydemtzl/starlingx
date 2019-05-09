@@ -1412,6 +1412,17 @@ Please use 'system application-list' or 'system application-show stx-openstack' 
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+| application   | version                     | manifest name   | manifest file | status    | progress                        |
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | uploading | validating and uploading charts |
++---------------+-----------------------------+-----------------+---------------+-----------+---------------------------------+
+```
+
+After some time...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
 +---------------+-----------------------------+-----------------+---------------+----------+-----------+
 | application   | version                     | manifest name   | manifest file | status   | progress  |
 +---------------+-----------------------------+-----------------+---------------+----------+-----------+
