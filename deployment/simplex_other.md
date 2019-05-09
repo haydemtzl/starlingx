@@ -1,3 +1,57 @@
+## OpenStack
+
+
+```sh
+controller-0:~$ openstack endpoint list
++----------------------------------+-----------+--------------+----------------+---------+-----------+---------------------------------------------------------------------------+
+| ID                               | Region    | Service Name | Service Type   | Enabled | Interface | URL                                                                       |
++----------------------------------+-----------+--------------+----------------+---------+-----------+---------------------------------------------------------------------------+
+| 0247c30de7a8408bbf8ca52f36b3bf70 | RegionOne | barbican     | key-manager    | True    | internal  | http://barbican-api.openstack.svc.cluster.local:9311/                     |
+| 06c1afc7f5dd42afb8c9952a3d8579c3 | RegionOne | neutron      | network        | True    | admin     | http://neutron-server.openstack.svc.cluster.local:9696/                   |
+| 0a04927605d641ff84cd1fe7cb6bc516 | RegionOne | glance       | image          | True    | admin     | http://glance-api.openstack.svc.cluster.local:9292/                       |
+| 0f86258694674db2ae168ee923a0a4a4 | RegionOne | heat         | orchestration  | True    | internal  | http://heat-api.openstack.svc.cluster.local:8004/v1/%(project_id)s        |
+| 139c305e7433484d9e64a626eae2cf04 | RegionOne | cinderv3     | volumev3       | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v3/%(tenant_id)s       |
+| 2b12828f02234732baafb2bbe4b6edaf | RegionOne | heat         | orchestration  | True    | public    | http://heat.openstack.svc.cluster.local:80/v1/%(project_id)s              |
+| 38558b0ecb9643a09dc497cc323c50e5 | RegionOne | aodh         | alarming       | True    | public    | http://aodh.openstack.svc.cluster.local:80/                               |
+| 3c57885476f7413182cefff15bbf6988 | RegionOne | gnocchi      | metric         | True    | internal  | http://gnocchi-api.openstack.svc.cluster.local:8041/                      |
+| 3f4db9191b0441cbb5922edc5863c202 | RegionOne | heat         | orchestration  | True    | admin     | http://heat-api.openstack.svc.cluster.local:8004/v1/%(project_id)s        |
+| 58ce482b96dc470fa3e8bb9a1cf6e5f4 | RegionOne | barbican     | key-manager    | True    | public    | http://barbican.openstack.svc.cluster.local:80/                           |
+| 5a762434fe1a493498b9376f3aae0058 | RegionOne | heat-cfn     | cloudformation | True    | public    | http://cloudformation.openstack.svc.cluster.local:80/v1                   |
+| 5e3278b65bee4c66a32bad97de3024b3 | RegionOne | glance       | image          | True    | internal  | http://glance-api.openstack.svc.cluster.local:9292/                       |
+| 5f02a9336f1249f38de19227e183582d | RegionOne | cinderv2     | volumev2       | True    | public    | http://cinder.openstack.svc.cluster.local:80/v2/%(tenant_id)s             |
+| 619809d99f514b159a556d34116cb757 | RegionOne | cinder       | volume         | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v1/%(tenant_id)s       |
+| 6e053f5500ff4a4b89335d1beb22798b | RegionOne | barbican     | key-manager    | True    | admin     | http://barbican-api.openstack.svc.cluster.local:9311/                     |
+| 7c0de76ce88c4f7180f3a5e8bff7f61c | RegionOne | panko        | event          | True    | admin     | http://panko-api.openstack.svc.cluster.local:8977/                        |
+| 823e5f065a20419e8d9cceba6f454e01 | RegionOne | gnocchi      | metric         | True    | admin     | http://gnocchi-api.openstack.svc.cluster.local:8041/                      |
+| 851610ef55ee49bf813906ef27465d52 | RegionOne | cinderv2     | volumev2       | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v2/%(tenant_id)s       |
+| 855e28b07447475185c2ef9739b7d492 | RegionOne | glance       | image          | True    | public    | http://glance.openstack.svc.cluster.local:80/                             |
+| 8ac08be758ad43f4a1b54e2480402114 | RegionOne | heat-cfn     | cloudformation | True    | admin     | http://heat-cfn.openstack.svc.cluster.local:8000/v1                       |
+| 925ce8a8df7c4ec3ab985580a0c24a8f | RegionOne | panko        | event          | True    | public    | http://panko.openstack.svc.cluster.local:80/                              |
+| 9e1a178f35054bb18eac14af23ef7c16 | RegionOne | cinderv3     | volumev3       | True    | public    | http://cinder.openstack.svc.cluster.local:80/v3/%(tenant_id)s             |
+| a04f47dc67004654a2061384004ebd3d | RegionOne | neutron      | network        | True    | internal  | http://neutron-server.openstack.svc.cluster.local:9696/                   |
+| a5d5407c30bf4986abc5b45da57a7728 | RegionOne | keystone     | identity       | True    | internal  | http://keystone-api.openstack.svc.cluster.local:5000/v3                   |
+| ac48ab38847e412bb803b8c800016f7b | RegionOne | aodh         | alarming       | True    | internal  | http://aodh-api.openstack.svc.cluster.local:8042/                         |
+| b24f5afc821943a4ac0a01168545e967 | RegionOne | placement    | placement      | True    | public    | http://placement.openstack.svc.cluster.local:80/                          |
+| c20e22c8e58c406c923e69e85c62334e | RegionOne | placement    | placement      | True    | admin     | http://placement-api.openstack.svc.cluster.local:8778/                    |
+| c7707c2c9aa84b56b341a09a6ae8076a | RegionOne | cinder       | volume         | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v1/%(tenant_id)s       |
+| c92fa4ef0f46488ea33043680c178e23 | RegionOne | cinderv3     | volumev3       | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v3/%(tenant_id)s       |
+| cc229863f1b94c2d981f589ccbeaa53d | RegionOne | cinderv2     | volumev2       | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v2/%(tenant_id)s       |
+| d07f2492edf94ab28dd732ed5eca36de | RegionOne | keystone     | identity       | True    | admin     | http://keystone.openstack.svc.cluster.local:80/v3                         |
+| d3fc19c50e26475e887240de1426f843 | RegionOne | gnocchi      | metric         | True    | public    | http://gnocchi.openstack.svc.cluster.local:80/                            |
+| d571ae93444c43acbae2226b030fb3f7 | RegionOne | heat-cfn     | cloudformation | True    | internal  | http://heat-cfn.openstack.svc.cluster.local:8000/v1                       |
+| d77be75cd86b47e995d48cc759669d52 | RegionOne | keystone     | identity       | True    | public    | http://keystone.openstack.svc.cluster.local:80/v3                         |
+| d90585b7da244f01885a19fbfde8ecbe | RegionOne | cinder       | volume         | True    | public    | http://cinder.openstack.svc.cluster.local:80/v1/%(tenant_id)s             |
+| de64d530932a4900981bbddaa80b48f1 | RegionOne | nova         | compute        | True    | admin     | http://nova-api-proxy.openstack.svc.cluster.local:8774/v2.1/%(tenant_id)s |
+| e0e399f3a02044008bf4798a517f8638 | RegionOne | nova         | compute        | True    | public    | http://nova.openstack.svc.cluster.local:80/v2.1/%(tenant_id)s             |
+| eb911ceccbf945de89a48109a214e1b7 | RegionOne | nova         | compute        | True    | internal  | http://nova-api-proxy.openstack.svc.cluster.local:8774/v2.1/%(tenant_id)s |
+| ed69292376f14ff1b11264d1941936aa | RegionOne | neutron      | network        | True    | public    | http://neutron.openstack.svc.cluster.local:80/                            |
+| f6b678321be44574a866ac1385da880e | RegionOne | placement    | placement      | True    | internal  | http://placement-api.openstack.svc.cluster.local:8778/                    |
+| f7167d09162e4dd5aafdf2b4e4a04cd7 | RegionOne | aodh         | alarming       | True    | admin     | http://aodh-api.openstack.svc.cluster.local:8042/                         |
+| fe5065ad5dac46698a2637150a0e1a89 | RegionOne | panko        | event          | True    | internal  | http://panko-api.openstack.svc.cluster.local:8977/                        |
++----------------------------------+-----------+--------------+----------------+---------+-----------+---------------------------------------------------------------------------+
+```
+
+
 ## Others
 
 ```sh
