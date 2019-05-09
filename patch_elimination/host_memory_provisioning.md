@@ -26,6 +26,11 @@ none on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
 hugepages-2048kB
 ```
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ls /sys/devices/system/node/
+has_cpu  has_normal_memory  node0  online  possible  power  uevent
+```
+
 ## Horizon Update Memory Allocation
 
 > Description: From here you can update the platform reserved memory and the number of application hugepages per numa node.
