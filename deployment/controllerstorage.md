@@ -1475,6 +1475,35 @@ Every 5.0s: system application-list                                             
 +---------------+---------------------------+-----------------+-----------+----------+-----------------------------------------------------+
 ```
 
+# Verify the cluster endpoints
+
+```sh
+```
+
+# Provider/tenant networking setup
+
+```sh
+```
+
+## Tenant Networking setup
+
+```sh
+```
+
+# Additional Setup Instructions
+
+```sh
+```
+
+# Horizon access
+
+```sh
+```
+
+# Errors
+
+Due to configuring ovs-dpdk in a StarlingX virtualized environment:
+
 ```sh
 Every 5.0s: system application-list                                                                                      Thu May  9 11:47:21 2019
 
