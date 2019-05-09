@@ -1224,6 +1224,15 @@ horizon-int                   NodePort    10.98.52.151     <none>        80:3100
 [wrsroot@controller-0 ~(keystone_admin)]$ 
 ```
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
 ## Others
 
 ```sh
