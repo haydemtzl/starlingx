@@ -1461,3 +1461,54 @@ Every 5.0s: system application-list                                             
 |               |                           |                 |           |          |                                                     |
 +---------------+---------------------------+-----------------+-----------+----------+-----------------------------------------------------+
 ```
+
+```sh
+Every 5.0s: system application-list                                                                                      Thu May  9 11:47:21 2019
+
++---------------+-----------------------------+-----------------+---------------+--------------+------------------------------------------+
+| application   | version                     | manifest name   | manifest file | status       | progress                                 |
++---------------+-----------------------------+-----------------+---------------+--------------+------------------------------------------+
+| stx-openstack | 1.0-11-centos-stable-latest | armada-manifest | manifest.yaml | apply-failed | operation aborted, check logs for detail |
++---------------+-----------------------------+-----------------+---------------+--------------+------------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo docker exec armada_service tail -f stx-openstack-apply.log
+Password: 
+2019-05-09 11:45:15.771 42 ERROR armada.cli   File "/usr/lib/python3.6/concurrent/futures/_base.py", line 384, in __get_result
+2019-05-09 11:45:15.771 42 ERROR armada.cli     raise self._exception
+2019-05-09 11:45:15.771 42 ERROR armada.cli   File "/usr/lib/python3.6/concurrent/futures/thread.py", line 56, in run
+2019-05-09 11:45:15.771 42 ERROR armada.cli     result = self.fn(*self.args, **self.kwargs)
+2019-05-09 11:45:15.771 42 ERROR armada.cli   File "/usr/local/lib/python3.6/dist-packages/armada/cli/apply.py", line 252, in handle
+2019-05-09 11:45:15.771 42 ERROR armada.cli     return armada.sync()
+2019-05-09 11:45:15.771 42 ERROR armada.cli   File "/usr/local/lib/python3.6/dist-packages/armada/handlers/armada.py", line 249, in sync
+2019-05-09 11:45:15.771 42 ERROR armada.cli     raise armada_exceptions.ChartDeployException(failures)
+2019-05-09 11:45:15.771 42 ERROR armada.cli armada.exceptions.armada_exceptions.ChartDeployException: Exception deploying charts: ['openvswitch']
+2019-05-09 11:45:15.771 42 ERROR armada.cli 
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system modify --vswitch_type none
++----------------------+--------------------------------------+
+| Property             | Value                                |
++----------------------+--------------------------------------+
+| contact              | None                                 |
+| created_at           | 2019-05-09T07:57:52.857427+00:00     |
+| description          | None                                 |
+| https_enabled        | False                                |
+| location             | None                                 |
+| name                 | 5873e93f-e035-4d22-8c2e-7dacf7c78003 |
+| region_name          | RegionOne                            |
+| sdn_enabled          | False                                |
+| security_feature     | spectre_meltdown_v1                  |
+| service_project_name | services                             |
+| software_version     | 19.01                                |
+| system_mode          | duplex                               |
+| system_type          | Standard                             |
+| timezone             | UTC                                  |
+| updated_at           | 2019-05-09T08:15:59.828113+00:00     |
+| uuid                 | 57b9f9a3-5840-4a6d-89fe-e4c6aa956b47 |
+| vswitch_type         | none                                 |
++----------------------+--------------------------------------+
+```
+
