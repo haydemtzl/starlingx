@@ -527,3 +527,656 @@ controller-0:~$ source /etc/platform/openrc
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
+
+Once rebooted
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | degraded     |
+| 3  | compute-0    | worker      | locked         | disabled    | online       |
+| 4  | compute-1    | worker      | locked         | disabled    | online       |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+CEPH with non ok status, due to missing Ceph monitor
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     d2143f4f-b092-4ba7-8d91-81c942a4c6ee
+    health: HEALTH_WARN
+            Reduced data availability: 64 pgs inactive
+ 
+  services:
+    mon: 2 daemons, quorum controller-0,controller-1
+    mgr: controller-0(active), standbys: controller-1
+    osd: 0 osds: 0 up, 0 in
+ 
+  data:
+    pools:   1 pools, 64 pgs
+    objects: 0  objects, 0 B
+    usage:   0 B used, 0 B / 0 B avail
+    pgs:     100.000% pgs unknown
+             64 unknown
+```
+
+# Provisioning computes
+
+## Add the third Ceph monitor to a compute node (Standard Only)
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system ceph-mon-add compute-0
++--------------+------------------------------------------------------------------+
+| Property     | Value                                                            |
++--------------+------------------------------------------------------------------+
+| uuid         | 5810c712-555a-490d-9b03-d0840a92e236                             |
+| ceph_mon_gib | 20                                                               |
+| created_at   | 2019-05-09T10:06:04.494153+00:00                                 |
+| updated_at   | None                                                             |
+| state        | configuring                                                      |
+| task         | {u'controller-1': 'configuring', u'controller-0': 'configuring'} |
++--------------+------------------------------------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system ceph-mon-list
++--------------------------------------+-------+--------------+------------+------+
+| uuid                                 | ceph_ | hostname     | state      | task |
+|                                      | mon_g |              |            |      |
+|                                      | ib    |              |            |      |
++--------------------------------------+-------+--------------+------------+------+
+| 0320914f-195f-4776-a51c-4570dfa0791d | 20    | controller-1 | configured | None |
+| 2bbedca6-859b-4291-a425-05901aac51f1 | 20    | controller-0 | configured | None |
+| 5810c712-555a-490d-9b03-d0840a92e236 | 20    | compute-0    | configured | None |
++--------------------------------------+-------+--------------+------------+------+
+```
+
+# Create the volume group for nova
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
+>   echo "Configuring nova local for: $COMPUTE"
+>   set -ex
+>   ROOT_DISK=$(system host-show ${COMPUTE} | grep rootfs | awk '{print $4}')
+>   ROOT_DISK_UUID=$(system host-disk-list ${COMPUTE} --nowrap | awk /${ROOT_DISK}/'{print $2}')
+>   PARTITION_SIZE=10
+>   NOVA_PARTITION=$(system host-disk-partition-add -t lvm_phys_vol ${COMPUTE} ${ROOT_DISK_UUID} ${PARTITION_SIZE})
+>   NOVA_PARTITION_UUID=$(echo ${NOVA_PARTITION} | grep -ow "| uuid | [a-z0-9\-]* |" | awk '{print $4}')
+>   system host-lvg-add ${COMPUTE} nova-local
+>   system host-pv-add ${COMPUTE} nova-local ${NOVA_PARTITION_UUID}
+>   system host-lvg-modify -b image ${COMPUTE} nova-local
+>   set +ex
+> done
+Configuring nova local for: compute-0
+++ system host-show compute-0
+++ grep --color=auto rootfs
+++ awk '{print $4}'
++ ROOT_DISK=sda
+++ system host-disk-list compute-0 --nowrap
+++ awk '/sda/{print $2}'
++ ROOT_DISK_UUID=63941904-3a7d-406d-aead-9cfb474a3c61
++ PARTITION_SIZE=10
+++ system host-disk-partition-add -t lvm_phys_vol compute-0 63941904-3a7d-406d-aead-9cfb474a3c61 10
++ NOVA_PARTITION='+-------------+--------------------------------------------------+
+| Property    | Value                                            |
++-------------+--------------------------------------------------+
+| device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
+| device_node | /dev/sda5                                        |
+| type_guid   | ba5eba11-0000-1111-2222-000000000001             |
+| type_name   | None                                             |
+| start_mib   | None                                             |
+| end_mib     | None                                             |
+| size_mib    | 10240                                            |
+| uuid        | c0cb34c6-7b66-4fcb-b22d-becc8efefbc4             |
+| ihost_uuid  | f4675450-cf5e-4797-a8c9-3238ed5a1da9             |
+| idisk_uuid  | 63941904-3a7d-406d-aead-9cfb474a3c61             |
+| ipv_uuid    | None                                             |
+| status      | Creating (on unlock)                             |
+| created_at  | 2019-05-09T10:07:19.280703+00:00                 |
+| updated_at  | None                                             |
++-------------+--------------------------------------------------+'
+++ grep --color=auto -ow '| uuid | [a-z0-9\-]* |'
+++ awk '{print $4}'
+++ echo +-------------+--------------------------------------------------+ '|' Property '|' Value '|' +-------------+--------------------------------------------------+ '|' device_path '|' /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 '|' '|' device_node '|' /dev/sda5 '|' '|' type_guid '|' ba5eba11-0000-1111-2222-000000000001 '|' '|' type_name '|' None '|' '|' start_mib '|' None '|' '|' end_mib '|' None '|' '|' size_mib '|' 10240 '|' '|' uuid '|' c0cb34c6-7b66-4fcb-b22d-becc8efefbc4 '|' '|' ihost_uuid '|' f4675450-cf5e-4797-a8c9-3238ed5a1da9 '|' '|' idisk_uuid '|' 63941904-3a7d-406d-aead-9cfb474a3c61 '|' '|' ipv_uuid '|' None '|' '|' status '|' Creating '(on' 'unlock)' '|' '|' created_at '|' 2019-05-09T10:07:19.280703+00:00 '|' '|' updated_at '|' None '|' +-------------+--------------------------------------------------+
++ NOVA_PARTITION_UUID=c0cb34c6-7b66-4fcb-b22d-becc8efefbc4
++ system host-lvg-add compute-0 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | 5f1fa392-ac46-40f9-a186-fd44ca1d0f99                              |
+| ihost_uuid            | f4675450-cf5e-4797-a8c9-3238ed5a1da9                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-05-09T10:07:20.641046+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
++ system host-pv-add compute-0 nova-local c0cb34c6-7b66-4fcb-b22d-becc8efefbc4
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | d7d7268b-9ad5-4a62-96d5-071f7fe13898             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | c0cb34c6-7b66-4fcb-b22d-becc8efefbc4             |
+| disk_or_part_device_node | /dev/sda5                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
+| lvm_pv_name              | /dev/sda5                                        |
+| lvm_vg_name              | nova-local                                       |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | f4675450-cf5e-4797-a8c9-3238ed5a1da9             |
+| created_at               | 2019-05-09T10:07:21.867072+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
++ system host-lvg-modify -b image compute-0 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | 5f1fa392-ac46-40f9-a186-fd44ca1d0f99                              |
+| ihost_uuid            | f4675450-cf5e-4797-a8c9-3238ed5a1da9                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-05-09T10:07:20.641046+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
++ set +ex
+Configuring nova local for: compute-1
+++ system host-show compute-1
+++ grep --color=auto rootfs
+++ awk '{print $4}'
++ ROOT_DISK=sda
+++ system host-disk-list compute-1 --nowrap
+++ awk '/sda/{print $2}'
++ ROOT_DISK_UUID=10d0f01e-0b46-425f-b89a-ecb98e99a98a
++ PARTITION_SIZE=10
+++ system host-disk-partition-add -t lvm_phys_vol compute-1 10d0f01e-0b46-425f-b89a-ecb98e99a98a 10
++ NOVA_PARTITION='+-------------+--------------------------------------------------+
+| Property    | Value                                            |
++-------------+--------------------------------------------------+
+| device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
+| device_node | /dev/sda5                                        |
+| type_guid   | ba5eba11-0000-1111-2222-000000000001             |
+| type_name   | None                                             |
+| start_mib   | None                                             |
+| end_mib     | None                                             |
+| size_mib    | 10240                                            |
+| uuid        | 9cf5de98-d3a4-46f1-84c6-66a4a83c77a1             |
+| ihost_uuid  | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3             |
+| idisk_uuid  | 10d0f01e-0b46-425f-b89a-ecb98e99a98a             |
+| ipv_uuid    | None                                             |
+| status      | Creating (on unlock)                             |
+| created_at  | 2019-05-09T10:07:26.717719+00:00                 |
+| updated_at  | None                                             |
++-------------+--------------------------------------------------+'
+++ grep --color=auto -ow '| uuid | [a-z0-9\-]* |'
+++ awk '{print $4}'
+++ echo +-------------+--------------------------------------------------+ '|' Property '|' Value '|' +-------------+--------------------------------------------------+ '|' device_path '|' /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 '|' '|' device_node '|' /dev/sda5 '|' '|' type_guid '|' ba5eba11-0000-1111-2222-000000000001 '|' '|' type_name '|' None '|' '|' start_mib '|' None '|' '|' end_mib '|' None '|' '|' size_mib '|' 10240 '|' '|' uuid '|' 9cf5de98-d3a4-46f1-84c6-66a4a83c77a1 '|' '|' ihost_uuid '|' 6ff0a563-422e-4bdd-8b89-9386cedc3fa3 '|' '|' idisk_uuid '|' 10d0f01e-0b46-425f-b89a-ecb98e99a98a '|' '|' ipv_uuid '|' None '|' '|' status '|' Creating '(on' 'unlock)' '|' '|' created_at '|' 2019-05-09T10:07:26.717719+00:00 '|' '|' updated_at '|' None '|' +-------------+--------------------------------------------------+
++ NOVA_PARTITION_UUID=9cf5de98-d3a4-46f1-84c6-66a4a83c77a1
++ system host-lvg-add compute-1 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | f2786398-480d-4d0e-88a2-6057b3ddf3f2                              |
+| ihost_uuid            | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-05-09T10:07:27.978481+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
++ system host-pv-add compute-1 nova-local 9cf5de98-d3a4-46f1-84c6-66a4a83c77a1
++--------------------------+--------------------------------------------------+
+| Property                 | Value                                            |
++--------------------------+--------------------------------------------------+
+| uuid                     | 7cf0b6f3-ade0-4cbd-9e2f-733d97b80386             |
+| pv_state                 | adding                                           |
+| pv_type                  | partition                                        |
+| disk_or_part_uuid        | 9cf5de98-d3a4-46f1-84c6-66a4a83c77a1             |
+| disk_or_part_device_node | /dev/sda5                                        |
+| disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
+| lvm_pv_name              | /dev/sda5                                        |
+| lvm_vg_name              | nova-local                                       |
+| lvm_pv_uuid              | None                                             |
+| lvm_pv_size_gib          | 0.0                                              |
+| lvm_pe_total             | 0                                                |
+| lvm_pe_alloced           | 0                                                |
+| ihost_uuid               | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3             |
+| created_at               | 2019-05-09T10:07:29.407066+00:00                 |
+| updated_at               | None                                             |
++--------------------------+--------------------------------------------------+
++ system host-lvg-modify -b image compute-1 nova-local
++-----------------------+-------------------------------------------------------------------+
+| Property              | Value                                                             |
++-----------------------+-------------------------------------------------------------------+
+| lvm_vg_name           | nova-local                                                        |
+| vg_state              | adding                                                            |
+| uuid                  | f2786398-480d-4d0e-88a2-6057b3ddf3f2                              |
+| ihost_uuid            | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3                              |
+| lvm_vg_access         | None                                                              |
+| lvm_max_lv            | 0                                                                 |
+| lvm_cur_lv            | 0                                                                 |
+| lvm_max_pv            | 0                                                                 |
+| lvm_cur_pv            | 0                                                                 |
+| lvm_vg_size_gib       | 0.0                                                               |
+| lvm_vg_avail_size_gib | 0.0                                                               |
+| lvm_vg_total_pe       | 0                                                                 |
+| lvm_vg_free_pe        | 0                                                                 |
+| created_at            | 2019-05-09T10:07:27.978481+00:00                                  |
+| updated_at            | None                                                              |
+| parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
++-----------------------+-------------------------------------------------------------------+
++ set +ex
+```
+
+# Configure data interfaces for computes
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ DATA0IF=eth1000
+[wrsroot@controller-0 ~(keystone_admin)]$ DATA1IF=eth1001
+[wrsroot@controller-0 ~(keystone_admin)]$ PHYSNET0='physnet0'
+[wrsroot@controller-0 ~(keystone_admin)]$ PHYSNET1='physnet1'
+[wrsroot@controller-0 ~(keystone_admin)]$ SPL=/tmp/tmp-system-port-list
+[wrsroot@controller-0 ~(keystone_admin)]$ SPIL=/tmp/tmp-system-host-if-list
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system datanetwork-add ${PHYSNET0} vlan
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| id           | 1                                    |
+| uuid         | 110cd57b-6da7-4356-9e9f-651b0a86b56a |
+| name         | physnet0                             |
+| network_type | vlan                                 |
+| mtu          | 1500                                 |
+| description  | None                                 |
++--------------+--------------------------------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system datanetwork-add ${PHYSNET1} vlan
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| id           | 2                                    |
+| uuid         | d45f30bf-40da-483c-aeac-5d1386ad3063 |
+| name         | physnet1                             |
+| network_type | vlan                                 |
+| mtu          | 1500                                 |
+| description  | None                                 |
++--------------+--------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
+>   echo "Configuring interface for: $COMPUTE"
+>   set -ex
+>   system host-port-list ${COMPUTE} --nowrap > ${SPL}
+>   system host-if-list -a ${COMPUTE} --nowrap > ${SPIL}
+>   DATA0PCIADDR=$(cat $SPL | grep $DATA0IF |awk '{print $8}')
+>   DATA1PCIADDR=$(cat $SPL | grep $DATA1IF |awk '{print $8}')
+>   DATA0PORTUUID=$(cat $SPL | grep ${DATA0PCIADDR} | awk '{print $2}')
+>   DATA1PORTUUID=$(cat $SPL | grep ${DATA1PCIADDR} | awk '{print $2}')
+>   DATA0PORTNAME=$(cat $SPL | grep ${DATA0PCIADDR} | awk '{print $4}')
+>   DATA1PORTNAME=$(cat  $SPL | grep ${DATA1PCIADDR} | awk '{print $4}')
+>   DATA0IFUUID=$(cat $SPIL | awk -v DATA0PORTNAME=$DATA0PORTNAME '($12 ~ DATA0PORTNAME) {print $2}')
+>   DATA1IFUUID=$(cat $SPIL | awk -v DATA1PORTNAME=$DATA1PORTNAME '($12 ~ DATA1PORTNAME) {print $2}')
+>   system host-if-modify -m 1500 -n data0 -d ${PHYSNET0} -c data ${COMPUTE} ${DATA0IFUUID}
+>   system host-if-modify -m 1500 -n data1 -d ${PHYSNET1} -c data ${COMPUTE} ${DATA1IFUUID}
+>   set +ex
+> done
+Configuring interface for: compute-0
++ system host-port-list compute-0 --nowrap
++ system host-if-list -a compute-0 --nowrap
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto eth1000
+++ awk '{print $8}'
++ DATA0PCIADDR=0000:02:03.0
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto eth1001
+++ awk '{print $8}'
++ DATA1PCIADDR=0000:02:04.0
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:03.0
+++ awk '{print $2}'
++ DATA0PORTUUID=adecc221-3922-45e8-b97a-d31f5ef47f2e
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:04.0
+++ awk '{print $2}'
++ DATA1PORTUUID=3b3a67b7-1a2a-4b2e-8167-1bf5d8a295ac
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:03.0
+++ awk '{print $4}'
++ DATA0PORTNAME=eth1000
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:04.0
+++ awk '{print $4}'
++ DATA1PORTNAME=eth1001
+++ cat /tmp/tmp-system-host-if-list
+++ awk -v DATA0PORTNAME=eth1000 '($12 ~ DATA0PORTNAME) {print $2}'
++ DATA0IFUUID=b0e22fe3-92c4-4546-9eb9-288745fe446c
+++ cat /tmp/tmp-system-host-if-list
+++ awk -v DATA1PORTNAME=eth1001 '($12 ~ DATA1PORTNAME) {print $2}'
++ DATA1IFUUID=7d2eb5e7-d215-4174-9828-ffb9c654680a
++ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-0 b0e22fe3-92c4-4546-9eb9-288745fe446c
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | data0                                |
+| iftype       | ethernet                             |
+| ports        | [u'eth1000']                         |
+| datanetworks | [u'physnet0']                        |
+| imac         | 52:54:00:36:f5:16                    |
+| imtu         | 1500                                 |
+| ifclass      | data                                 |
+| networks     |                                      |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | b0e22fe3-92c4-4546-9eb9-288745fe446c |
+| ihost_uuid   | f4675450-cf5e-4797-a8c9-3238ed5a1da9 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:17.631463+00:00     |
+| updated_at   | 2019-05-09T10:08:46.528133+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | disabled                             |
+| ipv6_mode    | disabled                             |
+| accelerated  | [True]                               |
++--------------+--------------------------------------+
++ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-0 7d2eb5e7-d215-4174-9828-ffb9c654680a
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | data1                                |
+| iftype       | ethernet                             |
+| ports        | [u'eth1001']                         |
+| datanetworks | [u'physnet1']                        |
+| imac         | 52:54:00:4b:54:59                    |
+| imtu         | 1500                                 |
+| ifclass      | data                                 |
+| networks     |                                      |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | 7d2eb5e7-d215-4174-9828-ffb9c654680a |
+| ihost_uuid   | f4675450-cf5e-4797-a8c9-3238ed5a1da9 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:17.762022+00:00     |
+| updated_at   | 2019-05-09T10:08:48.917231+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | disabled                             |
+| ipv6_mode    | disabled                             |
+| accelerated  | [True]                               |
++--------------+--------------------------------------+
++ set +ex
+Configuring interface for: compute-1
++ system host-port-list compute-1 --nowrap
++ system host-if-list -a compute-1 --nowrap
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto eth1000
+++ awk '{print $8}'
++ DATA0PCIADDR=0000:02:03.0
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto eth1001
+++ awk '{print $8}'
++ DATA1PCIADDR=0000:02:04.0
+++ cat /tmp/tmp-system-port-list
+++ awk '{print $2}'
+++ grep --color=auto 0000:02:03.0
++ DATA0PORTUUID=17c1a546-dd82-4e0e-8db2-9b574092199a
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:04.0
+++ awk '{print $2}'
++ DATA1PORTUUID=fe8e14da-20a8-4ba5-bf8f-23acba767cf6
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:03.0
+++ awk '{print $4}'
++ DATA0PORTNAME=eth1000
+++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:04.0
+++ awk '{print $4}'
++ DATA1PORTNAME=eth1001
+++ cat /tmp/tmp-system-host-if-list
+++ awk -v DATA0PORTNAME=eth1000 '($12 ~ DATA0PORTNAME) {print $2}'
++ DATA0IFUUID=d15265ea-2293-4b71-9e57-cca8afd21128
+++ cat /tmp/tmp-system-host-if-list
+++ awk -v DATA1PORTNAME=eth1001 '($12 ~ DATA1PORTNAME) {print $2}'
++ DATA1IFUUID=ef4f6a0b-a739-4d51-b6f1-5c07f0e2b9c3
++ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-1 d15265ea-2293-4b71-9e57-cca8afd21128
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | data0                                |
+| iftype       | ethernet                             |
+| ports        | [u'eth1000']                         |
+| datanetworks | [u'physnet0']                        |
+| imac         | 52:54:00:15:dc:4a                    |
+| imtu         | 1500                                 |
+| ifclass      | data                                 |
+| networks     |                                      |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | d15265ea-2293-4b71-9e57-cca8afd21128 |
+| ihost_uuid   | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:44.070835+00:00     |
+| updated_at   | 2019-05-09T10:08:53.643109+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | disabled                             |
+| ipv6_mode    | disabled                             |
+| accelerated  | [True]                               |
++--------------+--------------------------------------+
++ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-1 ef4f6a0b-a739-4d51-b6f1-5c07f0e2b9c3
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | data1                                |
+| iftype       | ethernet                             |
+| ports        | [u'eth1001']                         |
+| datanetworks | [u'physnet1']                        |
+| imac         | 52:54:00:73:c1:cd                    |
+| imtu         | 1500                                 |
+| ifclass      | data                                 |
+| networks     |                                      |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | ef4f6a0b-a739-4d51-b6f1-5c07f0e2b9c3 |
+| ihost_uuid   | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:44.192263+00:00     |
+| updated_at   | 2019-05-09T10:08:55.861330+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | disabled                             |
+| ipv6_mode    | disabled                             |
+| accelerated  | [True]                               |
++--------------+--------------------------------------+
++ set +ex
+```
+
+# Setup the cluster-host interfaces on the computes to the management network (enp0s8)
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
+>    system host-if-modify $COMPUTE mgmt0 --networks cluster-host
+> done
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | mgmt0                                |
+| iftype       | ethernet                             |
+| ports        | [u'enp2s2']                          |
+| datanetworks | []                                   |
+| imac         | 52:54:00:6a:8c:f7                    |
+| imtu         | 1500                                 |
+| ifclass      | platform                             |
+| networks     | cluster-host,mgmt                    |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | 4d8b713e-9035-48b5-9907-9820fbbf1841 |
+| ihost_uuid   | f4675450-cf5e-4797-a8c9-3238ed5a1da9 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:17.353137+00:00     |
+| updated_at   | 2019-05-09T10:09:39.981778+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | static                               |
+| ipv6_mode    | disabled                             |
+| accelerated  | [False]                              |
++--------------+--------------------------------------+
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | mgmt0                                |
+| iftype       | ethernet                             |
+| ports        | [u'enp2s2']                          |
+| datanetworks | []                                   |
+| imac         | 52:54:00:77:42:81                    |
+| imtu         | 1500                                 |
+| ifclass      | platform                             |
+| networks     | cluster-host,mgmt                    |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | 0587198d-f5c8-4c5c-bddd-73f76ca5bd1e |
+| ihost_uuid   | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-09T08:47:43.891565+00:00     |
+| updated_at   | 2019-05-09T10:09:42.555785+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | static                               |
+| ipv6_mode    | disabled                             |
+| accelerated  | [False]                              |
++--------------+--------------------------------------+
+```
+
+# Unlock compute nodes
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
+>    system host-unlock $COMPUTE
+> done
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | online                               |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | 54ed0e3f-ae77-44a1-8b07-ecacce217add |
+| config_status       | Config out-of-date                   |
+| config_target       | 13599fe0-f486-4927-9551-0048df787956 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-05-09T08:35:40.579739+00:00     |
+| hostname            | compute-0                            |
+| id                  | 3                                    |
+| install_output      | text                                 |
+| install_state       | completed                            |
+| install_state_info  | None                                 |
+| invprovision        | unprovisioned                        |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.186                      |
+| mgmt_mac            | 52:54:00:6a:8c:f7                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | Unlocking                            |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | 2019-05-09T10:11:44.873146+00:00     |
+| uptime              | 5117                                 |
+| uuid                | f4675450-cf5e-4797-a8c9-3238ed5a1da9 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | online                               |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | 649c9d18-d854-44a5-bfa5-c99724b3ccd0 |
+| config_status       | Config out-of-date                   |
+| config_target       | 13599fe0-f486-4927-9551-0048df787956 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-05-09T08:35:44.749879+00:00     |
+| hostname            | compute-1                            |
+| id                  | 4                                    |
+| install_output      | text                                 |
+| install_state       | completed                            |
+| install_state_info  | None                                 |
+| invprovision        | unprovisioned                        |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.252                      |
+| mgmt_mac            | 52:54:00:77:42:81                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | Unlocking                            |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | 2019-05-09T10:11:49.753304+00:00     |
+| uptime              | 5083                                 |
+| uuid                | 6ff0a563-422e-4bdd-8b89-9386cedc3fa3 |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
