@@ -7,7 +7,6 @@ WARNING: Unauthorized access to this system is forbidden and will be
 prosecuted by law. By accessing this system, you agree that your
 actions may be monitored if unauthorized usage is suspected.
 
-(reverse-i-search)`': ^C
 controller-0:~$ source /etc/platform/openrc 
 [wrsroot@controller-0 ~(keystone_admin)]$ 
 ```
@@ -1447,5 +1446,18 @@ Please use 'system application-list' or 'system application-show stx-openstack' 
 ```
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ watch -n 5 system application-list
+```
 
+```sh
+Every 5.0s: system application-list                                                                                      Thu May  9 11:39:51 2019
+
++---------------+---------------------------+-----------------+-----------+----------+-----------------------------------------------------+
+| application   | version                   | manifest name   | manifest  | status   | progress                                            |
+|               |                           |                 | file      |          |                                                     |
++---------------+---------------------------+-----------------+-----------+----------+-----------------------------------------------------+
+| stx-openstack | 1.0-11-centos-stable-     | armada-manifest | manifest. | applying | processing chart: osh-openstack-neutron, overall    |
+|               | latest                    |                 | yaml	  |          | completion: 67.0%                                   |
+|               |                           |                 |           |          |                                                     |
++---------------+---------------------------+-----------------+-----------+----------+-----------------------------------------------------+
 ```
