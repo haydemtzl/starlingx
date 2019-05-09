@@ -27,6 +27,8 @@ controller-0:~$ source /etc/platform/openrc
 
 ## Configure the vswitch type (optional)
 
+Documentation! Only in Bare Metal
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system modify --vswitch_type ovs-dpdk
 +----------------------+--------------------------------------+
