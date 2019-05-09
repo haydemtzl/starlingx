@@ -149,3 +149,65 @@ Host must be locked.
 | vim_progress_status | services-disabled                          |
 +---------------------+--------------------------------------------+
 ```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-show controller-0 0
++-------------------------------------+--------------------------------------+
+| Property                            | Value                                |
++-------------------------------------+--------------------------------------+
+| Memory: Usable Total (MiB)          | 10258                                |
+|         Platform     (MiB)          | 7600                                 |
+|         Available    (MiB)          | 10258                                |
+| Huge Pages Configured               | True                                 |
+| vSwitch Huge Pages: Size (MiB)      | 2                                    |
+|                     Total           | 0                                    |
+|                     Available       | 0                                    |
+|                     Required        | None                                 |
+| Application  Pages (4K): Total      | 2329856                              |
+| Application  Huge Pages (2M): Total | 0                                    |
+|                 Total Pending       | 1                                    |
+|                 Available           | 0                                    |
+| Application  Huge Pages (1G): Total | 0                                    |
+|                 Available           | None                                 |
+| uuid                                | a68ebc55-f62a-4510-bfdc-b3b4c3e257b9 |
+| ihost_uuid                          | c56bb8fd-b67f-479e-97dc-65d383aaa47e |
+| inode_uuid                          | d41a9a42-4e10-41de-b0a2-791664422ce1 |
+| created_at                          | 2019-05-08T16:23:03.328445+00:00     |
+| updated_at                          | 2019-05-08T19:34:53.915214+00:00     |
++-------------------------------------+--------------------------------------+
+```
+
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-list controller-0
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+| processor | mem_tot | mem_platfo | mem_ava | hugepages(hp)_ | vs_hp_ | vs_hp_ | vs_hp_ | vs_hp | vm_total | vm_hp_ | vm_hp_ | vm_hp_pe | vm_hp_ | vm_hp_ | vm_hp_pen | vm_hp_use_1G |
+|           | al(MiB) | rm(MiB)    | il(MiB) | configured     | size(M | total  | avail  | _reqd | _4K      | total_ | avail_ | nding_2M | total_ | avail_ | ding_1G   |              |
+|           |         |            |         |                | iB)    |        |        |       |          | 2M     | 2M     |          | 1G     | 1G     |           |              |
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+| 0         | 10258   | 7600       | 10258   | True           | 2      | 0      | 0      | None  | 2329856  | 0      | 0      | 1        | 0      | None   | None      | False        |
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ grep Huge /proc/meminfo
+HugePages_Total:       1
+HugePages_Free:        1
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ grep GRUB_CMDLINE_LINUX /etc/default/grub
+GRUB_CMDLINE_LINUX="security_profile=standard module_blacklist=integrity,ima audit=0 tboot=false crashkernel=auto biosdevname=0 console=tty0 iommu=pt usbcore.autosuspend=-1 hugepagesz=2M hugepages=0 default_hugepagesz=2M isolcpus=2,3 rcu_nocbs=2-5 kthread_cpus=0,1 irqaffinity=0,1 selinux=0 enforcing=0 nmi_watchdog=panic,1 softlockup_panic=1 intel_iommu=on user_namespace.enable=1"
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ mount | grep huge
+cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb)
+none on /dev/huge-2048kB type hugetlbfs (rw,relatime,pagesize=2048kB)
+none on /mnt/huge-2048kB type hugetlbfs (rw,relatime,pagesize=2048kB)
+none on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
+```
+
