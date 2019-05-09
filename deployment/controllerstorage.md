@@ -1528,7 +1528,7 @@ Password:
 2019-05-09 11:45:15.771 42 ERROR armada.cli armada.exceptions.armada_exceptions.ChartDeployException: Exception deploying charts: ['openvswitch']
 2019-05-09 11:45:15.771 42 ERROR armada.cli 
 ```
-
+this 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system modify --vswitch_type none
 +----------------------+--------------------------------------+
