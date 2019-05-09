@@ -1,4 +1,4 @@
-# Huge Pages
+# Host Memory Provisioning
 
 # Links
 
@@ -25,6 +25,17 @@ none on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
 [wrsroot@controller-0 ~(keystone_admin)]$ ls /sys/kernel/mm/hugepages/
 hugepages-2048kB
 ```
+
+## Horizon Update Memory Allocation
+
+> Description: From here you can update the platform reserved memory and the number of application hugepages per numa node.
+
+
+- Platform Memory for Node 0
+- # of Application 2M Hugepages Node 0
+- # of Application 1G Hugepages Node 0
+- # of vSwitch 1G Hugepages Node 0
+- vSwitch Hugepage Size Node 0
 
 ## Command Host Memory * Source Code
 
@@ -414,4 +425,40 @@ After some time...
 +-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
 | 0         | 9087    | 7600       | 9087    | True           | 2      | 0      | 0      | None  | 2321152  | 10     | 10     | None     | 0      | None   | None      | False        |
 +-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+```
+
+## Command Host Memory Modify Platform
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-0
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-modify controller-0 0 -m 9086
++-------------------------------------+--------------------------------------+
+| Property                            | Value                                |
++-------------------------------------+--------------------------------------+
+| Memory: Usable Total (MiB)          | 9085                                 |
+|         Platform     (MiB)          | 9086                                 |
+|         Available    (MiB)          | 9085                                 |
+| Huge Pages Configured               | True                                 |
+| vSwitch Huge Pages: Size (MiB)      | 2                                    |
+|                     Total           | 0                                    |
+|                     Available       | 0                                    |
+|                     Required        | None                                 |
+| Application  Pages (4K): Total      | 2321152                              |
+| Application  Huge Pages (2M): Total | 9                                    |
+|                 Available           | 9                                    |
+| Application  Huge Pages (1G): Total | 0                                    |
+|                 Available           | None                                 |
+| uuid                                | a68ebc55-f62a-4510-bfdc-b3b4c3e257b9 |
+| ihost_uuid                          | c56bb8fd-b67f-479e-97dc-65d383aaa47e |
+| inode_uuid                          | d41a9a42-4e10-41de-b0a2-791664422ce1 |
+| created_at                          | 2019-05-08T16:23:03.328445+00:00     |
+| updated_at                          | 2019-05-09T04:55:21.114982+00:00     |
++-------------------------------------+--------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
 ```
