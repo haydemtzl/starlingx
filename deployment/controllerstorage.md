@@ -331,7 +331,7 @@ compute-1
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-Once all installed and rebooted:
+Once all nodes have been installed and rebooted:
 
 ```sh
 WARNING: Unauthorized access to this system is forbidden and will be
