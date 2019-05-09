@@ -347,3 +347,42 @@ Hugepagesize:       2048 kB
 | 0         | 9103    | 7600       | 9103    | True           | 2      | 0      | 0      | None  | 2321152  | 1      | 1      | 10       | 0      | None   | None      | False        |
 +-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
 ```
+
+After some time...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-show controller-0 0
++-------------------------------------+--------------------------------------+
+| Property                            | Value                                |
++-------------------------------------+--------------------------------------+
+| Memory: Usable Total (MiB)          | 9087                                 |
+|         Platform     (MiB)          | 7600                                 |
+|         Available    (MiB)          | 9087                                 |
+| Huge Pages Configured               | True                                 |
+| vSwitch Huge Pages: Size (MiB)      | 2                                    |
+|                     Total           | 0                                    |
+|                     Available       | 0                                    |
+|                     Required        | None                                 |
+| Application  Pages (4K): Total      | 2321152                              |
+| Application  Huge Pages (2M): Total | 10                                   |
+|                 Available           | 10                                   |
+| Application  Huge Pages (1G): Total | 0                                    |
+|                 Available           | None                                 |
+| uuid                                | a68ebc55-f62a-4510-bfdc-b3b4c3e257b9 |
+| ihost_uuid                          | c56bb8fd-b67f-479e-97dc-65d383aaa47e |
+| inode_uuid                          | d41a9a42-4e10-41de-b0a2-791664422ce1 |
+| created_at                          | 2019-05-08T16:23:03.328445+00:00     |
+| updated_at                          | 2019-05-09T04:50:20.749485+00:00     |
++-------------------------------------+--------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-memory-list controller-0
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+| processor | mem_tot | mem_platfo | mem_ava | hugepages(hp)_ | vs_hp_ | vs_hp_ | vs_hp_ | vs_hp | vm_total | vm_hp_ | vm_hp_ | vm_hp_pe | vm_hp_ | vm_hp_ | vm_hp_pen | vm_hp_use_1G |
+|           | al(MiB) | rm(MiB)    | il(MiB) | configured     | size(M | total  | avail  | _reqd | _4K      | total_ | avail_ | nding_2M | total_ | avail_ | ding_1G   |              |
+|           |         |            |         |                | iB)    |        |        |       |          | 2M     | 2M     |          | 1G     | 1G     |           |              |
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+| 0         | 9087    | 7600       | 9087    | True           | 2      | 0      | 0      | None  | 2321152  | 10     | 10     | None     | 0      | None   | None      | False        |
++-----------+---------+------------+---------+----------------+--------+--------+--------+-------+----------+--------+--------+----------+--------+--------+-----------+--------------+
+```
