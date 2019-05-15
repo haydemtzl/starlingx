@@ -9,6 +9,74 @@
 906ba71fcce3:/home:xe1gyq # zypper install vim
 ```
 
+## openSUSE:Build Service Tutorial StarlingX
+
+1. Go to https://build.opensuse.org/project/show/home:saulwold
+2. Select poackage stx-fault
+3. Branch Package
+```sh
+Source
+home:saulwold / stx-fault
+Destination
+home:xe1gyq:branches:home:saulwold
+```
+4. https://build.opensuse.org/package/show/home:xe1gyq:branches:home:saulwold/stx-fault should be available
+5. Checkout stx-fault from Saul workspace
+
+```sh
+906ba71fcce3:~/stx-fault # osc co home:saulwold stx-fault
+A    home:saulwold
+A    home:saulwold/stx-fault
+A    home:saulwold/stx-fault/_multibuild
+A    home:saulwold/stx-fault/debian.tar.xz
+A    home:saulwold/stx-fault/fm-api.spec
+A    home:saulwold/stx-fault/fm-common.dsc
+A    home:saulwold/stx-fault/fm-common.spec
+A    home:saulwold/stx-fault/fm-doc.spec
+A    home:saulwold/stx-fault/fm-mgr.spec
+A    home:saulwold/stx-fault/fm-rest-api.spec
+A    home:saulwold/stx-fault/python-fmclient.spec
+A    home:saulwold/stx-fault/snmp-audittrail.spec
+A    home:saulwold/stx-fault/snmp-ext.spec
+A    home:saulwold/stx-fault/stx-fault-1.0.tar.xz
+A    home:saulwold/stx-fault/stx-fault.spec
+At revision 26.
+```
+
+What is the content?
+
+```sh
+906ba71fcce3:~/stx-fault # ls
+home:saulwold
+906ba71fcce3:~/stx-fault # ls home:saulwold/
+stx-fault
+906ba71fcce3:~/stx-fault # ls home:saulwold/stx-fault/
+_multibuild    fm-api.spec    fm-common.spec  fm-mgr.spec       python-fmclient.spec  snmp-ext.spec         stx-fault.spec
+debian.tar.xz  fm-common.dsc  fm-doc.spec     fm-rest-api.spec  snmp-audittrail.spec  stx-fault-1.0.tar.xz
+```
+
+```sh
+906ba71fcce3:~/stx-fault # cd home:saulwold/stx-fault/
+906ba71fcce3:~/stx-fault/home:saulwold/stx-fault # ls   
+_multibuild    fm-api.spec    fm-common.spec  fm-mgr.spec       python-fmclient.spec  snmp-ext.spec         stx-fault.spec
+debian.tar.xz  fm-common.dsc  fm-doc.spec     fm-rest-api.spec  snmp-audittrail.spec  stx-fault-1.0.tar.xz
+```
+
+Now let's build
+
+```sh
+906ba71fcce3:~/stx-fault/home:saulwold/stx-fault # osc build --no-verify fm-common.spec
+Building fm-common.spec for SLE_12_SP4/x86_64
+Getting buildinfo from server and store to /root/stx-fault/home:saulwold/stx-fault/.osc/_buildinfo-SLE_12_SP4-x86_64.xml
+...
+...
+```
+
+### Build multiple spec files
+
+- In top level directory
+- Name? _multibuild
+
 ## openSUSE:Build Service Tutorial 
 
 - https://en.opensuse.org/openSUSE:Build_Service_Tutorial
@@ -152,4 +220,35 @@ make install DESTDIR=%{buildroot} %{?_smp_mflags}
 %doc ChangeLog README COPYING
 ```
 
-## openSUSE:Build Service Tutorial StarlingX
+```sh
+906ba71fcce3:~/hello-world/home:xe1gyq/hello-world # osc add *
+A    hello-world.spec
+```
+
+```sh
+906ba71fcce3:~/hello-world/home:xe1gyq/hello-world # osc commit
+```
+
+
+```sh
+Commit Package Hello World
+
+--This line, and those below, will be ignored--
+
+A    hello-world.spec
+
+Diff for working copy: .
+Index: hello-world.spec
+===================================================================
+--- hello-world.spec    (revision 0)
++++ hello-world.spec    (revision 0)
+@@ -0,0 +1,52 @@
++#
++# spec file for package hello-world
+```
+
+```sh
+Sending    hello-world.spec
+Transmitting file data .
+Committed revision 1.
+```
