@@ -13,6 +13,8 @@
 
 > Build FLOCK services for another distro, populate with FLOCK content
 
+### Steps
+
 1. Go to https://build.opensuse.org/project/show/home:saulwold
 2. Select poackage stx-fault
 3. Branch Package
@@ -94,7 +96,7 @@ Second try? Work in Progress
 
 ### Important
 
-Flags
+#### Flags
 
 - --keep-pkgs906ba71fcce3:~/home:marcelarosalesj/fm-common # osc build --no-verify fm-common.spec
 Building fm-common.spec for CentOS_7/x86_64
@@ -112,11 +114,11 @@ Would you like to ...
 
 - --prefer-pkgs
 
-Commands
+#### Commands
 
 - linkpac: Link a package to another package
 
-Things Changed
+#### Things Changed
 
 - Only change to CentOS Specfiles?
   - build requirements
@@ -130,7 +132,7 @@ Things Changed
   - Let's not 
 - SUSE wants ownership of directories to be declared, we need %dir
 
-### Build multiple spec files
+#### Build multiple spec files
 
 - In top level directory
 - Name? _multibuild
