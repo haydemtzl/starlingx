@@ -304,7 +304,7 @@ hello-world  home:xe1gyq
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           hello-world
+Name:           hello
 Version:        2.10
 Release:        1
 License:        GPLv3+
@@ -372,4 +372,150 @@ Index: hello-world.spec
 Sending    hello-world.spec
 Transmitting file data .
 Committed revision 1.
+```
+
+### Outside Container
+
+```sh
+e342332b5495:~ # osc co home:xe1gyq hello-world
+A    home:xe1gyq
+A    home:xe1gyq/hello-world
+A    home:xe1gyq/hello-world/hello-world.spec
+At revision 1.
+e342332b5495:~ # cd home:xe1gyq/
+e342332b5495:~/home:xe1gyq # cd hello-world/
+e342332b5495:~/home:xe1gyq/hello-world # ls
+hello-world.spec
+e342332b5495:~/home:xe1gyq/hello-world # 
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc ls | grep xe1gyq
+home:xe1gyq
+home:xe1gyq:branches:home:marcelarosalesj
+home:xe1gyq:branches:home:saulwold
+```
+
+1. Go to https://build.opensuse.org/repositories/home:xe1gyq
+2. Select "Repositories" column
+3. Select "Add repositories" link
+4. Select a repository (e.g. SLE_12_SP4 (x86_64) SUSE:SLE-12-SP4:GA/standard)
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
+```
+
+```sh
+<project name="home:xe1gyq">
+  <title/>
+  <description/>
+  <person userid="xe1gyq" role="maintainer"/>
+  <repository name="hello-world">
+    <path project="SUSE:SLE-12-SP4:GA" repository="standard"/>
+    <arch>x86_64</arch>
+  </repository>
+</project>
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
+Sending meta data...
+Done.
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc rebuildpac home:xe1gyq hello-world
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc up
+At revision 1.
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc build SLE-12-SP4 x86_64 hello-world.spec                                                       
+SLE-12-SP4 is not a valid repository, use one of: hello-world
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc build
+Building hello-world.spec for hello-world/x86_64
+Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
+Getting buildconfig from server and store to /root/home:xe1gyq/hello-world/.osc/_buildconfig-hello-world-x86_64
+Updating cache of required packages
+0.0% cache miss. 103/103 dependencies cached.
+
+Verifying integrity of cached packages
+using keys from SUSE:SLE-12-SP4:GA
+warning: /var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/aaa_base-13.2+git20140911.61c1681-38.8.1.x86_64.rpm: Header V3 RSA/SHA
+256 Signature, key ID 39db7c82: NOKEY
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/aaa_base-13.2+git20140911.61c1681-38.8.1.x86_64.rpm : public key not available
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc build --no-verify
+Building hello-world.spec for hello-world/x86_64
+Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
+Getting buildconfig from server and store to /root/home:xe1gyq/hello-world/.osc/_buildconfig-hello-world-x86_64
+...
+... # Taking around 5 minutes
+...
+[  135s] now finalizing build dir...
+[  135s] mount: permission denied
+[  135s] mount: permission denied
+[  138s] -----------------------------------------------------------------
+[  138s] ----- building hello-world.spec (user abuild)
+[  138s] -----------------------------------------------------------------
+[  138s] -----------------------------------------------------------------
+[  138s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature /home/abuild/rpmbuild/SOURCES/hello-world.spec
+[  138s] error: line 24: Empty tag: Group:
+
+The buildroot was: /var/tmp/build-root/hello-world-x86_64
+```
+
+```sh
+Name:           hello
+Version:        2.10
+Release:        1
+License:        GPLv3+
+Summary:        The "Hello World" program from GNU
+Url:            https://www.gnu.org/software/hello/
+Group:          StarlingX
+Source:         https://ftp.gnu.org/gnu/hello/hello-%{version}.tar.gz
+Patch:
+BuildRequires:
+PreReq:
+Provides:
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # zypper install curl
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # curl -LO https://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  708k  100  708k    0     0   304k      0  0:00:02  0:00:02 --:--:--  304k
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # osc build --no-verify
+Building hello-world.spec for hello-world/x86_64
+Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
+...
+... # Taking around 5 minutes
+...
+[   46s] setting /usr/ to root:root 0755. (wrong owner/group abuild:abuild)
+[   46s] calling /usr/lib/rpm/brp-suse.d/brp-15-strip-debug
+[   46s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 33: /dev/fd/62: No such file or directory
+[   46s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 47: /dev/fd/62: No such file or directory
+[   46s] error: Bad exit status from /var/tmp/rpm-tmp.lkmaxw (%install)
+[   46s] 
+[   46s] 
+[   46s] RPM build errors:
+[   46s]     Bad exit status from /var/tmp/rpm-tmp.lkmaxw (%install)
+
+The buildroot was: /var/tmp/build-root/hello-world-x86_64
 ```
