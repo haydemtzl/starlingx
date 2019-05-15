@@ -121,8 +121,8 @@ Would you like to ...
 #### Things Changed
 
 - Only change to CentOS Specfiles?
-  - build requirements
-  - runtime requirements
+  - Build requirements
+  - Runtime requirements
 - Heavy clean up of Specfiles based in Spec Cleaner
   - See https://review.opendev.org/#/c/659157/
     - Check Zuul Check "flock-check-packaging": http://logs.openstack.org/57/659157/5/check/flock-check-packaging/1180044/
@@ -181,8 +181,29 @@ Would you like to ...
 ...
 ... # Taking around 10 minutes
 ...
+[  347s] Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.yGJQVd
+[  347s] + umask 022
+[  347s] + cd /home/abuild/rpmbuild/BUILD
+[  347s] + cd fm-common/sources
+[  347s] + /usr/bin/rm -rf '/home/abuild/rpmbuild/BUILDROOT/fm-common-0.0-%{tis_patch_ver}.x86_64'
+[  347s] + exit 0
+[  347s] ... checking for files with abuild user/group
+[  347s] 
+[  347s] 906ba71fcce3 finished "build fm-common.spec" at Wed May 15 09:24:19 UTC 2019.
+[  347s] 
 
+/var/tmp/build-root/CentOS_7-x86_64/home/abuild/rpmbuild/SRPMS/fm-common-0.0-%{tis_patch_ver}.src.rpm
+
+/var/tmp/build-root/CentOS_7-x86_64/home/abuild/rpmbuild/RPMS/x86_64/fm-common-0.0-%{tis_patch_ver}.x86_64.rpm
+/var/tmp/build-root/CentOS_7-x86_64/home/abuild/rpmbuild/RPMS/x86_64/fm-common-doc-0.0-%{tis_patch_ver}.x86_64.rpm
+/var/tmp/build-root/CentOS_7-x86_64/home/abuild/rpmbuild/RPMS/x86_64/fm-common-devel-0.0-%{tis_patch_ver}.x86_64.rpm
+/var/tmp/build-root/CentOS_7-x86_64/home/abuild/rpmbuild/RPMS/x86_64/fm-common-debuginfo-0.0-%{tis_patch_ver}.x86_64.rpm
 ```
+
+```sh
+906ba71fcce3:~/home:marcelarosalesj/fm-common # ls
+fm-common-0.0.tar.xz  fm-common.spec  fm-common_0.0-1.debian.tar.xz  fm-common_0.0-1.dsc  fm-common_0.0.orig.tar.gz
+``` 
 
 ## openSUSE:Build Service Tutorial 
 
