@@ -123,6 +123,7 @@ https://software.opensuse.org/download.html?project=home:saulwold&package=stx-fa
   - Suse build does not deal with wheels stuff
   - Let's not 
 - SUSE wants ownership of directories to be declared, we need %dir
+- Under Specfile use %setup -n fm-mgr/sources
 
 #### Build multiple spec files
 
