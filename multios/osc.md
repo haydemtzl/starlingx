@@ -72,6 +72,11 @@ Getting buildinfo from server and store to /root/stx-fault/home:saulwold/stx-fau
 ...
 ```
 
+Important Flags
+
+- --keep-pkgs
+- --prefer-pkgs
+
 ### Build multiple spec files
 
 - In top level directory
