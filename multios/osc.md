@@ -9,7 +9,9 @@
 906ba71fcce3:/home:xe1gyq # zypper install vim
 ```
 
-## openSUSE:Build Service Tutorial StarlingX stx-fault
+## openSUSE:Build Service Tutorial StarlingX saulwold stx-fault
+
+> Build FLOCK services for another distro, populate with FLOCK content
 
 1. Go to https://build.opensuse.org/project/show/home:saulwold
 2. Select poackage stx-fault
@@ -85,21 +87,100 @@ The buildroot was: /var/tmp/build-root/SLE_12_SP4-x86_64
 
 Second try? Work in Progress
 
-### Important Concepts
+```sh
+906ba71fcce3:~/stx-fault/home:saulwold/stx-fault # pwd
+/root/stx-fault/home:saulwold/stx-fault
+```
+
+### Important
 
 Flags
 
-- --keep-pkgs
+- --keep-pkgs906ba71fcce3:~/home:marcelarosalesj/fm-common # osc build --no-verify fm-common.spec
+Building fm-common.spec for CentOS_7/x86_64
+Getting buildinfo from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildinfo-CentOS_7-x86_64.xml
+Getting buildconfig from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildconfig-CentOS_7-x86_64
+Updating cache of required packages
+
+The build root needs packages from project 'CentOS:CentOS-7'.
+Note that malicious packages can compromise the build result or even your system.
+Would you like to ...
+0 - quit (default)
+1 - always trust packages from 'CentOS:CentOS-7'
+2 - trust packages just this time
+? 
+
 - --prefer-pkgs
 
 Commands
 
 - linkpac: Link a package to another package
 
+Things Changed
+
+- Only change to CentOS Specfiles?
+  - build requirements
+  - runtime requirements
+- Heavy clean up of Specfiles based in Spec Cleaner
+  - See https://review.opendev.org/#/c/659157/
+    - Check Zuul Check "flock-check-packaging": http://logs.openstack.org/57/659157/5/check/flock-check-packaging/1180044/
+  - Do it locally
+- Remove all the wheel stuff from SUSE
+  - Suse build does not deal with wheels stuff
+  - Let's not 
+- SUSE wants ownership of directories to be declared, we need %dir
+
 ### Build multiple spec files
 
 - In top level directory
 - Name? _multibuild
+
+## openSUSE:Build Service Tutorial StarlingX marcelarosalesj stx-common
+
+```sh
+906ba71fcce3:~ # mkdir fm-common
+906ba71fcce3:~ # osc co home:marcelarosalesj fm-common
+A    home:marcelarosalesj
+A    home:marcelarosalesj/fm-common
+A    home:marcelarosalesj/fm-common/fm-common-0.0.tar.xz
+A    home:marcelarosalesj/fm-common/fm-common.spec
+A    home:marcelarosalesj/fm-common/fm-common_0.0-1.debian.tar.xz
+A    home:marcelarosalesj/fm-common/fm-common_0.0-1.dsc
+A    home:marcelarosalesj/fm-common/fm-common_0.0.orig.tar.gz
+At revision 3.
+```
+
+```sh
+906ba71fcce3:~ # ls home:marcelarosalesj/
+fm-common
+906ba71fcce3:~ # ls home:marcelarosalesj/fm-common/
+fm-common-0.0.tar.xz  fm-common.spec  fm-common_0.0-1.debian.tar.xz  fm-common_0.0-1.dsc  fm-common_0.0.orig.tar.gz
+```
+
+```sh
+906ba71fcce3:~ # cd home:marcelarosalesj/fm-common/
+906ba71fcce3:~/home:marcelarosalesj/fm-common # osc build --no-verify fm-common.spec
+```
+
+```sh
+906ba71fcce3:~/home:marcelarosalesj/fm-common # osc build --no-verify fm-common.spec
+Building fm-common.spec for CentOS_7/x86_64
+Getting buildinfo from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildinfo-CentOS_7-x86_64.xml
+Getting buildconfig from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildconfig-CentOS_7-x86_64
+Updating cache of required packages
+
+The build root needs packages from project 'CentOS:CentOS-7'.
+Note that malicious packages can compromise the build result or even your system.
+Would you like to ...
+0 - quit (default)
+1 - always trust packages from 'CentOS:CentOS-7'
+2 - trust packages just this time
+? 
+...
+... # Taking around 10 minutes
+...
+
+```
 
 ## openSUSE:Build Service Tutorial 
 
