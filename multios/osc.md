@@ -377,20 +377,40 @@ Committed revision 1.
 ### Outside Container
 
 ```sh
-e342332b5495:~ # osc co home:xe1gyq hello-world
+user@workstation:~$ docker run -ti --privileged -v /proc:/proc -v /dev:/dev --name=osc jaltek/docker-opensuse-osc-client /bin/bash
+```
+
+```sh
+e342332b5495:~/home:xe1gyq/hello-world # zypper install vim curl
+```
+
+```sh
+:/ # osc co home:xe1gyq hello-world
+
+Your user account / password are not configured yet.
+You will be asked for them below, and they will be stored in
+/root/.oscrc for future use.
+
+Creating osc configuration file /root/.oscrc ...
+Username: xe1gyq
+Password: 
+done
 A    home:xe1gyq
 A    home:xe1gyq/hello-world
 A    home:xe1gyq/hello-world/hello-world.spec
 At revision 1.
-e342332b5495:~ # cd home:xe1gyq/
-e342332b5495:~/home:xe1gyq # cd hello-world/
-e342332b5495:~/home:xe1gyq/hello-world # ls
-hello-world.spec
-e342332b5495:~/home:xe1gyq/hello-world # 
+:/ # 
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc ls | grep xe1gyq
+:/ # cd home:xe1gyq/hello-world/
+:/home:xe1gyq/hello-world # ls
+hello-world.spec
+:/home:xe1gyq/hello-world #   
+```
+
+```sh
+:/ # osc ls | grep xe1gyq
 home:xe1gyq
 home:xe1gyq:branches:home:marcelarosalesj
 home:xe1gyq:branches:home:saulwold
@@ -402,7 +422,7 @@ home:xe1gyq:branches:home:saulwold
 4. Select a repository (e.g. SLE_12_SP4 (x86_64) SUSE:SLE-12-SP4:GA/standard)
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
+:/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
 ```
 
 ```sh
@@ -418,42 +438,44 @@ e342332b5495:~/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
-Sending meta data...
-Done.
+:/home:xe1gyq/hello-world # osc meta prj -e home:xe1gyq
+File unchanged. Not saving.
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc rebuildpac home:xe1gyq hello-world
+:/home:xe1gyq/hello-world # osc rebuildpac home:xe1gyq hello-world
+ok
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc up
+:/ # osc up
 At revision 1.
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc build SLE-12-SP4 x86_64 hello-world.spec                                                       
+:/home:xe1gyq/hello-world # osc build SLE-12-SP4 x86_64 hello-world.spec                                                       
 SLE-12-SP4 is not a valid repository, use one of: hello-world
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc build
+:/home:xe1gyq/hello-world # osc build
 Building hello-world.spec for hello-world/x86_64
-Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
-Getting buildconfig from server and store to /root/home:xe1gyq/hello-world/.osc/_buildconfig-hello-world-x86_64
-Updating cache of required packages
-0.0% cache miss. 103/103 dependencies cached.
-
-Verifying integrity of cached packages
-using keys from SUSE:SLE-12-SP4:GA
-warning: /var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/aaa_base-13.2+git20140911.61c1681-38.8.1.x86_64.rpm: Header V3 RSA/SHA
-256 Signature, key ID 39db7c82: NOKEY
-/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/aaa_base-13.2+git20140911.61c1681-38.8.1.x86_64.rpm : public key not available
+Getting buildinfo from server and store to /home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
+Getting buildconfig from server and store to /home:xe1gyq/hello-world/.osc/_buildconfig-hello-world-x86_64
+...
+...
+...
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SDK/noarch/rpmlint-Factory-1.0-85.14.noarch.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SDK/noarch/build-compare-20160104T085658.0b929c8-5.87.noarch.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SDK/noarch/brp-extract-appdata-2012.02.13-4.1.noarch.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/ncurses-utils-5.9-58.1.x86_64.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SLES/x86_64/libgdbm4-1.10-9.70.x86_64.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SDK/x86_64/aaa_base-malloccheck-13.2+git20140911.61c1681-38.8.1.x86_64.rpm : public key not available
+/var/tmp/osbuild-packagecache/SUSE:SLE-12-SP4:GA/SDK/x86_64/rpmlint-mini-1.8-2.9.3.x86_64.rpm : public key not available
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # osc build --no-verify
+:/home:xe1gyq/hello-world # osc build --no-verify
 Building hello-world.spec for hello-world/x86_64
 Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_buildinfo-hello-world-x86_64.xml
 Getting buildconfig from server and store to /root/home:xe1gyq/hello-world/.osc/_buildconfig-hello-world-x86_64
@@ -474,6 +496,10 @@ The buildroot was: /var/tmp/build-root/hello-world-x86_64
 ```
 
 ```sh
+:/home:xe1gyq/hello-world # vim hello-world.spec
+```
+
+```sh
 Name:           hello
 Version:        2.10
 Release:        1
@@ -490,14 +516,15 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 ```
 
 ```sh
-e342332b5495:~/home:xe1gyq/hello-world # zypper install curl
-```
-
-```sh
 e342332b5495:~/home:xe1gyq/hello-world # curl -LO https://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  708k  100  708k    0     0   304k      0  0:00:02  0:00:02 --:--:--  304k
+```
+
+```sh
+:/home:xe1gyq/hello-world # ls
+hello-2.10.tar.gz  hello-world.spec
 ```
 
 ```sh
@@ -507,15 +534,26 @@ Getting buildinfo from server and store to /root/home:xe1gyq/hello-world/.osc/_b
 ...
 ... # Taking around 5 minutes
 ...
-[   46s] setting /usr/ to root:root 0755. (wrong owner/group abuild:abuild)
-[   46s] calling /usr/lib/rpm/brp-suse.d/brp-15-strip-debug
-[   46s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 33: /dev/fd/62: No such file or directory
-[   46s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 47: /dev/fd/62: No such file or directory
-[   46s] error: Bad exit status from /var/tmp/rpm-tmp.lkmaxw (%install)
-[   46s] 
-[   46s] 
-[   46s] RPM build errors:
-[   46s]     Bad exit status from /var/tmp/rpm-tmp.lkmaxw (%install)
+[   43s]    /usr/share/locale/tr/LC_MESSAGES/hello.mo
+[   43s]    /usr/share/locale/uk/LC_MESSAGES/hello.mo
+[   43s]    /usr/share/locale/vi/LC_MESSAGES/hello.mo
+[   43s]    /usr/share/locale/zh_CN/LC_MESSAGES/hello.mo
+[   43s]    /usr/share/locale/zh_TW/LC_MESSAGES/hello.mo
+[   43s]    /usr/share/man/man1/hello.1.gz
 
 The buildroot was: /var/tmp/build-root/hello-world-x86_64
+```
+
+```sh
+:/home:xe1gyq/hello-world # osc add *
+A    hello-2.10.tar.gz
+osc: warning: 'hello-world.spec' is already under version control
+```
+
+```sh
+:/home:xe1gyq/hello-world # osc commit
+Sending    hello-world.spec
+Sending    hello-2.10.tar.gz
+Transmitting file data ..
+Committed revision 2.
 ```
