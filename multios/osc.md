@@ -101,20 +101,7 @@ https://software.opensuse.org/download.html?project=home:saulwold&package=stx-fa
 
 #### Flags
 
-- --keep-pkgs906ba71fcce3:~/home:marcelarosalesj/fm-common # osc build --no-verify fm-common.spec
-Building fm-common.spec for CentOS_7/x86_64
-Getting buildinfo from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildinfo-CentOS_7-x86_64.xml
-Getting buildconfig from server and store to /root/home:marcelarosalesj/fm-common/.osc/_buildconfig-CentOS_7-x86_64
-Updating cache of required packages
-
-The build root needs packages from project 'CentOS:CentOS-7'.
-Note that malicious packages can compromise the build result or even your system.
-Would you like to ...
-0 - quit (default)
-1 - always trust packages from 'CentOS:CentOS-7'
-2 - trust packages just this time
-? 
-
+- --keep-pkgs
 - --prefer-pkgs
 
 #### Commands
@@ -123,6 +110,8 @@ Would you like to ...
 
 #### Things Changed
 
+- We use Top Level Repository
+  - Take stx-fault as an example
 - Only change to CentOS Specfiles?
   - Build requirements
   - Runtime requirements
