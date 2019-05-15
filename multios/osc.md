@@ -557,3 +557,5 @@ Sending    hello-2.10.tar.gz
 Transmitting file data ..
 Committed revision 2.
 ```
+
+Go to https://build.opensuse.org/project/show/home:xe1gyq
