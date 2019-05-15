@@ -94,6 +94,9 @@ Second try? Work in Progress
 /root/stx-fault/home:saulwold/stx-fault
 ```
 
+Once finished, we will have it under:
+https://software.opensuse.org/download.html?project=home:saulwold&package=stx-fault
+
 ### Important
 
 #### Flags
