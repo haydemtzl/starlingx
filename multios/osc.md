@@ -9,7 +9,7 @@
 906ba71fcce3:/home:xe1gyq # zypper install vim
 ```
 
-## openSUSE:Build Service Tutorial StarlingX
+## openSUSE:Build Service Tutorial StarlingX stx-fault
 
 1. Go to https://build.opensuse.org/project/show/home:saulwold
 2. Select poackage stx-fault
@@ -62,20 +62,39 @@ _multibuild    fm-api.spec    fm-common.spec  fm-mgr.spec       python-fmclient.
 debian.tar.xz  fm-common.dsc  fm-doc.spec     fm-rest-api.spec  snmp-audittrail.spec  stx-fault-1.0.tar.xz
 ```
 
-Now let's build
+Now let's build, first try we have an error:
 
 ```sh
 906ba71fcce3:~/stx-fault/home:saulwold/stx-fault # osc build --no-verify fm-common.spec
 Building fm-common.spec for SLE_12_SP4/x86_64
 Getting buildinfo from server and store to /root/stx-fault/home:saulwold/stx-fault/.osc/_buildinfo-SLE_12_SP4-x86_64.xml
 ...
+... # Taking around 10 minutes
 ...
+[  182s] calling /usr/lib/rpm/brp-suse.d/brp-15-strip-debug
+[  182s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 33: /dev/fd/62: No such file or directory
+[  182s] /usr/lib/rpm/brp-suse.d/brp-15-strip-debug: line 47: /dev/fd/62: No such file or directory
+[  182s] error: Bad exit status from /var/tmp/rpm-tmp.Qtn3Vt (%install)
+[  182s] 
+[  182s] 
+[  182s] RPM build errors:
+[  182s]     Bad exit status from /var/tmp/rpm-tmp.Qtn3Vt (%install)
+
+The buildroot was: /var/tmp/build-root/SLE_12_SP4-x86_64
 ```
 
-Important Flags
+Second try? Work in Progress
+
+### Important Concepts
+
+Flags
 
 - --keep-pkgs
 - --prefer-pkgs
+
+Commands
+
+- linkpac: Link a package to another package
 
 ### Build multiple spec files
 
