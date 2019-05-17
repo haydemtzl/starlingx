@@ -79,6 +79,9 @@ Updating cache of required packages
    - Name: platform-kickstarts
    - Title: Platform kickstart files
    - Description: Platform kickstart files
+3. Select "Repositories" column
+4. Select "Add repositories" link
+5. Select a repository (e.g. SLE_12_SP4 (x86_64) SUSE:SLE-12-SP4:GA/standard)
 
 ### Container Setup
 
@@ -139,11 +142,6 @@ Source0:        %{name}-%{version}.tar.gz
 ```
 
 ```sh
-:/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts.specs
-platform-kickstarts.specs is not a valid repository, use one of: hello-world
-````
-
-```sh
 :/home:xe1gyq/platform-kickstarts # osc meta prj -e home:xe1gyq
 ```
 
@@ -165,14 +163,20 @@ Done.
 ```
 
 ```sh
+:/home:xe1gyq # osc meta pkg -e home:xe1gyq platform-kickstarts
+```
+
+```sh
+<package name="platform-kickstarts" project="home:xe1gyq">
+  <title>Platform kickstart files</title>
+  <description>Platform kickstart files</description>
+</package>
+```
+
+```sh
 :/home:xe1gyq/platform-kickstarts # osc rebuildpac home:xe1gyq platform-kickstarts
 ok
 ```
-
-1. Go to https://build.opensuse.org/repositories/home:xe1gyq
-2. Select "Repositories" column
-3. Select "Add repositories" link
-4. Select a repository (e.g. SLE_12_SP4 (x86_64) SUSE:SLE-12-SP4:GA/standard)
 
 ```
 :/home:xe1gyq/platform-kickstarts # osc add *
@@ -186,17 +190,6 @@ Committed revision 1.
 ```sh
 :/home:xe1gyq/platform-kickstarts # osc up
 At revision 1.
-```
-
-```sh
-:/home:xe1gyq # osc meta pkg -e home:xe1gyq platform-kickstarts
-```
-
-```sh
-<package name="platform-kickstarts" project="home:xe1gyq">
-  <title>Platform kickstart files</title>
-  <description>Platform kickstart files</description>
-</package>
 ```
 
 ```sh
