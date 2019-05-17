@@ -74,7 +74,36 @@ Updating cache of required packages
 
 ## home:xe1gyq > platform-kickstarts
 
+1. Under your workspace (e.g. https://build.opensuse.org/project/show/home:xe1gyq), select "Create Package"
+2. Fill out and Accept:
+   - Name: platform-kickstarts
+   - Title: Platform kickstart files
+   - Description: Platform kickstart files
+3. 
+
 ```
 user@workstation:~$ docker run -ti --privileged -v /proc:/proc -v /dev:/dev --name=osc-xe1gyq jaltek/docker-opensuse-osc-client /bin/bash
 :/ # 
 ```
+
+```sh
+:/ # osc co home:xe1gyq platform-kickstarts
+
+Your user account / password are not configured yet.
+You will be asked for them below, and they will be stored in
+/root/.oscrc for future use.
+
+Creating osc configuration file /root/.oscrc ...
+Username: xe1gyq
+Password: 
+done
+A    home:xe1gyq
+A    home:xe1gyq/platform-kickstarts
+At revision None.
+```
+
+```sh
+:/ # cd home:xe1gyq/platform-kickstarts/
+:/home:xe1gyq/platform-kickstarts # 
+```
+
