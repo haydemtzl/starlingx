@@ -237,7 +237,8 @@ Committed revision 2.
 ```sh
 :/home:xe1gyq/platform-kickstarts # tar xvf master.tar.gz 
 :/home:xe1gyq/platform-kickstarts # mv metal/ platform-kickstarts/
-:/home:xe1gyq/platform-kickstarts # tar -czf platform-kickstarts-1.0.tar.gz --files-from=platform-kickstarts/    
+:/home:xe1gyq/platform-kickstarts # tar -zcvf platform-kickstarts-1.0.tar.gz platform-kickstarts/
+:/home:xe1gyq/platform-kickstarts # rm -rf master.tar.gz platform-kickstarts/
 ```
 
 ```sh
