@@ -79,12 +79,21 @@ Updating cache of required packages
    - Name: platform-kickstarts
    - Title: Platform kickstart files
    - Description: Platform kickstart files
-3. 
+
+### Container Setup
 
 ```
 user@workstation:~$ docker run -ti --privileged -v /proc:/proc -v /dev:/dev --name=osc-xe1gyq jaltek/docker-opensuse-osc-client /bin/bash
 :/ # 
 ```
+
+### Common Package Installation
+
+```sh
+:/ # zypper install vim curl
+```
+
+### Package Checkout
 
 ```sh
 :/ # osc co home:xe1gyq platform-kickstarts
@@ -107,3 +116,100 @@ At revision None.
 :/home:xe1gyq/platform-kickstarts # 
 ```
 
+### Base specfile creation
+
+```sh
+:/home:xe1gyq/platform-kickstarts # vi platform-kickstarts.specs
+```
+
+```sh
+Name:           platform-kickstarts
+Version:        1.0
+Release:        %{tis_patch_ver}%{?tis_dist}
+Summary:        Placeholder for platform-kickstarts
+License:        Apache-2.0
+
+Source0:        %{name}-%{version}.tar.gz
+
+%description
+
+%files
+
+%changelog
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts.specs
+platform-kickstarts.specs is not a valid repository, use one of: hello-world
+````
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc meta prj -e home:xe1gyq
+```
+
+```sh
+<project name="home:xe1gyq">
+  <title/>
+  <description/>
+  <person userid="xe1gyq" role="maintainer"/>
+  <repository name="platform-kickstarts">
+    <path project="SUSE:SLE-12-SP4:GA" repository="standard"/>
+    <arch>x86_64</arch>
+  </repository>
+</project>
+```
+
+```sh
+Sending meta data...
+Done.
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc rebuildpac home:xe1gyq platform-kickstarts
+ok
+```
+
+1. Go to https://build.opensuse.org/repositories/home:xe1gyq
+2. Select "Repositories" column
+3. Select "Add repositories" link
+4. Select a repository (e.g. SLE_12_SP4 (x86_64) SUSE:SLE-12-SP4:GA/standard)
+
+```
+:/home:xe1gyq/platform-kickstarts # osc add *
+A    platform-kickstarts.specs
+:/home:xe1gyq/platform-kickstarts # osc commit
+Sending    platform-kickstarts.specs
+Transmitting file data .
+Committed revision 1.
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc up
+At revision 1.
+```
+
+```sh
+:/home:xe1gyq # osc meta pkg -e home:xe1gyq platform-kickstarts
+```
+
+```sh
+<package name="platform-kickstarts" project="home:xe1gyq">
+  <title>Platform kickstart files</title>
+  <description>Platform kickstart files</description>
+</package>
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc rebuildpac home:xe1gyq platform-kickstarts      
+ok
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts x86_64 platform-kickstarts.spec 
+Building platform-kickstarts.spec for platform-kickstarts/x86_64
+Getting buildinfo from server and store to /home:xe1gyq/platform-kickstarts/.osc/_buildinfo-platform-kickstarts-x86_64.xml
+Getting buildconfig from server and store to /home:xe1gyq/platform-kickstarts/.osc/_buildconfig-platform-kickstarts-x86_64
+...
+... # Taking ~ 10 minutes
+...
+```
