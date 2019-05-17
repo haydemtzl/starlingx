@@ -199,7 +199,24 @@ Committed revision 2.
 
 ```sh
 :/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts x86_64 platform-kickstarts.spec
+...
+...
+   22s] platform-kickstarts-extracfgs.noarch: W: description-shorter-than-summary
+[   22s] platform-kickstarts-pxeboot.noarch: W: description-shorter-than-summary
+[   22s] The package description should be longer than the summary. be a bit more
+[   22s] verbose, please.
+[   22s] 
+[   22s] 4 packages and 0 specfiles checked; 0 errors, 42 warnings.
+[   22s] 
+[   22s] 
+[   22s] 090c02e38358 finished "build platform-kickstarts.spec" at Fri May 17 14:40:22 UTC 2019.
+[   22s] 
 
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/SRPMS/platform-kickstarts-1.0-%{tis_patch_ver}.src.rpm
+
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/RPMS/noarch/platform-kickstarts-1.0-%{tis_patch_ver}.noarch.rpm
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/RPMS/noarch/platform-kickstarts-extracfgs-1.0-%{tis_patch_ver}.noarch.rpm
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/RPMS/noarch/platform-kickstarts-pxeboot-1.0-%{tis_patch_ver}.noarch.rpm
 ```
 
 ### Remote Packaging
