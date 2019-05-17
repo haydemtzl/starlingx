@@ -2,6 +2,10 @@
 
 ## home:xe1gyq > platform-kickstarts
 
+- https://build.opensuse.org/package/show/home:xe1gyq/platform-kickstarts
+
+### Web Service
+
 1. Under your workspace (e.g. https://build.opensuse.org/project/show/home:xe1gyq), select "Create Package"
 2. Fill out and Accept:
    - Name: platform-kickstarts
@@ -190,6 +194,29 @@ Committed revision 2.
   - https://opendev.org/starlingx/metal/src/branch/master/kickstart/centos/platform-kickstarts.spec
 - To local
   - platform-kickstarts.spec
+
+### Local Packaging
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts x86_64 platform-kickstarts.spec
+
+```
+
+### Remote Packaging
+
+```sh
+[   28s] ### VM INTERACTION START ###
+[   31s] [   23.453180] sysrq: SysRq : Power Off
+[   31s] [   23.457807] reboot: Power down
+[   31s] ### VM INTERACTION END ###
+[   31s] build: extracting built packages...
+[   31s] RPMS/noarch/platform-kickstarts-pxeboot-1.0-4.1.noarch.rpm
+[   31s] RPMS/noarch/platform-kickstarts-1.0-4.1.noarch.rpm
+[   31s] RPMS/noarch/platform-kickstarts-extracfgs-1.0-4.1.noarch.rpm
+[   31s] SRPMS/platform-kickstarts-1.0-4.1.src.rpm
+[   31s] OTHER/rpmlint.log
+[   31s] OTHER/_statistics
+```
 
 ## home:marcelarosalesj stx-nfv
 
