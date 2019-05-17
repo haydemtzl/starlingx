@@ -2,7 +2,8 @@
 
 ## home:xe1gyq > platform-kickstarts
 
-- https://build.opensuse.org/package/show/home:xe1gyq/platform-kickstarts
+Expected Output:
+- - https://build.opensuse.org/package/show/home:xe1gyq/platform-kickstarts
 
 ### Web Service
 
