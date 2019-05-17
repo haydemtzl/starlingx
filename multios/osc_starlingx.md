@@ -205,4 +205,53 @@ Getting buildconfig from server and store to /home:xe1gyq/platform-kickstarts/.o
 ...
 ... # Taking ~ 10 minutes
 ...
+[    6s] -----------------------------------------------------------------
+[    6s] ----- building platform-kickstarts.spec (user abuild)
+[    6s] -----------------------------------------------------------------
+[    6s] -----------------------------------------------------------------
+[    6s] + exec rpmbuild -ba --define '_srcdefattr (-,root,root)' --nosignature /home/abuild/rpmbuild/SOURCES/platform-kickstarts.spec
+[    6s] error: Bad file: /home/abuild/rpmbuild/SOURCES/platform-kickstarts-1.0.tar.gz: No such file or directory
+[    6s] 
+[    6s] 
+[    6s] RPM build errors:
+[    6s]     Bad file: /home/abuild/rpmbuild/SOURCES/platform-kickstarts-1.0.tar.gz: No such file or directory
+
+The buildroot was: /var/tmp/build-root/platform-kickstarts-x86_64
 ```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc add platform-kickstarts.spec
+osc: warning: 'platform-kickstarts.spec' is already under version control
+:/home:xe1gyq/platform-kickstarts # osc commit
+Sending    platform-kickstarts.spec
+Transmitting file data .
+Committed revision 2.
+```
+
+## Metal Tar Gz File
+
+```sh
+:/home:xe1gyq/platform-kickstarts # wget https://opendev.org/starlingx/metal/archive/master.tar.gz
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # tar xvf master.tar.gz 
+:/home:xe1gyq/platform-kickstarts # mv metal/ platform-kickstarts/
+:/home:xe1gyq/platform-kickstarts # tar -czf platform-kickstarts-1.0.tar.gz --files-from=platform-kickstarts/    
+```
+
+```sh
+:/home:xe1gyq/platform-kickstarts # osc build --no-verify platform-kickstarts x86_64 platform-kickstarts.spec
+...
+...
+[   12s] 2 packages and 0 specfiles checked; 0 errors, 17 warnings.
+[   12s] 
+[   12s] 
+[   12s] 090c02e38358 finished "build platform-kickstarts.spec" at Fri May 17 13:31:54 UTC 2019.
+[   12s] 
+
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/SRPMS/platform-kickstarts-1.0-%{tis_patch_ver}.src.rpm
+
+/var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/RPMS/x86_64/platform-kickstarts-1.0-%{tis_patch_ver}.x86_64.rpm
+```
+
