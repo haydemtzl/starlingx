@@ -256,3 +256,9 @@ Committed revision 2.
 /var/tmp/build-root/platform-kickstarts-x86_64/home/abuild/rpmbuild/RPMS/x86_64/platform-kickstarts-1.0-%{tis_patch_ver}.x86_64.rpm
 ```
 
+## Specfile Refactor
+
+- Content from remote
+  - https://opendev.org/starlingx/metal/src/branch/master/kickstart/centos/platform-kickstarts.spec
+- To local
+  - platform-kickstarts.spec
