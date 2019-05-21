@@ -2,6 +2,9 @@
 
 ## home:xe1gyq > platform-kickstarts
 
+> Replace home:xe1gyq with your username (e.g. home:username)
+> Replace platform-kickstarts with your package name
+
 Expected Output:
 - - https://build.opensuse.org/package/show/home:xe1gyq/platform-kickstarts
 
