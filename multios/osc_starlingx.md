@@ -4,7 +4,7 @@
 
 - Follow process for home:xe1gyq > platform-kickstarts
 
-Init Script LSB Header
+Changes related to "Init Script LSB Header" for: mtce-storage-1.0/mtce-storage/src/scripts/goenabled
 
 ```sh
 ### BEGIN INIT INFO
