@@ -55,7 +55,7 @@ At revision None.
 ### Base specfile creation
 
 ```sh
-:/home:xe1gyq/platform-kickstarts # vi platform-kickstarts.specs
+:/home:xe1gyq/platform-kickstarts # vi platform-kickstarts.spec
 ```
 
 ```sh
@@ -113,9 +113,9 @@ ok
 
 ```
 :/home:xe1gyq/platform-kickstarts # osc add *
-A    platform-kickstarts.specs
+A    platform-kickstarts.spec
 :/home:xe1gyq/platform-kickstarts # osc commit
-Sending    platform-kickstarts.specs
+Sending    platform-kickstarts.spec
 Transmitting file data .
 Committed revision 1.
 ```
