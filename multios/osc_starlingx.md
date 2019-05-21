@@ -2,7 +2,7 @@
 
 ## home:xe1gyq > mtce-storage
 
-- Follow process for home:xe1gyq > platform-kickstarts
+> Follow process for home:xe1gyq > platform-kickstarts
 
 Changes related to "Init Script LSB Header" for: mtce-storage-1.0/mtce-storage/src/scripts/goenabled
 
