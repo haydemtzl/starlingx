@@ -1,9 +1,29 @@
 # openSUSE:Open Build Service Command Line Tool StarlingX
 
+## home:xe1gyq > mtce-storage
+
+- Follow process for home:xe1gyq > platform-kickstarts
+
+Init Script LSB Header
+
+```sh
+### BEGIN INIT INFO
+# Provides:          goenabled
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+```
+
 ## home:xe1gyq > platform-kickstarts
 
-> Replace home:xe1gyq with your username (e.g. home:username)
-> Replace platform-kickstarts with your package name
+Please consider to:
+
+- Replace home:xe1gyq with your username (e.g. home:username)
+- Replace platform-kickstarts with your package name
 
 Expected Output:
 - https://build.opensuse.org/package/show/home:xe1gyq/platform-kickstarts
