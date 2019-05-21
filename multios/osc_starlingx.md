@@ -1,5 +1,21 @@
 # openSUSE:Open Build Service Command Line Tool StarlingX
 
+## Specfile Conventions
+
+The following items are missing to be defined: 
+
+- Sequence of specfile directives
+
+The following are conventions to consider for your first specfile version:
+
+```sh
+Packager:       The StarlingX developers <starlinx-discuss@lists.starlingx.io>
+Source0:        stx-metal-%{version}.tar.gz
+
+%prep
+%setup -n stx-metal-%{version}
+```
+
 ## home:xe1gyq > mtce-storage
 
 > Follow process for home:xe1gyq > platform-kickstarts
