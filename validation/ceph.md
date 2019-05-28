@@ -16,7 +16,12 @@ $ google-chrome --no-proxy-server &
 ## CEPH Basics
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph health
+HEALTH_OK
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph status
   cluster:
     id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
     health: HEALTH_OK
@@ -34,8 +39,187 @@ $ google-chrome --no-proxy-server &
     pgs:     856 active+clean
  
   io:
-    client:   531 KiB/s wr, 0 op/s rd, 102 op/s wr
- 
+    client:   228 KiB/s wr, 0 op/s rd, 50 op/s wr
+
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph quorum_status | python -m json.tool
+{
+    "election_epoch": 8,
+    "monmap": {
+        "created": "2019-05-22 12:38:07.817475",
+        "epoch": 2,
+        "features": {
+            "optional": [],
+            "persistent": [
+                "kraken",
+                "luminous",
+                "mimic",
+                "osdmap-prune"
+            ]
+        },
+        "fsid": "ea5b5cfa-c8f4-454f-9b8a-92afb56973ac",
+        "modified": "2019-05-22 14:51:15.519776",
+        "mons": [
+            {
+                "addr": "10.10.58.3:6789/0",
+                "name": "controller-0",
+                "public_addr": "10.10.58.3:6789/0",
+                "rank": 0
+            },
+            {
+                "addr": "10.10.58.4:6789/0",
+                "name": "controller-1",
+                "public_addr": "10.10.58.4:6789/0",
+                "rank": 1
+            },
+            {
+                "addr": "10.10.58.125:6789/0",
+                "name": "storage-0",
+                "public_addr": "10.10.58.125:6789/0",
+                "rank": 2
+            }
+        ]
+    },
+    "quorum": [
+        0,
+        1,
+        2
+    ],
+    "quorum_leader_name": "controller-0",
+    "quorum_names": [
+        "controller-0",
+        "controller-1",
+        "storage-0"
+    ]
+}
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph mon_status | python -m json.tool
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph mon_status | python -m json.tool                                                                                        [44/1298]
+{
+    "election_epoch": 8,
+    "extra_probe_peers": [
+        "10.10.58.125:6789/0"
+    ],
+    "feature_map": {
+        "client": [
+            {
+                "features": "0x3ffddff8ffa4fffb",
+                "num": 9,
+                "release": "luminous"
+            }
+        ],
+        "mgr": [
+            {
+                "features": "0x3ffddff8ffa4fffb",
+                "num": 1,
+                "release": "luminous"
+            }
+        ],
+        "mon": [
+            {
+                "features": "0x3ffddff8ffa4fffb",
+                "num": 1,
+                "release": "luminous"
+            }
+        ]
+    },
+    "features": {
+        "quorum_con": "4611087854031142907",
+        "quorum_mon": [
+            "kraken",
+            "luminous",
+            "mimic",
+            "osdmap-prune"
+        ],
+        "required_con": "144115738102218752",
+        "required_mon": [
+            "kraken",
+            "luminous",
+            "mimic",
+            "osdmap-prune"
+        ]
+    },
+    "monmap": {
+        "created": "2019-05-22 12:38:07.817475",
+        "epoch": 2,
+        "features": {
+            "optional": [],
+            "persistent": [
+                "kraken",
+                "luminous",
+                "mimic",
+                "osdmap-prune"
+            ]
+        },
+        "fsid": "ea5b5cfa-c8f4-454f-9b8a-92afb56973ac",
+        "modified": "2019-05-22 14:51:15.519776",
+        "mons": [
+            {
+                "addr": "10.10.58.3:6789/0",
+                "name": "controller-0",
+                "public_addr": "10.10.58.3:6789/0",
+                "rank": 0
+            },
+            {
+                "addr": "10.10.58.4:6789/0",
+                "name": "controller-1",
+                "public_addr": "10.10.58.4:6789/0",
+                "rank": 1
+            },
+            {
+                "addr": "10.10.58.125:6789/0",
+                "name": "storage-0",
+                "public_addr": "10.10.58.125:6789/0",
+                "rank": 2
+            }
+        ]
+    },
+    "name": "controller-0",
+    "outside_quorum": [],
+    "quorum": [
+        0,
+        1,
+        2
+    ],
+    "rank": 0,
+    "state": "leader",
+    "sync_provider": []
+}
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph df
+GLOBAL:
+    SIZE        AVAIL       RAW USED     %RAW USED 
+    1.3 TiB     1.3 TiB      2.1 GiB          0.16 
+POOLS:
+    NAME                    ID     USED        %USED     MAX AVAIL     OBJECTS 
+    .rgw.root               1      1.1 KiB         0       1.2 TiB           4 
+    kube-rbd                2      1.7 GiB      0.13       1.2 TiB         584 
+    default.rgw.control     3          0 B         0       1.2 TiB           8 
+    default.rgw.meta        4          0 B         0       1.2 TiB           0 
+    default.rgw.log         5          0 B         0       1.2 TiB        1152 
+    images                  6         19 B         0       1.2 TiB           2 
+    ephemeral               7          0 B         0       1.2 TiB           0 
+    cinder-volumes          8          0 B         0       1.2 TiB           0 
+    gnocchi.metrics         9      378 KiB         0       1.2 TiB          63 
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls
+.rgw.root
+kube-rbd
+default.rgw.control
+default.rgw.meta
+default.rgw.log
+images
+ephemeral
+cinder-volumes
+gnocchi.metrics
 ```
 
 ```sh
