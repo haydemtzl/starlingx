@@ -421,7 +421,7 @@ No filesystems configured
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-reinstall storage-0
 ```
 
-storage-0 reinstalling...
+In Horizon: Pre-Install ... Installing Packages (23%) ... Post-Install
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
@@ -475,11 +475,151 @@ storage-0 reinstalling...
 3. Ensure the host comes online after reinstall.
 
 ```sh
-Tbd
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | locked         | disabled    | online       |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+            1/3 mons down, quorum controller-0,controller-1
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1, out of quorum: storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.82 k objects, 1.7 GiB
+    usage:   1.4 GiB used, 890 GiB / 892 GiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   341 B/s rd, 0 op/s rd, 0 op/s wr
+
 ```
 
 4. Unlock the host
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+```
+
 5. Ensure the host eventually becomes available
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | degraded     |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+But controller-0 is degraded. Alarms?
+
+```sh
+200.006	controller-1 is degraded due to the failure of its 'ceph' process. Auto recovery of this major process is in progress.	host=controller-1.process=ceph	major	2019-05-28T16:17:55.608239
+```
+
+```sh
+800.001	Storage Alarm Condition: HEALTH_WARN [PGs are degraded/stuck or undersized]. Please check 'ceph -s' for more details.	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac	warning	2019-05-28T16:05:05.486930
+```
+
+Trying to recover controller-1 by locking and unlocking controller-1:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-1
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-1
+```
+
+```
+400.002	Service group cloud-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=cloud-services	major	2019-05-28T16:47:39.731109	
+400.002	Service group controller-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=controller-services	major	2019-05-28T16:47:39.895027	
+400.002	Service group directory-services loss of redundancy; expected 2 active members but only 1 active member available	service_domain=controller.service_group=directory-services	major	2019-05-28T16:47:39.242037	
+400.002	Service group oam-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=oam-services	major	2019-05-28T16:47:40.057033	
+400.002	Service group patching-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=patching-services	major	2019-05-28T16:47:39.406200	
+400.002	Service group storage-monitoring-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=storage-monitoring-services	major	2019-05-28T16:47:38.754022	
+400.002	Service group storage-services loss of redundancy; expected 2 active members but only 1 active member available	service_domain=controller.service_group=storage-services	major	2019-05-28T16:47:38.916208	
+400.002	Service group vim-services loss of redundancy; expected 1 standby member but no standby members available	service_domain=controller.service_group=vim-services	major	2019-05-28T16:47:39.569023	
+400.002	Service group web-services loss of redundancy; expected 2 active members but only 1 active member available	service_domain=controller.service_group=web-services	major	2019-05-28T16:47:39.079025	
+800.001	Storage Alarm Condition: HEALTH_WARN [PGs are degraded/stuck or undersized]. Please check 'ceph -s' for more details.	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac	warning	2019-05-28T16:05:05.486930
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | disabled    | offline      |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list[527199.052290] drbd drbd-extension: PingAck did not arrive in time.
+[527199.078255] drbd drbd-cgcs: PingAck did not arrive in time.
+[527199.080234] drbd drbd-platform: PingAck did not arrive in time.
+[527202.998096] drbd drbd-pgsql: PingAck did not arrive in time.
+[527204.723966] drbd drbd-dockerdistribution: PingAck did not arrive in time.
+[527204.724969] drbd drbd-rabbit: PingAck did not arrive in time.
+[527205.528082] drbd drbd-etcd: PingAck did not arrive in time.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+            1/3 mons down, quorum controller-0,storage-0
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,storage-0, out of quorum: controller-1
+    mgr: controller-0(active)
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.82 k objects, 1.7 GiB
+    usage:   1.5 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   85 B/s rd, 0 op/s rd, 0 op/s wr
+ 
+```
+
+Under Horizon, Testing...
 
 6. Check that ceph reports HEALTH_OK via
 
