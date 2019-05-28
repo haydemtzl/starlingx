@@ -387,7 +387,9 @@ No filesystems configured
 ### STOR_CORE_*
 
 > __STOR_CORE_014__ The objective of this test is to ensure that host reinstall of nodes running ceph-mon works properly on all supported configs.
+
 > __STOR_CORE_015__ The objective of this test is to ensure that host delete and reprovision of nodes running ceph-mon works properly on all supported configs.
+
 > __STOR_CORE_016__ The objective of this test is to ensure that semantic checks with respect to node lock, work properly on nodes running ceph monitors.
 
 
