@@ -392,8 +392,159 @@ No filesystems configured
 
 > __STOR_CORE_016__ The objective of this test is to ensure that semantic checks with respect to node lock, work properly on nodes running ceph monitors.
 
+#### STOR_CORE_014
+
+1. Lock one of the nodes that are part of a ceph-system. e.g. controller-0 on an All-in-One Duplex system, controller-0 on a standard system, or storage-0 on a ceph storage system.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 6  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock storage-0                                                                                                            
+```
+
+1. Initiate a host re-install
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-reinstall storage-0
+```
+
+storage-0 reinstalling...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | locked         | disabled    | offline      |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            1 osds down
+            1 host (1 osds) down
+            Reduced data availability: 284 pgs stale
+            1/3 mons down, quorum controller-0,cont  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            1 osds down
+            1 host (1 osds) down
+            Reduced data availability: 284 pgs stale
+            1/3 mons down, quorum controller-0,controller-1
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1, out of quorum: storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 2 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.82 k objects, 1.7 GiB
+    usage:   2.0 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   1023 B/s wr, 0 op/s rd, 0 op/s wr
+ 
+```
+
+3. Ensure the host comes online after reinstall.
+
+```sh
+Tbd
+```
+
+4. Unlock the host
+5. Ensure the host eventually becomes available
+
+6. Check that ceph reports HEALTH_OK via
+
+```sh
+ceph -s
+```
+
+7. Ensure the weights look accurate in
+
+```sh
+ceph osd tree
+```
 
 #### STOR_CORE_016
+
+1. storage-0: Pass but additional steps involved to recover healthiness. Then another cycle was executed and it succedded without those extra steps involved.
+2. controller-1: Pass
+
+##### controller-1
+
+See steps under section storage-0 fir details, this output is a summary of them.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-1
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
+```
+
+```
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-1
+[wrsroot@controller-0 ~(keystone_admin)]$ [523649.791656] drbd drbd-rabbit: PingAck did not arrive in time.
+[523652.389547] drbd drbd-dockerdistribution: PingAck did not arrive in time.
+[523652.554152] drbd drbd-platform: PingAck did not arrive in time.
+[523655.425493] drbd drbd-extension: PingAck did not arrive in time.
+[523655.427394] drbd drbd-cgcs: PingAck did not arrive in time.
+[523656.111783] drbd drbd-etcd: PingAck did not arrive in time.
+[523656.432034] drbd drbd-pgsql: PingAck did not arrive in time.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active)
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.81 k objects, 1.7 GiB
+    usage:   2.1 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   26 KiB/s rd, 80 KiB/s wr, 26 op/s rd, 36 op/s wr
+ 
+```
+
+##### storage-0
 
 1. Lock one of the ceph monitor nodes in the system being tested
 
