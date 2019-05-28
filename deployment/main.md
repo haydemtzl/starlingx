@@ -5,6 +5,10 @@ user@workstation:~/stx-tools/deployment/libvirt$ sudo brctl delbr stxbr1
 user@workstation:~/stx-tools/deployment/libvirt$ sudo virsh net-destroy default
 ```
 
+```sh
+user@workstation:~/stx-tools/deployment/libvirt$ nano nat.xml
+```
+
 ```xml
 <network>
 	<name>default</name>
