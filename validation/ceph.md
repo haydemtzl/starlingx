@@ -420,6 +420,10 @@ No filesystems configured
 ```
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock storage-0
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | id | hostname     | personality | administrative | operational | availability |
@@ -472,7 +476,13 @@ Only 2 storage monitor available. At least 2 unlocked and enabled hosts with mon
 
 4. Ensure this is rejected.
 
-To Check
+This is rejected
+
+```sh
+Only 2 storage monitor available. At least 2 unlocked and enabled hosts with monitors are required. Please ensure hosts with monitors are unlocked and enabled.
+```
+
+However the following messages are shown:
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ [519825.439055] INFO: task jbd2/rbd0-8:801166 blocked for more than 120 seconds.
@@ -593,7 +603,7 @@ Check storage-0 is offline, reboot in progress
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-After storage is up again
+After storage-0 is up again
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
@@ -609,6 +619,8 @@ After storage is up again
 | 7  | storage-2    | storage     | unlocked       | enabled     | available    |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
+
+Unlock it, storage-0
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
