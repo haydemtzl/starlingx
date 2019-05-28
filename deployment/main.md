@@ -44,6 +44,7 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 ```
 
 ```sh
-localhost:~$ ifconfig enp2s1 10.10.10.10 up
-localhost:~$ route add default gw 
+localhost:~$ sudo ip addr add 10.10.10.10/24 dev enp2s1
+localhost:~$ sudo ip link set enp2s1 up
+localhost:~$ sudo ip route add default via 10.10.10.1
 ```
