@@ -533,10 +533,146 @@ After some seconds:
 Restore Ceph config failed. Retry unlocking storage node.
 ```
 
-6. Ensure ceph becomes healthy again.
+Another retry:
 
 ```sh
-Failure in Step 6
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+Restore Ceph config failed. Retry unlocking storage node.
+```
+
+Failed! Checking again status:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+            1/3 mons down, quorum controller-0,controller-1
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1, out of quorum: storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.81 k objects, 1.7 GiB
+    usage:   1.5 GiB used, 890 GiB / 892 GiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   170 B/s rd, 0 op/s rd, 0 op/s wr
+ 
+```
+
+5. __Recover__ Reboot storage-0 and then unlock
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-reboot storage-0
+```
+
+Check storage-0 is offline, reboot in progress
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | degraded     |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | degraded     |
+| 5  | storage-0    | storage     | locked         | disabled    | offline      |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+After storage is up again
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | degraded     |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | degraded     |
+| 5  | storage-0    | storage     | locked         | disabled    | online       |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+```
+storage-0 host unlock is succesful! Check storage-0 is offline, reboot in progress
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+|
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | unlocked       | disabled    | offline      |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+6. Ensure ceph becomes healthy again.
+
+- Failure in Step 6 with regular process
+- Success in Step 6 after reboot and unlock of storage-0 was performed
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.81 k objects, 1.7 GiB
+    usage:   2.1 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   4.6 KiB/s rd, 473 KiB/s wr, 5 op/s rd, 93 op/s wr
+
 ```
 
 7. Repeat this for each node type, e.g. on a 2+X system, try this by locking the controller, and then do another test to lock the worker that is running the ceph monitor.
