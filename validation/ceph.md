@@ -384,7 +384,163 @@ No filesystems configured
 
 ## StarlingX CEPH Test Cases
 
-### STOR_CORE_015
+### STOR_CORE_*
+
+> __STOR_CORE_014__ The objective of this test is to ensure that host reinstall of nodes running ceph-mon works properly on all supported configs.
+> __STOR_CORE_015__ The objective of this test is to ensure that host delete and reprovision of nodes running ceph-mon works properly on all supported configs.
+> __STOR_CORE_016__ The objective of this test is to ensure that semantic checks with respect to node lock, work properly on nodes running ceph monitors.
+
+
+#### STOR_CORE_016
+
+1. Lock one of the ceph monitor nodes in the system being tested
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.81 k objects, 1.7 GiB
+    usage:   2.1 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   88 KiB/s rd, 463 KiB/s wr, 88 op/s rd, 146 op/s wr
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | locked         | disabled    | online       |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+2. Ensure `ceph -s` reports HEALTH_WARN with one of the monitor's listed as being down:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            1 osds down
+            1 host (1 osds) down
+            1/3 mons down, quorum controller-0,controller-1
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1, out of quorum: storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 2 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.81 k objects, 1.7 GiB
+    usage:   2.1 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   10 KiB/s wr, 0 op/s rd, 2 op/s wr
+ 
+```
+
+3. Attempt to lock another one of the ceph monitors (if applies).
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock controller-1
+Only 2 storage monitor available. At least 2 unlocked and enabled hosts with monitors are required. Please ensure hosts with monitors are unlocked and enabled.
+```
+
+4. Ensure this is rejected.
+
+To Check
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ [519825.439055] INFO: task jbd2/rbd0-8:801166 blocked for more than 120 seconds.
+[519825.446180] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.454236] INFO: task mysqld:810948 blocked for more than 120 seconds.
+[519825.460932] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.460977] INFO: task mysqld:810952 blocked for more than 120 seconds.
+[519825.460978] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461083] INFO: task mysqld:810973 blocked for more than 120 seconds.
+[519825.461085] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461148] INFO: task mysqld:1018507 blocked for more than 120 seconds.
+[519825.461150] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461566] INFO: task 10_dirty_io_sch:859628 blocked for more than 120 seconds.
+[519825.461566] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461954] INFO: task pidof:1231546 blocked for more than 120 seconds.
+[519825.461955] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461970] INFO: task ps:1232857 blocked for more than 120 seconds.
+[5sage.
+[519825.461954] INFO: task pidof:1231546 blocked for more than 120 seconds.
+[519825.461955] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519825.461970] INFO: task ps:1232857 blocked for more than 120 seconds.
+[519825.461970] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+```
+
+5. Unlock the ceph monitor that was locked in step 1.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+
+<No output message for some seconds, then>
+
+Timeout while waiting on RPC response - topic: "sysinv.conductor_manager", RPC method: "configure_ihost" info: "<unknown>"
+[wrsroot@controller-0 ~(keystone_admin)]$ 
+[wrsroot@controller-0 ~(keystone_admin)]$ [519945.180175] INFO: task kubelet:90685 blocked for more than 120 seconds.
+[519945.186870] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[519945.195464] INFO: task jbd2/rbd0-8:801166 blocked for more than 120 seconds.
+[519945.202579] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | locked         | disabled    | online       |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+After some seconds:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+Restore Ceph config failed. Retry unlocking storage node.
+```
+
+6. Ensure ceph becomes healthy again.
+
+```sh
+Failure in Step 6
+```
+
+7. Repeat this for each node type, e.g. on a 2+X system, try this by locking the controller, and then do another test to lock the worker that is running the ceph monitor.
+8. Repeat test for each system type, e.g. 2+X, All-in-One Duplex, Storage, All-in-One Simplex.
 
 ### STOR_TIER_005
 
@@ -496,3 +652,143 @@ No filesystems configured
 +--------------------------------------+-----------------+----------+------------+---------------------+----------+--------------------+
 ```
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-show shared_services
++--------------+----------------------------------+
+| Property     | Value                            |
++--------------+----------------------------------+
+| backend      | external                         |
+| name         | shared_services                  |
+| state        | configured                       |
+| task         | None                             |
+| services     | glance                           |
+| capabilities |                                  |
+| created_at   | 2019-05-22T12:34:57.446723+00:00 |
+| updated_at   | None                             |
++--------------+----------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system storage-backend-show ceph-store
++----------------------+--------------------------------------+
+| Property             | Value                                |
++----------------------+--------------------------------------+
+| backend              | ceph                                 |
+| name                 | ceph-store                           |
+| state                | configured                           |
+| task                 | reconfig-controller                  |
+| services             | None                                 |
+| capabilities         | min_replication: 1                   |
+|                      | replication: 2                       |
+| object_gateway       | False                                |
+| ceph_total_space_gib | 890                                  |
+| object_pool_gib      | None                                 |
+| cinder_pool_gib      | None                                 |
+| kube_pool_gib        | None                                 |
+| glance_pool_gib      | None                                 |
+| ephemeral_pool_gib   | None                                 |
+| tier_name            | storage                              |
+| tier_uuid            | aae84629-2518-4b0a-a7e0-0fc3e759b918 |
+| created_at           | 2019-05-22T12:35:44.884703+00:00     |
+| updated_at           | None                                 |
++----------------------+--------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph df
+GLOBAL:
+    SIZE        AVAIL       RAW USED     %RAW USED 
+    1.3 TiB     1.3 TiB      2.1 GiB          0.16 
+POOLS:
+    NAME                    ID     USED        %USED     MAX AVAIL     OBJECTS 
+    .rgw.root               1      1.1 KiB         0       1.2 TiB           4 
+    kube-rbd                2      1.7 GiB      0.13       1.2 TiB         584 
+    default.rgw.control     3          0 B         0       1.2 TiB           8 
+    default.rgw.meta        4          0 B         0       1.2 TiB           0 
+    default.rgw.log         5          0 B         0       1.2 TiB        1152 
+    images                  6         19 B         0       1.2 TiB           2 
+    ephemeral               7          0 B         0       1.2 TiB           0 
+    cinder-volumes          8          0 B         0       1.2 TiB           0 
+    gnocchi.metrics         9      378 KiB         0       1.2 TiB          63 
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo sm-dump
+Password: 
+
+-Service_Groups------------------------------------------------------------------------
+oam-services                     active               active                         
+controller-services              active               active                         
+cloud-services                   active               active                         
+patching-services                active               active                         
+directory-services               active               active                         
+web-services                     active               active                         
+storage-services                 active               active                         
+storage-monitoring-services      active               active                         
+vim-services                     active               active                         
+---------------------------------------------------------------------------------------
+
+-Services------------------------------------------------------------------------------
+oam-ip                           enabled-active       enabled-active                  
+management-ip                    enabled-active       enabled-active                  
+drbd-pg                          enabled-active       enabled-active                  
+drbd-rabbit                      enabled-active       enabled-active                  
+drbd-cgcs                        enabled-active       enabled-active                  
+drbd-platform                    enabled-active       enabled-active                  
+pg-fs                            enabled-active       enabled-active                  
+rabbit-fs                        enabled-active       enabled-active                  
+nfs-mgmt                         enabled-active       enabled-active                  
+cgcs-fs                          enabled-active       enabled-active                  
+platform-fs                      enabled-active       enabled-active                  
+postgres                         enabled-active       enabled-active                  
+rabbit                           enabled-active       enabled-active                  
+cgcs-export-fs                   enabled-active       enabled-active                  
+platform-export-fs               enabled-active       enabled-active                  
+cgcs-nfs-ip                      enabled-active       enabled-active                  
+platform-nfs-ip                  enabled-active       enabled-active                  
+sysinv-inv                       enabled-active       enabled-active                  
+sysinv-conductor                 enabled-active       enabled-active                  
+mtc-agent                        enabled-active       enabled-active                  
+hw-mon                           enabled-active       enabled-active                  
+dnsmasq                          enabled-active       enabled-active                  
+fm-mgr                           enabled-active       enabled-active                  
+keystone                         enabled-active       enabled-active                  
+open-ldap                        enabled-active       enabled-active                  
+snmp                             enabled-active       enabled-active                  
+lighttpd                         enabled-active       enabled-active                  
+horizon                          enabled-active       enabled-active                  
+patch-alarm-manager              enabled-active       enabled-active                  
+mgr-restful-plugin               enabled-active       enabled-active                  
+ceph-manager                     enabled-active       enabled-active                  
+vim                              enabled-active       enabled-active                  
+vim-api                          enabled-activSTOR_CORE_14e       enabled-active                  
+vim-webserver                    enabled-active       enabled-active                  
+guest-agent                      enabled-active       enabled-active                  
+haproxy                          enabled-active       en                 
+vim-webserver                    enabled-active       enabled-active                  
+guest-agent                      enabled-active       enabled-active                  
+haproxy                          enabled-active       enabled-active                  
+pxeboot-ip                       enabled-active       enabled-active                  
+ceph-radosgw                     enabled-active       enabled-active                  
+drbd-extension                   enabled-active       enabled-active                  
+extension-fs                     enabled-active       enabled-active                  
+extension-export-fs              enabled-active       enabled-active                  
+etcd                             enabled-active       enabled-active                  
+drbd-etcd                        enabled-active       enabled-active                  
+etcd-fs                          enabled-active       enabled-active                  
+barbican-api                     enabled-active       enabled-active                  
+barbican-keystone-listener       enabled-active       enabled-active                  
+barbican-worker                  enabled-active       enabled-active                  
+cluster-host-ip                  enabled-active       enabled-active                  
+docker-distribution              enabled-active       enabled-active                  
+dockerdistribution-fs            enabled-active       enabled-active                  
+drbd-dockerdistribution          enabled-active       enabled-active                  
+helmrepository-fs                enabled-active       enabled-active                  
+registry-token-server            enabled-active       enabled-active                  
+------------------------------------------------------------------------------
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool get cinder-volumes pg_num
+pg_num: 8
+```
