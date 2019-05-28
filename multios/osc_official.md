@@ -56,6 +56,21 @@ created request id 706082
 :/home:xe1gyq/mtce-storage # osc build --no-verify openSUSE_Leap_15.0 x86_64 mtce-storage.spec
 ```
 
+Error
+
+```sh
+[   34s] + rm -rf '/home/abuild/rpmbuild/BUILDROOT/mtce-storage-1.0-%{tis_patch_ver}.x86_64'
+[   34s] + exit 0
+[   34s] ... checking for files with abuild user/group
+[   34s] ... running 00-check-install-rpms
+[   34s] ... installing all built rpms
+[   34s] error: File not found by glob: /.build.packages/RPMS/x86_64/mtce-storage-1.0-%{tis_patch_ver}.x86_64.rpm
+[   34s] failed to install rpms, aborting build
+
+The buildroot was: /var/tmp/build-root/openSUSE_Leap_15.0-x86_64
+:/home:xe1gyq/mtce-storage # 
+```
+
 ## home:xe1gyq > platform-kickstarts
 
 ```sh
@@ -95,6 +110,23 @@ created request id 706087
 
 ```sh
 :/home:xe1gyq/mtce-storage # osc build --no-verify openSUSE_Leap_15.0 x86_64 platform-kickstarts.spec
+```
+
+Error
+
+```sh
+[   29s] + exit 0
+[   29s] ... checking for files with abuild user/group
+[   29s] ... running 00-check-install-rpms
+[   29s] ... installing all built rpms
+[   29s] error: File not found by glob: /.build.packages/RPMS/noarch/platform-kickstarts-1.0-%{tis_patch_ver}.noarch.rpm
+[   29s] error: File not found by glob: /.build.packages/RPMS/noarch/platform-kickstarts-extracfgs-1.0-%{tis_patch_ver}.noarch.rpm
+[   29s] error: File not found by glob: /.build.packages/RPMS/noarch/platform-kickstarts-pxeboot-1.0-%{tis_patch_ver}.noarch.rpm
+[   29s] failed to install rpms, aborting build
+
+The buildroot was: /var/tmp/build-root/openSUSE_Leap_15.0-x86_64
+:/home:xe1gyq/platform-kickstarts # 
+:/home:xe1gyq/platform-kickstarts # osc build --no-verify openSUSE_Leap_15.0 x86_64 platform-kickstarts.spec 
 ```
 
 ## home:xe1gyq > sm-tools
@@ -144,5 +176,5 @@ created request id 706091
 ```
 
 ```sh
-:/home:xe1gyq/mtce-storage # osc build --no-verify openSUSE_Leap_15.0 x86_64 sm-tools.spec
+:/home:xe1gyq/sm-tools # osc build --no-verify openSUSE_Leap_15.0 x86_64 sm-tools.spec
 ```
