@@ -3,6 +3,7 @@ user@workstation:~/stx-tools/deployment/libvirt$ sudo brctl delif stxbr1 vnet0
 user@workstation:~/stx-tools/deployment/libvirt$ sudo ifconfig stxbr1 down
 user@workstation:~/stx-tools/deployment/libvirt$ sudo brctl delbr stxbr1
 user@workstation:~/stx-tools/deployment/libvirt$ sudo virsh net-destroy default
+user@workstation:~/stx-tools/deployment/libvirt$ sudo virsh net-undefine default
 ```
 
 ```sh
