@@ -23,7 +23,34 @@ localhost:~$ ping 10.22.224.196
 ```
 
 ```sh
-user@workstation:~$ ssh wrsroot@10.10.10.10
+user@workstation:~/stx-tools/deployment/libvirt$ ssh wrsroot@10.10.10.10
+The authenticity of host '10.10.10.10 (10.10.10.10)' can't be established.
+ECDSA key fingerprint is SHA256:zmpmzT51KHw5VgFnH4J5fwAi5Q1hsYv2QSu03pKudyY.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.10.10.10' (ECDSA) to the list of known hosts.
+Release 19.01
+------------------------------------------------------------------------
+W A R N I N G *** W A R N I N G *** W A R N I N G *** W A R N I N G *** 
+------------------------------------------------------------------------
+THIS IS A PRIVATE COMPUTER SYSTEM.
+This computer system including all related equipment, network devices
+(specifically including Internet access), are provided only for authorized use.
+All computer systems may be monitored for all lawful purposes, including to
+ensure that their use is authorized, for management of the system, to
+facilitate protection against unauthorized access, and to verify security
+procedures, survivability and operational security. Monitoring includes active
+attacks by authorized personnel and their entities to test or verify the
+security of the system. During monitoring, information may be examined,
+recorded, copied and used for authorized purposes. All information including
+personal information, placed on or sent over this system may be monitored. Uses
+of this system, authorized or unauthorized, constitutes consent to monitoring
+of this system. Unauthorized use may subject you to criminal prosecution.
+Evidence of any such unauthorized use collected during monitoring may be used
+for administrative, criminal or other adverse action. Use of this system
+constitutes consent to monitoring for these purposes.
+
+wrsroot@10.10.10.10's password: 
+Last login: Wed May 29 08:27:52 2019
 
 WARNING: Unauthorized access to this system is forbidden and will be
 prosecuted by law. By accessing this system, you agree that your
@@ -1344,39 +1371,6 @@ localhost                  : ok=225  changed=139  unreachable=0    failed=0
 #### Configure OAM, Management and Cluster interfaces
 
 ```sh
-user@workstation:~/stx-tools/deployment/libvirt$ ssh wrsroot@10.10.10.10
-The authenticity of host '10.10.10.10 (10.10.10.10)' can't be established.
-ECDSA key fingerprint is SHA256:zmpmzT51KHw5VgFnH4J5fwAi5Q1hsYv2QSu03pKudyY.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '10.10.10.10' (ECDSA) to the list of known hosts.
-Release 19.01
-------------------------------------------------------------------------
-W A R N I N G *** W A R N I N G *** W A R N I N G *** W A R N I N G *** 
-------------------------------------------------------------------------
-THIS IS A PRIVATE COMPUTER SYSTEM.
-This computer system including all related equipment, network devices
-(specifically including Internet access), are provided only for authorized use.
-All computer systems may be monitored for all lawful purposes, including to
-ensure that their use is authorized, for management of the system, to
-facilitate protection against unauthorized access, and to verify security
-procedures, survivability and operational security. Monitoring includes active
-attacks by authorized personnel and their entities to test or verify the
-security of the system. During monitoring, information may be examined,
-recorded, copied and used for authorized purposes. All information including
-personal information, placed on or sent over this system may be monitored. Uses
-of this system, authorized or unauthorized, constitutes consent to monitoring
-of this system. Unauthorized use may subject you to criminal prosecution.
-Evidence of any such unauthorized use collected during monitoring may be used
-for administrative, criminal or other adverse action. Use of this system
-constitutes consent to monitoring for these purposes.
-
-wrsroot@10.10.10.10's password: 
-Last login: Wed May 29 08:27:52 2019
-
-WARNING: Unauthorized access to this system is forbidden and will be
-prosecuted by law. By accessing this system, you agree that your
-actions may be monitored if unauthorized usage is suspected.
-
 controller-0:~$ source /etc/platform/openrc
 ```
 
@@ -1503,8 +1497,13 @@ controller-0:~$ source /etc/platform/openrc
 +--------------+--------------------------------------+
 ```
 
+#### Set the ntp server
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system ntp-modify ntpservers=0.pool.ntp.org,1.pool.ntp.org
 +--------------+--------------------------------------+
 | Property     | Value                                |
@@ -1516,54 +1515,20 @@ controller-0:~$ source /etc/platform/openrc
 | created_at   | 2019-05-29T08:34:05.340438+00:00     |
 | updated_at   | None                                 |
 +--------------+--------------------------------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system modify --vswitch_type ovs-dpdk
-+----------------------+--------------------------------------+
-| Property             | Value                                |
-+----------------------+--------------------------------------+
-| contact              | None                                 |
-| created_at           | 2019-05-29T08:34:05.314720+00:00     |
-| description          | None                                 |
-| https_enabled        | False                                |
-| location             | None                                 |
-| name                 | a6b7c820-ef13-4260-b864-17b72c593898 |
-| region_name          | RegionOne                            |
-| sdn_enabled          | False                                |
-| security_feature     | spectre_meltdown_v1                  |
-| service_project_name | services                             |
-| software_version     | 19.01                                |
-| system_mode          | duplex                               |
-| system_type          | Standard                             |
-| timezone             | UTC                                  |
-| updated_at           | 2019-05-29T08:35:15.459547+00:00     |
-| uuid                 | d046949c-e16e-4475-bdee-f420a430fb00 |
-| vswitch_type         | ovs-dpdk                             |
-+----------------------+--------------------------------------+
+```
+
+#### Configure the vswitch type (optional)
+
+> Not done under a virtual installation.
+
+
+#### Prepare the host for running the containerized services
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
 ```
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system modify --vswitch_type ovs
-+----------------------+--------------------------------------+
-| Property             | Value                                |
-+----------------------+--------------------------------------+
-| contact              | None                                 |
-| created_at           | 2019-05-29T08:34:05.314720+00:00     |
-| description          | None                                 |
-| https_enabled        | False                                |
-| location             | None                                 |
-| name                 | a6b7c820-ef13-4260-b864-17b72c593898 |
-| region_name          | RegionOne                            |
-| sdn_enabled          | False                                |
-| security_feature     | spectre_meltdown_v1                  |
-| service_project_name | services                             |
-| software_version     | 19.01                                |
-| system_mode          | duplex                               |
-| system_type          | Standard                             |
-| timezone             | UTC                                  |
-| updated_at           | 2019-05-29T08:48:56.934789+00:00     |
-| uuid                 | d046949c-e16e-4475-bdee-f420a430fb00 |
-| vswitch_type         | ovs                                  |
-+----------------------+--------------------------------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-label-assign controller-0 openstack-control-plane=enabled
 +-------------+--------------------------------------+
 | Property    | Value                                |
@@ -1575,8 +1540,13 @@ controller-0:~$ source /etc/platform/openrc
 +-------------+--------------------------------------+
 ```
 
+#### Unlock Controller-0
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-0
 +---------------------+--------------------------------------------+
 | Property            | Value                                      |
@@ -1620,6 +1590,17 @@ controller-0:~$ source /etc/platform/openrc
 ```
 
 ```sh
+[wrsroot@localhost ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+## Install remaining hosts
+
+```sh
 user@workstation:~/stx-tools/deployment/libvirt$ ssh wrsroot@10.10.10.3                                                                                                         
 The authenticity of host '10.10.10.3 (10.10.10.3)' can't be established.
 ECDSA key fingerprint is SHA256:zmpmzT51KHw5VgFnH4J5fwAi5Q1hsYv2QSu03pKudyY.
@@ -1654,7 +1635,6 @@ WARNING: Unauthorized access to this system is forbidden and will be
 prosecuted by law. By accessing this system, you agree that your
 actions may be monitored if unauthorized usage is suspected.
 
-(reverse-i-search)`': ^C                                                                                                                                                        
 controller-0:~$ system host-list
 ```
 
@@ -1665,30 +1645,23 @@ controller-0:~$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
 +----+--------------+-------------+----------------+-------------+--------------+
+```
+
+### PXE boot hosts
+
+Power on the nodes... see procedure below.
+
+### Configure host personalities
+
+Power on controller-1
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | id | hostname     | personality | administrative | operational | availability |
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ sudo ufw disable^C
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | None         | None        | locked         | disabled    | offline      |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
@@ -1709,7 +1682,7 @@ controller-0:~$ system host-list
 | config_status       | None                                 |
 | config_target       | None                                 |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:10:07.675773+00:00     |
+| created_at          | 2019-05-29T14:05:53.758084+00:00     |
 | hostname            | controller-1                         |
 | id                  | 2                                    |
 | install_output      | text                                 |
@@ -1718,7 +1691,7 @@ controller-0:~$ system host-list
 | invprovision        | None                                 |
 | location            | {}                                   |
 | mgmt_ip             | 192.168.204.4                        |
-| mgmt_mac            | 52:54:00:2f:73:a8                    |
+| mgmt_mac            | 52:54:00:af:f3:e9                    |
 | operational         | disabled                             |
 | personality         | controller                           |
 | reserved            | False                                |
@@ -1730,19 +1703,14 @@ controller-0:~$ system host-list
 | ttys_dcd            | None                                 |
 | updated_at          | None                                 |
 | uptime              | 0                                    |
-| uuid                | 52fbdff9-f575-42ea-b882-20fecebc3a7c |
+| uuid                | ba798c74-978c-40bf-8530-ba638e5a3021 |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
 
+Power on storage-0
+
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | locked         | disabled    | offline      |
-+----+--------------+-------------+----------------+-------------+--------------+
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | id | hostname     | personality | administrative | operational | availability |
@@ -1754,7 +1722,7 @@ controller-0:~$ system host-list
 ```
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 3 personality=worker hostname=compute-0                                                                            
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 3 personality=storage 
 +---------------------+--------------------------------------+
 | Property            | Value                                |
 +---------------------+--------------------------------------+
@@ -1770,18 +1738,18 @@ controller-0:~$ system host-list
 | config_status       | None                                 |
 | config_target       | None                                 |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:12:09.750282+00:00     |
-| hostname            | compute-0                            |
+| created_at          | 2019-05-29T14:07:10.797882+00:00     |
+| hostname            | storage-0                            |
 | id                  | 3                                    |
 | install_output      | text                                 |
 | install_state       | None                                 |
 | install_state_info  | None                                 |
 | invprovision        | None                                 |
 | location            | {}                                   |
-| mgmt_ip             | 192.168.204.8                        |
-| mgmt_mac            | 52:54:00:77:70:e6                    |
+| mgmt_ip             | 192.168.204.9                        |
+| mgmt_mac            | 52:54:00:d2:e5:5b                    |
 | operational         | disabled                             |
-| personality         | worker                               |
+| personality         | storage                              |
 | reserved            | False                                |
 | rootfs_device       | sda                                  |
 | serialid            | None                                 |
@@ -1791,25 +1759,30 @@ controller-0:~$ system host-list
 | ttys_dcd            | None                                 |
 | updated_at          | None                                 |
 | uptime              | 0                                    |
-| uuid                | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid                | 62acd311-72fa-4535-b542-c5419c0df36a |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
+```
+
+Power on storage-1
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | id | hostname     | personality | administrative | operational | availability |
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
 | 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
+| 3  | storage-0    | storage     | locked         | disabled    | offline      |
 | 4  | None         | None        | locked         | disabled    | offline      |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 4 personality=worker hostname=compute-1
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 4 personality=storage  
 +---------------------+--------------------------------------+
 | Property            | Value                                |
-+---------------------+--------------------------------------+                                                                                                       [1174/1930]
++---------------------+--------------------------------------+
 | action              | none                                 |
 | administrative      | locked                               |
 | availability        | offline                              |
@@ -1822,8 +1795,8 @@ controller-0:~$ system host-list
 | config_status       | None                                 |
 | config_target       | None                                 |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:13:01.680278+00:00     |
-| hostname            | compute-1                            |
+| created_at          | 2019-05-29T14:08:09.929773+00:00     |
+| hostname            | storage-1                            |
 | id                  | 4                                    |
 | install_output      | text                                 |
 | install_state       | None                                 |
@@ -1831,7 +1804,65 @@ controller-0:~$ system host-list
 | invprovision        | None                                 |
 | location            | {}                                   |
 | mgmt_ip             | 192.168.204.14                       |
-| mgmt_mac            | 52:54:00:69:a0:5c                    |
+| mgmt_mac            | 52:54:00:7b:80:cd                    |
+| operational         | disabled                             |
+| personality         | storage                              |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | None                                 |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | None                                 |
+| uptime              | 0                                    |
+| uuid                | d472b007-f9d0-4947-bff0-6484ab7fa40e |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
+
+Power on compute-0
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | locked         | disabled    | offline      |
+| 3  | storage-0    | storage     | locked         | disabled    | offline      |
+| 4  | storage-1    | storage     | locked         | disabled    | offline      |
+| 5  | None         | None        | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 5 personality=worker hostname=compute-0
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | offline                              |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | None                                 |
+| config_status       | None                                 |
+| config_target       | None                                 |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-05-29T14:09:15.968293+00:00     |
+| hostname            | compute-0                            |
+| id                  | 5                                    |
+| install_output      | text                                 |
+| install_state       | None                                 |
+| install_state_info  | None                                 |
+| invprovision        | None                                 |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.10                       |
+| mgmt_mac            | 52:54:00:19:e2:ea                    |
 | operational         | disabled                             |
 | personality         | worker                               |
 | reserved            | False                                |
@@ -1843,63 +1874,12 @@ controller-0:~$ system host-list
 | ttys_dcd            | None                                 |
 | updated_at          | None                                 |
 | uptime              | 0                                    |
-| uuid                | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid                | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
-| 4  | compute-1    | worker      | locked         | disabled    | offline      |
-| 5  | None         | None        | locked         | disabled    | offline      |
-+----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 5 personality=storage                                                                                              
-+---------------------+--------------------------------------+
-| Property            | Value                                |
-+---------------------+--------------------------------------+
-| action              | none                                 |
-| administrative      | locked                               |
-| availability        | offline                              |
-| bm_ip               | None                                 |
-| bm_type             | None                                 |
-| bm_username         | None                                 |
-| boot_device         | sda                                  |
-| capabilities        | {}                                   |
-| config_applied      | None                                 |
-| config_status       | None                                 |
-| config_target       | None                                 |
-| console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:13:53.664236+00:00     |
-| hostname            | storage-0                            |
-| id                  | 5                                    |
-| install_output      | text                                 |
-| install_state       | None                                 |
-| install_state_info  | None                                 |
-| invprovision        | None                                 |
-| location            | {}                                   |
-| mgmt_ip             | 192.168.204.7                        |
-| mgmt_mac            | 52:54:00:df:ef:b5                    |
-| operational         | disabled                             |
-| personality         | storage                              |
-| reserved            | False                                |
-| rootfs_device       | sda                                  |
-| serialid            | None                                 |
-| software_load       | 19.01                                |
-| task                | None                                 |
-| tboot               | false                                |
-| ttys_dcd            | None                                 |
-| updated_at          | None                                 |
-| uptime              | 0                                    |
-| uuid                | 1190f0c2-1c5c-4017-95a0-f0c46c2ac2df |
-| vim_progress_status | None                                 |
-+---------------------+--------------------------------------+
-```
+Power on compute-1
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
@@ -1908,35 +1888,15 @@ controller-0:~$ system host-list
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
 | 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
-| 4  | compute-1    | worker      | locked         | disabled    | offline      |
-| 5  | storage-0    | storage     | locked         | disabled    | offline      |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
-| 4  | compute-1    | worker      | locked         | disabled    | offline      |
-| 5  | storage-0    | storage     | locked         | disabled    | offline      |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
-| 4  | compute-1    | worker      | locked         | disabled    | offline      |
-| 5  | storage-0    | storage     | locked         | disabled    | offline      |
+| 3  | storage-0    | storage     | locked         | disabled    | offline      |
+| 4  | storage-1    | storage     | locked         | disabled    | offline      |
+| 5  | compute-0    | worker      | locked         | disabled    | offline      |
 | 6  | None         | None        | locked         | disabled    | offline      |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 6 personality=storage                                                                                              
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-update 6 personality=worker hostname=compute-1
 +---------------------+--------------------------------------+
 | Property            | Value                                |
 +---------------------+--------------------------------------+
@@ -1952,18 +1912,18 @@ controller-0:~$ system host-list
 | config_status       | None                                 |
 | config_target       | None                                 |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:14:28.888055+00:00     |
-| hostname            | storage-1                            |
+| created_at          | 2019-05-29T14:10:23.228399+00:00     |
+| hostname            | compute-1                            |
 | id                  | 6                                    |
 | install_output      | text                                 |
 | install_state       | None                                 |
 | install_state_info  | None                                 |
 | invprovision        | None                                 |
 | location            | {}                                   |
-| mgmt_ip             | 192.168.204.12                       |
-| mgmt_mac            | 52:54:00:31:f2:21                    |
+| mgmt_ip             | 192.168.204.8                        |
+| mgmt_mac            | 52:54:00:bb:9b:06                    |
 | operational         | disabled                             |
-| personality         | storage                              |
+| personality         | worker                               |
 | reserved            | False                                |
 | rootfs_device       | sda                                  |
 | serialid            | None                                 |
@@ -1973,24 +1933,12 @@ controller-0:~$ system host-list
 | ttys_dcd            | None                                 |
 | updated_at          | None                                 |
 | uptime              | 0                                    |
-| uuid                | 5353214c-686e-47ef-847c-5cba7273290d |
+| uuid                | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
 ```
 
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | locked         | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | offline      |
-| 4  | compute-1    | worker      | locked         | disabled    | offline      |
-| 5  | storage-0    | storage     | locked         | disabled    | offline      |
-| 6  | storage-1    | storage     | locked         | disabled    | offline      |
-+----+--------------+-------------+----------------+-------------+--------------+
-```
+### Wait for hosts to become online
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-list
@@ -2004,6 +1952,9 @@ controller-0:~$ system host-list
 | 5  | storage-0    | storage     | locked         | disabled    | offline      |
 | 6  | storage-1    | storage     | locked         | disabled    | offline      |
 +----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-label-assign controller-1 openstack-control-plane=enabled
 +-------------+--------------------------------------+
