@@ -912,7 +912,7 @@ Error EINVAL: specified pgp_num 128 > pg_num 8
 
 Tried:
 
-- Lock (Fail), Unlock
+- Lock (Fail), Unlock Nodes
 
 Reboot controller-0
 
@@ -968,6 +968,16 @@ Cluster connection interrupted or timed out
 [wrsroot@controller-1 ~(keystone_admin)]$ ceph health
 ```
 
+Locked, Reinstall storage-0
+
+```sh
+Error: Unable to reinstall host: storage-0. Reason/Action: Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1
+```
+
+```sh
+[wrsroot@controller-1 ~(keystone_admin)]$ system host-reinstall storage-0
+Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1
+```
 
 6. Check that ceph reports HEALTH_OK via
 
