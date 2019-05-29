@@ -889,6 +889,15 @@ Error EINVAL: specified pgp_num 128 > pg_num 8
 Error EINVAL: specified pgp_num 128 > pg_num 8
 ```
 
+```sh
+200.004	compute-1 experienced a service-affecting failure. Auto-recovery in progress. Manual Lock and Unlock may be required if auto-recovery is unsuccessful.	host=compute-1	critical	2019-05-28T18:31:01.747027	
+200.005	compute-1 experienced a persistent critical 'Management Network' communication failure.	host=compute-1.network=Management	critical	2019-05-28T18:31:01.733037	
+270.001	Host compute-1 compute services failure, failed to disable nova services	host=compute-1.services=compute	critical	2019-05-28T16:07:35.022505	
+800.011	Loss of replication in replication group group-0: OSDs are down	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac.peergroup=group-0.host=storage-1	major	2019-05-28T18:51:07.786088	
+800.011	Loss of replication in replication group group-1: peer host down	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac.peergroup=group-1	major	2019-05-28T16:04:04.757143	
+200.006	compute-1 is degraded due to the failure of its 'pci-irq-affinity-agent' process. Auto recovery of this major process is in progress.	host=compute-1.process=pci-irq-affinity-agent	major	2019-05-28T18:50:32.852847
+```
+
 6. Check that ceph reports HEALTH_OK via
 
 ```sh
