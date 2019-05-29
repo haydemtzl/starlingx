@@ -1,3 +1,76 @@
+# Installing StarlingX with containers: Standard Storage configuration
+
+## Setup Controller-0
+
+### Install StarlingX
+
+1. bootimage.iso
+2. Use password _St4rlingX*_
+
+### Bootstrap the controller
+
+```sh
+localhost:~$ ip a
+```
+
+```sh
+localhost:~$ sudo ip address add 10.10.10.10/24 dev enp2s1
+localhost:~$ sudo ip link set up dev enp2s1
+localhost:~$ sudo ip route add default via 10.10.10.1 dev enp2s1
+localhost:~$ ping 8.8.8.8
+localhost:~$ ping 10.248.2.1
+localhost:~$ ping 10.22.224.196
+```
+
+```sh
+user@workstation:~$ ssh wrsroot@10.10.10.10
+
+WARNING: Unauthorized access to this system is forbidden and will be
+prosecuted by law. By accessing this system, you agree that your
+actions may be monitored if unauthorized usage is suspected.
+
+localhost:~$ 
+````
+
+```sh
+localhost:~$ vi /home/wrsroot/localhost.yml
+```
+
+```yaml
+system_mode: duplex
+
+dns_servers:
+  - 10.248.2.1
+  - 10.22.224.196
+
+docker_http_proxy: http://proxy-chain.intel.com:911
+docker_https_proxy: http://proxy-chain.intel.com:912
+docker_no_proxy:
+  - localhost
+  - 127.0.0.1
+  - 192.168.204.2
+  - 192.168.204.3
+  - 192.168.204.4
+  - 10.10.10.3
+  - 10.10.10.4
+  - 10.10.10.5
+
+external_oam_subnet: 10.10.10.0/24
+external_oam_gateway_address: 10.10.10.1
+external_oam_floating_address: 10.10.10.3
+
+ansible_become_pass: St4rlingX*
+admin_password: St4rlingX*
+```
+
+```sh
+localhost:~$ ansible-playbook /usr/share/ansible/stx-ansible/playbooks/bootstrap/bootstrap.yml -e "ansible_become_pass=St4rlingX*"
+```
+
+### Provisioning Controller-0
+
+#### Configure OAM, Management and Cluster interfaces
+
 ```sh
 user@workstation:~/stx-tools/deployment/libvirt$ ssh wrsroot@10.10.10.10
 The authenticity of host '10.10.10.10 (10.10.10.10)' can't be established.
