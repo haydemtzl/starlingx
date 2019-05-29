@@ -67,6 +67,1278 @@ admin_password: St4rlingX*
 localhost:~$ ansible-playbook /usr/share/ansible/stx-ansible/playbooks/bootstrap/bootstrap.yml -e "ansible_become_pass=St4rlingX*"
 ```
 
+```sh
+localhost:~$ ansible-playbook /usr/share/ansible/stx-ansible/playbooks/bootstrap/bootstrap.yml -e "ansible_become_pass=St4rlingX*"
+
+PLAY [bootstrap] ***************************************************************************************************************************************************************
+
+TASK [include_vars] ************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [include_vars] ************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Update SSH known hosts] ************************************************************************************************************************************
+
+TASK [prepare-env : Check connectivity] ****************************************************************************************************************************************
+
+TASK [prepare-env : Fail if host is unreachable] *******************************************************************************************************************************
+
+TASK [prepare-env : debug] *****************************************************************************************************************************************************
+
+TASK [prepare-env : Change initial password] ***********************************************************************************************************************************
+
+TASK [prepare-env : Look for unmistakenly StarlingX package] *******************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Fail if host is not running the right image] ***************************************************************************************************************
+
+TASK [prepare-env : Check initial config flag] *********************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Set skip_play flag for host] *******************************************************************************************************************************
+
+TASK [prepare-env : Skip remaining tasks if host is already unlocked] **********************************************************************************************************
+
+TASK [prepare-env : Fail if any of the mandatory configurations are not defined] ***********************************************************************************************
+
+TASK [prepare-env : Set initial address facts if not defined. They will be updated later] **************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Set docker registries to default values if not specified] **************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Initialize some flags to be used in subsequent roles/tasks] ************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Set initial facts] *****************************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Turn on use_docker_proxy flag] *****************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Set default values for docker proxies if not defined] ******************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Retrieve software version number] **************************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Fail if software version is not defined] *******************************************************************************************************************
+
+TASK [prepare-env : Retrieve system type] **************************************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Fail if system type is not defined] ************************************************************************************************************************
+
+TASK [prepare-env : Set software version, system type config path facts] *******************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Set config path facts] *************************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Check Docker status] ***************************************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Look for openrc file] **************************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Turn on replayed flag] *************************************************************************************************************************************
+
+TASK [prepare-env : Check if the controller-0 host has been successfully provisioned] ******************************************************************************************
+
+TASK [prepare-env : Set flag to indicate that this host has been previously configured] ****************************************************************************************
+
+TASK [prepare-env : Find previous config file for this host] *******************************************************************************************************************
+
+                                                                                                                                                                      [964/1922]
+TASK [prepare-env : Fetch previous config file from this host] *****************************************************************************************************************
+
+TASK [prepare-env : Read in last config values] ********************************************************************************************************************************
+
+TASK [prepare-env : Turn on system attributes reconfiguration flag] ************************************************************************************************************
+
+TASK [prepare-env : Turn on docker reconfiguration flag if docker config is changed] *******************************************************************************************
+
+TASK [prepare-env : Turn on service endpoints reconfiguration flag if management and/or oam network config is changed] *********************************************************
+
+TASK [prepare-env : Turn on network reconfiguration flag if any of the network related config is changed] **********************************************************************
+
+TASK [prepare-env : Turn on restart services flag if management/oam/cluster network or docker config is changed] ***************************************************************
+
+TASK [prepare-env : Turn off save_password flag if admin password has not changed] *********************************************************************************************
+
+TASK [prepare-env : Turn off save_config flag if system, network, and docker configurations have not changed] ******************************************************************
+
+TASK [prepare-env : debug] *****************************************************************************************************************************************************
+
+TASK [prepare-env : Turn on skip_play flag] ************************************************************************************************************************************
+
+TASK [prepare-env : Check volume groups] ***************************************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Fail if volume groups are not configured] ******************************************************************************************************************
+
+TASK [prepare-env : Check size of root disk] ***********************************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : Update root disk index for remote play] ********************************************************************************************************************
+
+TASK [prepare-env : Set root disk and root disk size facts] ********************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : debug] *****************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "[WARNING]: Root disk /dev/sda size is 250GB which is less than the standard size of 500GB. Please consult the Software Installation Guide for details."
+}
+
+TASK [prepare-env : Look for branding tar file] ********************************************************************************************************************************
+ok: [localhost]
+
+TASK [prepare-env : Fail if there are more than one branding tar files] ********************************************************************************************************
+
+TASK [prepare-env : Look for other branding files] *****************************************************************************************************************************
+ok: [localhost]
+
+                                                                                                                                                                      [916/1922]
+TASK [prepare-env : Fail if the branding filename is not valid] ****************************************************************************************************************
+
+TASK [prepare-env : Mark environment as Ansible bootstrap] *********************************************************************************************************************
+changed: [localhost]
+
+TASK [prepare-env : debug] *****************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "system_config_update flag: False, network_config_update flag: False, docker_config_update flag: False, restart_services flag:  False, endpoints_reconfiguration_flag
+: False, save_password flag: True, save_config flag: True, skip_play flag: False"
+}
+
+TASK [validate-config : debug] *************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": [
+        "System mode is simplex", 
+        "Timezone is UTC", 
+        "DNS servers is [u'10.248.2.1', u'10.22.224.196']", 
+        "PXE boot subnet is 169.254.202.0/24", 
+        "Management subnet is 192.168.204.0/28", 
+        "Cluster host subnet is 192.168.206.0/24", 
+        "Cluster pod subnet is 172.16.0.0/16", 
+        "Cluster service subnet is 10.96.0.0/12", 
+        "OAM subnet is 10.10.10.0/24", 
+        "OAM gateway is 10.10.10.1", 
+        "OAM floating ip is 10.10.10.3", 
+        "Dynamic address allocation is True", 
+        "Docker registries is [u'k8s.gcr.io', u'gcr.io', u'quay.io', u'docker.io']", 
+        "Docker HTTP proxy is http://proxy-chain.intel.com:911", 
+        "Docker HTTPS proxy is http://proxy-chain.intel.com:912", 
+        "Docker no proxy list is [u'localhost', u'127.0.0.1', u'192.168.204.2', u'192.168.204.3', u'192.168.204.4', u'10.10.10.3', u'10.10.10.4', u'10.10.10.5']"
+    ]
+}
+
+TASK [validate-config : Set system mode fact] **********************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : debug] *************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "System type is Standard, system mode will be set to duplex."
+}
+
+TASK [validate-config : Set system mode to duplex for Standard system] *********************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate system mode if system type is All-in-one] *****************************************************************************************************
+
+TASK [validate-config : Checking registered timezones] *************************************************************************************************************************
+
+TASK [validate-config : Fail if provided timezone is unknown] ******************************************************************************************************************
+
+TASK [validate-config : Fail if the number of dns servers provided is not at least 1 and no more than 3] ***********************************************************************
+
+TASK [validate-config : include] ***********************************************************************************************************************************************
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_dns.yml for localhost => (item=10.248.2.1)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_dns.yml for localhost => (item=10.22.224.196)
+
+TASK [validate-config : Check format of DNS Server IP] *************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "DNS Server: 10.248.2.1"
+}
+
+TASK [validate-config : Perform ping test] *************************************************************************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Fail if DNS Server is unreachable] *********************************************************************************************************************
+
+TASK [validate-config : Check format of DNS Server IP] *************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "DNS Server: 10.22.224.196"
+}
+
+TASK [validate-config : Perform ping test] *************************************************************************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Fail if DNS Server is unreachable] *********************************************************************************************************************
+
+TASK [validate-config : Validate provided subnets (both IPv4 & IPv6 notations)] ************************************************************************************************
+ok: [localhost] => (item={'value': u'10.10.10.0/24', 'key': u'external_oam_subnet'}) => {
+    "msg": "external_oam_subnet: 10.10.10.0/24"
+}
+ok: [localhost] => (item={'value': u'192.168.206.0/24', 'key': u'cluster_host_subnet'}) => {
+    "msg": "cluster_host_subnet: 192.168.206.0/24"
+}
+ok: [localhost] => (item={'value': u'10.10.10.1', 'key': u'external_oam_gateway_address'}) => {
+    "msg": "external_oam_gateway_address: 10.10.10.1"
+}
+ok: [localhost] => (item={'value': u'10.96.0.0/12', 'key': u'cluster_service_subnet'}) => {
+    "msg": "cluster_service_subnet: 10.96.0.0/12"
+}
+ok: [localhost] => (item={'value': u'169.254.202.0/24', 'key': u'pxeboot_subnet'}) => {
+    "msg": "pxeboot_subnet: 169.254.202.0/24"
+}
+ok: [localhost] => (item={'value': u'239.1.1.0/28', 'key': u'management_multicast_subnet'}) => {
+    "msg": "management_multicast_subnet: 239.1.1.0/28"
+
+}
+ok: [localhost] => (item={'value': u'192.168.204.0/28', 'key': u'management_subnet'}) => {
+    "msg": "management_subnet: 192.168.204.0/28"
+}
+ok: [localhost] => (item={'value': u'172.16.0.0/16', 'key': u'cluster_pod_subnet'}) => {
+    "msg": "cluster_pod_subnet: 172.16.0.0/16"
+}
+ok: [localhost] => (item={'value': u'10.10.10.3', 'key': u'external_oam_floating_address'}) => {
+    "msg": "external_oam_floating_address: 10.10.10.3"
+}
+
+TASK [validate-config : Fail if cluster pod/service subnet size is too small (minimum size = 65536)] ***************************************************************************
+
+TASK [validate-config : Fail if pxeboot/management/multicast subnet size is too small (minimum size = 16)] *********************************************************************
+
+TASK [validate-config : Fail if the size of the remaining subnets is too small (minimum size = 8)] *****************************************************************************
+
+TASK [validate-config : Generate warning if subnet prefix is not typical for Standard systems] *********************************************************************************
+ok: [localhost] => (item=192.168.204.0/28) => {
+    "msg": "WARNING: Subnet prefix of less than /24 is not typical. This will affect scaling of the system!"
+}
+ok: [localhost] => (item=239.1.1.0/28) => {
+    "msg": "WARNING: Subnet prefix of less than /24 is not typical. This will affect scaling of the system!"
+}
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Fail if IPv6 management on simplex] ********************************************************************************************************************
+
+TASK [validate-config : Fail if IPv6 prefix length is too short] ***************************************************************************************************************
+
+TASK [validate-config : Update localhost name ip mapping for IPv6] *************************************************************************************************************
+
+TASK [validate-config : Fail if address allocation is misconfigured] ***********************************************************************************************************
+
+TASK [validate-config : Set default start and end addresses based on provided subnets] *****************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Build address pairs for validation, merging default and user provided values] **************************************************************************
+ok: [localhost]
+
+TASK [validate-config : include] ***********************************************************************************************************************************************
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'oam_node', 'value': {u'use_
+default': True, u'start': u'10.10.10.4', u'end': u'10.10.10.5', u'subnet': u'10.10.10.0/24'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'cluster_pod', 'value': {u'u
+se_default': True, u'start': u'172.16.0.1', u'end': u'172.16.255.254', u'subnet': u'172.16.0.0/16'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'management', 'value': {u'us
+e_default': True, u'start': u'192.168.204.2', u'end': u'192.168.204.14', u'subnet': u'192.168.204.0/28'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'multicast', 'value': {u'use
+_default': True, u'start': u'239.1.1.1', u'end': u'239.1.1.14', u'subnet': u'239.1.1.0/28'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'cluster_service', 'value': 
+{u'use_default': True, u'start': u'10.96.0.1', u'end': u'10.111.255.254', u'subnet': u'10.96.0.0/12'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'oam', 'value': {u'use_defau
+lt': True, u'start': u'10.10.10.1', u'end': u'10.10.10.254', u'subnet': u'10.10.10.0/24'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'cluster_host', 'value': {u'
+use_default': True, u'start': u'192.168.206.2', u'end': u'192.168.206.254', u'subnet': u'192.168.206.0/24'}})
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address_range.yml for localhost => (item={'key': u'pxeboot', 'value': {u'use_d
+efault': True, u'start': u'169.254.202.2', u'end': u'169.254.202.254', u'subnet': u'169.254.202.0/24'}})
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate oam_node start and end address format] ********************************************************************************************************
+
+TASK [validate-config : Validate oam_node start and end range] *****************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate cluster_pod start and end address format] *****************************************************************************************************
+
+TASK [validate-config : Validate cluster_pod start and end range] **************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate management start and end address format] ******************************************************************************************************
+
+TASK [validate-config : Validate management start and end range] ***************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate multicast start and end address format] *******************************************************************************************************
+
+
+TASK [validate-config : Validate multicast start and end range] ****************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate cluster_service start and end address format] *************************************************************************************************
+
+TASK [validate-config : Validate cluster_service start and end range] **********************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate oam start and end address format] *************************************************************************************************************
+
+TASK [validate-config : Validate oam start and end range] **********************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate cluster_host start and end address format] ****************************************************************************************************
+
+TASK [validate-config : Validate cluster_host start and end range] *************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate pxeboot start and end address format] *********************************************************************************************************
+
+TASK [validate-config : Validate pxeboot start and end range] ******************************************************************************************************************
+
+TASK [validate-config : Fail if address range did not meet required criteria] **************************************************************************************************
+
+TASK [validate-config : Set floating addresses based on subnets or start addresses] ********************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Set derived facts for subsequent tasks/roles] **********************************************************************************************************
+ok: [localhost]
+
+                                                                                                                                                                      [683/1922]
+TASK [validate-config : Set facts for IP address provisioning against loopback interface] **************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Set default no-proxy address list (non simplex)] *******************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Validate http proxy urls] ******************************************************************************************************************************
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_url.yml for localhost => (item=http://proxy-chain.intel.com:911)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_url.yml for localhost => (item=http://proxy-chain.intel.com:912)
+
+TASK [validate-config : Check if the supplied proxy is a valid URL] ************************************************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Fail if proxy has the wrong format] ********************************************************************************************************************
+
+TASK [validate-config : Check if the supplied proxy is a valid URL] ************************************************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Fail if proxy has the wrong format] ********************************************************************************************************************
+
+TASK [validate-config : Validate no proxy addresses] ***************************************************************************************************************************
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=localhost)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=127.0.0.1)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=192.168.204.2)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=192.168.204.3)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=192.168.204.4)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=10.10.10.3)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=10.10.10.4)
+included: /usr/share/ansible/stx-ansible/playbooks/bootstrap/roles/validate-config/tasks/validate_address.yml for localhost => (item=10.10.10.5)
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+                                                                                                                                                                      [636/1922]
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Check if the supplied address is a valid domain name or ipv4 address] **********************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Check if the supplied address is of ipv6 with port format] *********************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6] ******************************************************************************************************
+
+TASK [validate-config : Fail if the supplied address is not a valid ipv6 with port] ********************************************************************************************
+
+TASK [validate-config : Add user defined no-proxy address list to default] *****************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Fail if secure registry flag is misconfigured] *********************************************************************************************************
+
+TASK [validate-config : Default the unified registry to secure if not specified] ***********************************************************************************************
+
+TASK [validate-config : Turn on use_unified_registry flag] *********************************************************************************************************************
+
+TASK [validate-config : Update use_default_registries flag] ********************************************************************************************************************
+
+TASK [validate-config : include] ***********************************************************************************************************************************************
+
+TASK [validate-config : set_fact] **********************************************************************************************************************************************
+ok: [localhost]
+
+TASK [validate-config : Check if images archive location exists] ***************************************************************************************************************
+
+TASK [validate-config : Get list of archived files] ****************************************************************************************************************************
+
+TASK [validate-config : Turn on images archive flag] ***************************************************************************************************************************
+
+TASK [validate-config : Create config workdir] *********************************************************************************************************************************
+changed: [localhost]
+
+TASK [validate-config : Generate config ini file for python sysinv db population script] ***************************************************************************************
+changed: [localhost] => (item=[BOOTSTRAP_CONFIG])
+changed: [localhost] => (item=CONTROLLER_HOSTNAME=controller-0)
+changed: [localhost] => (item=SYSTEM_TYPE=Standard)
+changed: [localhost] => (item=SYSTEM_MODE=duplex)
+changed: [localhost] => (item=TIMEZONE=UTC)
+changed: [localhost] => (item=SW_VERSION=19.01)
+changed: [localhost] => (item=NAMESERVERS=10.248.2.1,10.22.224.196)
+changed: [localhost] => (item=PXEBOOT_SUBNET=169.254.202.0/24)
+changed: [localhost] => (item=PXEBOOT_START_ADDRESS=169.254.202.2)
+changed: [localhost] => (item=PXEBOOT_END_ADDRESS=169.254.202.254)
+changed: [localhost] => (item=MANAGEMENT_SUBNET=192.168.204.0/28)
+changed: [localhost] => (item=MANAGEMENT_START_ADDRESS=192.168.204.2)
+changed: [localhost] => (item=MANAGEMENT_END_ADDRESS=192.168.204.14)
+changed: [localhost] => (item=DYNAMIC_ADDRESS_ALLOCATION=True)
+changed: [localhost] => (item=MANAGEMENT_INTERFACE=lo)
+changed: [localhost] => (item=CONTROLLER_0_ADDRESS=192.168.204.3)
+changed: [localhost] => (item=CLUSTER_HOST_SUBNET=192.168.206.0/24)
+changed: [localhost] => (item=CLUSTER_HOST_START_ADDRESS=192.168.206.2)
+changed: [localhost] => (item=CLUSTER_HOST_END_ADDRESS=192.168.206.254)
+changed: [localhost] => (item=CLUSTER_POD_SUBNET=172.16.0.0/16)
+changed: [localhost] => (item=CLUSTER_POD_START_ADDRESS=172.16.0.1)
+changed: [localhost] => (item=CLUSTER_POD_END_ADDRESS=172.16.255.254)
+changed: [localhost] => (item=CLUSTER_SERVICE_SUBNET=10.96.0.0/12)
+changed: [localhost] => (item=CLUSTER_SERVICE_START_ADDRESS=10.96.0.1)
+changed: [localhost] => (item=CLUSTER_SERVICE_END_ADDRESS=10.96.0.1)
+changed: [localhost] => (item=EXTERNAL_OAM_SUBNET=10.10.10.0/24)
+changed: [localhost] => (item=EXTERNAL_OAM_START_ADDRESS=10.10.10.1)
+changed: [localhost] => (item=EXTERNAL_OAM_END_ADDRESS=10.10.10.254)
+changed: [localhost] => (item=EXTERNAL_OAM_GATEWAY_ADDRESS=10.10.10.1)
+changed: [localhost] => (item=EXTERNAL_OAM_FLOATING_ADDRESS=10.10.10.3)
+changed: [localhost] => (item=EXTERNAL_OAM_0_ADDRESS=10.10.10.4)
+changed: [localhost] => (item=EXTERNAL_OAM_1_ADDRESS=10.10.10.5)
+changed: [localhost] => (item=MANAGEMENT_MULTICAST_SUBNET=239.1.1.0/28)
+changed: [localhost] => (item=MANAGEMENT_MULTICAST_START_ADDRESS=239.1.1.1)
+changed: [localhost] => (item=MANAGEMENT_MULTICAST_END_ADDRESS=239.1.1.14)
+changed: [localhost] => (item=DOCKER_HTTP_PROXY=http://proxy-chain.intel.com:911)
+changed: [localhost] => (item=DOCKER_HTTPS_PROXY=http://proxy-chain.intel.com:912)
+changed: [localhost] => (item=DOCKER_NO_PROXY=localhost,127.0.0.1,192.168.204.2,192.168.204.3,10.10.10.3,10.10.10.4,192.168.204.4,10.10.10.5)
+changed: [localhost] => (item=DOCKER_REGISTRIES=k8s.gcr.io,gcr.io,quay.io,docker.io)
+changed: [localhost] => (item=USE_DEFAULT_REGISTRIES=True)
+changed: [localhost] => (item=IS_SECURE_REGISTRY=True)
+changed: [localhost] => (item=RECONFIGURE_ENDPOINTS=False)
+
+TASK [validate-config : Write simplex flag] ************************************************************************************************************************************
+changed: [localhost]
+
+TASK [store-passwd : debug] ****************************************************************************************************************************************************
+
+TASK [store-passwd : set_fact] *************************************************************************************************************************************************
+
+TASK [store-passwd : Print warning if admin credentials are not stored in vault] ***********************************************************************************************
+ok: [localhost] => {
+    "msg": "[WARNING: Default admin username and password (unencrypted) are used. Consider storing both of these variables in Ansible vault.]"
+}
+
+TASK [store-passwd : Set admin username and password facts] ********************************************************************************************************************
+ok: [localhost]
+
+TASK [store-passwd : Look for password rules file] *****************************************************************************************************************************
+ok: [localhost]
+
+TASK [store-passwd : Fail if password rules file is missing] *******************************************************************************************************************
+
+TASK [store-passwd : Get password rules] ***************************************************************************************************************************************
+changed: [localhost]
+
+TASK [store-passwd : Get password rules description] ***************************************************************************************************************************
+changed: [localhost]
+
+TASK [store-passwd : Set password regex facts] *********************************************************************************************************************************
+ok: [localhost]
+
+TASK [store-passwd : Fail if password regex cannot be found] *******************************************************************************************************************
+
+TASK [store-passwd : Set password regex description fact] **********************************************************************************************************************
+
+TASK [store-passwd : Validate admin password] **********************************************************************************************************************************
+changed: [localhost]
+
+TASK [store-passwd : Fail if provided admin password does not meet required complexity] ****************************************************************************************
+
+TASK [store-passwd : Store admin password] *************************************************************************************************************************************
+changed: [localhost]
+
+TASK [apply-bootstrap-manifest : Create config workdir] ************************************************************************************************************************
+changed: [localhost]
+
+TASK [apply-bootstrap-manifest : Generating static config data] ****************************************************************************************************************
+changed: [localhost]
+
+TASK [apply-bootstrap-manifest : Fail if static hieradata cannot be generated] *************************************************************************************************
+
+TASK [apply-bootstrap-manifest : Applying puppet bootstrap manifest] ***********************************************************************************************************
+changed: [localhost]
+
+TASK [apply-bootstrap-manifest : debug] ****************************************************************************************************************************************
+ok: [localhost] => {
+    "bootstrap_manifest": {
+        "changed": true, 
+        "cmd": [                                                                                                                                                      [452/1922]
+            "/usr/local/bin/puppet-manifest-apply.sh", 
+            "/tmp/hieradata", 
+            "192.168.204.3", 
+            "controller", 
+            "ansible_bootstrap", 
+            ">", 
+            "/tmp/apply_manifest.log"
+        ], 
+        "delta": "0:02:13.051606", 
+        "end": "2019-05-29 13:31:29.173395", 
+        "failed": false, 
+        "rc": 0, 
+        "start": "2019-05-29 13:29:16.121789", 
+        "stderr": "cp: cannot stat ‘/tmp/hieradata/192.168.204.3.yaml’: No such file or directory\ncp: cannot stat ‘/tmp/hieradata/system.yaml’: No such file or directory\ncp: 
+cannot stat ‘/tmp/hieradata/secure_system.yaml’: No such file or directory\ncp: cannot stat ‘>’: No such file or directory", 
+        "stderr_lines": [
+            "cp: cannot stat ‘/tmp/hieradata/192.168.204.3.yaml’: No such file or directory", 
+            "cp: cannot stat ‘/tmp/hieradata/system.yaml’: No such file or directory", 
+            "cp: cannot stat ‘/tmp/hieradata/secure_system.yaml’: No such file or directory", 
+            "cp: cannot stat ‘>’: No such file or directory"
+        ], 
+        "stdout": "Applying puppet ansible_bootstrap manifest...\n[DONE]", 
+        "stdout_lines": [
+            "Applying puppet ansible_bootstrap manifest...", 
+            "[DONE]"
+        ]
+    }
+}
+
+TASK [apply-bootstrap-manifest : Fail if puppet manifest apply script returns an error] ****************************************************************************************
+
+TASK [apply-bootstrap-manifest : Ensure Puppet directory exists] ***************************************************************************************************************
+changed: [localhost]
+
+TASK [apply-bootstrap-manifest : Persist puppet working files] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Delete the previous python_keyring directory if exists] *************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Persist keyring data] ***********************************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Ensure replicated config parent directory exists] *******************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Get list of new config files] ***************************************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Remove existing config files from permanent location] ***************************************************************************************************
+ok: [localhost] => (item={u'rusr': True, u'uid': 0, u'rgrp': True, u'xoth': False, u'islnk': False, u'woth': False, u'nlink': 1, u'issock': False, u'mtime': 1559136552.668, u'g
+r_name': u'root', u'path': u'/tmp/config/bootstrap_config', u'xusr': False, u'atime': 1559136552.668, u'inode': 80565, u'isgid': False, u'size': 1545, u'isdir': False, u'ctime'
+: 1559136552.668, u'roth': True, u'isblk': False, u'xgrp': False, u'isuid': False, u'dev': 34, u'wgrp': False, u'isreg': True, u'isfifo': False, u'mode': u'0644', u'pw_name': u
+'root', u'gid': 0, u'ischr': False, u'wusr': True})
+ok: [localhost] => (item={u'rusr': True, u'uid': 0, u'rgrp': True, u'xoth': True, u'islnk': False, u'woth': False, u'nlink': 2, u'issock': False, u'mtime': 1559136555.338, u'gr
+_name': u'root', u'path': u'/tmp/config/ssh_config', u'xusr': True, u'atime': 1559136555.272, u'inode': 83007, u'isgid': False, u'size': 120, u'isdir': True, u'ctime': 15591365
+55.338, u'roth': True, u'isblk': False, u'xgrp': True, u'isuid': False, u'dev': 34, u'wgrp': False, u'isreg': False, u'isfifo': False, u'mode': u'0755', u'pw_name': u'root', u'
+gid': 0, u'ischr': False, u'wusr': True})
+
+TASK [persist-config : Move new config files to permanent location] ************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Delete working config directory] ************************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Set Postgres, PXE, branding config directory fact] ******************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : debug] **************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "postgres_config_dir: /opt/platform/config/19.01/postgresql pxe_config_dir: /opt/platform/config/19.01/pxelinux.cfg branding_config_dir: /opt/platform/config/19.01/p
+xelinux.cfg"
+}
+
+TASK [persist-config : Ensure Postres, PXE config directories exist] ***********************************************************************************************************
+changed: [localhost] => (item=/opt/platform/config/19.01/postgresql)
+changed: [localhost] => (item=/opt/platform/config/19.01/pxelinux.cfg)
+
+TASK [persist-config : Get list of Postgres conf files] ************************************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Copy postgres conf files for mate] **********************************************************************************************************************
+changed: [localhost] => (item={u'rusr': True, u'uid': 120, u'rgrp': True, u'xoth': False, u'islnk': False, u'woth': False, u'nlink': 1, u'issock': False, u'mtime': 1559136606.4
+78, u'gr_name': u'postgres', u'path': u'/etc/postgresql/pg_hba.conf', u'xusr': False, u'atime': 1559136606.669, u'inode': 669951, u'isgid': False, u'size': 929, u'isdir': False
+, u'ctime': 1559136606.481, u'roth': False, u'isblk': False, u'xgrp': False, u'isuid': False, u'dev': 2051, u'wgrp': False, u'isreg': True, u'isfifo': False, u'mode': u'0640', 
+u'pw_name': u'postgres', u'gid': 120, u'ischr': False, u'wusr': True})
+changed: [localhost] => (item={u'rusr': True, u'uid': 120, u'rgrp': True, u'xoth': False, u'islnk': False, u'woth': False, u'nlink': 1, u'issock': False, u'mtime': 1559136606.4
+64, u'gr_name': u'postgres', u'path': u'/etc/postgresql/pg_ident.conf', u'xusr': False, u'atime': 1559136606.669, u'inode': 669952, u'isgid': False, u'size': 47, u'isdir': Fals
+e, u'ctime': 1559136606.467, u'roth': False, u'isblk': False, u'xgrp': False, u'isuid': False, u'dev': 2051, u'wgrp': False, u'isreg': True, u'isfifo': False, u'mode': u'0640',
+ u'pw_name': u'postgres', u'gid': 120, u'ischr': False, u'wusr': True})
+changed: [localhost] => (item={u'rusr': True, u'uid': 120, u'rgrp': False, u'xoth': False, u'islnk': False, u'woth': False, u'nlink': 1, u'issock': False, u'mtime': 1559136606.
+473, u'gr_name': u'postgres', u'path': u'/etc/postgresql/postgresql.conf', u'xusr': False, u'atime': 1559136606.657, u'inode': 669945, u'isgid': False, u'size': 20195, u'isdir'
+: False, u'ctime': 1559136606.473, u'roth': False, u'isblk': False, u'xgrp': False, u'isuid': False, u'dev': 2051, u'wgrp': False, u'isreg': True, u'isfifo': False, u'mode': u'
+0600', u'pw_name': u'postgres', u'gid': 120, u'ischr': False, u'wusr': True})
+
+TASK [persist-config : Create a symlink to PXE config files] *******************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Check if copying of branding files for mate is required] ************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Ensure branding config directory exists] ****************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Check if horizon-region-exclusion.csv file exists] ******************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Copy horizon-region-exclusions.csv if exists] ***********************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Check if branding tar files exist (there should be only one)] *******************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Copy branding tar files] ********************************************************************************************************************************
+
+TASK [persist-config : Get grub default kernel] ********************************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Add default security feature to kernel parameters] ******************************************************************************************************
+changed: [localhost] => (item=grubby --update-kernel=/boot/vmlinuz-3.10.0-957.1.3.el7.1.tis.x86_64 --args='nopti nospectre_v2')
+changed: [localhost] => (item=grubby --efi --update-kernel=/boot/vmlinuz-3.10.0-957.1.3.el7.1.tis.x86_64 --args='nopti nospectre_v2')
+
+TASK [persist-config : Resize filesystems (default)] ***************************************************************************************************************************
+changed: [localhost] => (item=lvextend -L20G /dev/cgts-vg/pgsql-lv)
+changed: [localhost] => (item=lvextend -L10G /dev/cgts-vg/cgcs-lv)
+changed: [localhost] => (item=lvextend -L16G /dev/cgts-vg/dockerdistribution-lv)
+changed: [localhost] => (item=lvextend -L40G /dev/cgts-vg/backup-lv)
+changed: [localhost] => (item=drbdadm -- --assume-peer-has-space resize all)
+changed: [localhost] => (item=resize2fs /dev/drbd0)
+changed: [localhost] => (item=resize2fs /dev/drbd3)
+changed: [localhost] => (item=resize2fs /dev/drbd8)
+
+TASK [persist-config : Further resize if root disk size is larger than 240G] ***************************************************************************************************
+changed: [localhost] => (item=lvextend -L40G /dev/cgts-vg/pgsql-lv)
+changed: [localhost] => (item=lvextend -L20G /dev/cgts-vg/cgcs-lv)
+changed: [localhost] => (item=lvextend -L50G /dev/cgts-vg/backup-lv)
+changed: [localhost] => (item=drbdadm -- --assume-peer-has-space resize all)
+changed: [localhost] => (item=resize2fs /dev/drbd0)
+changed: [localhost] => (item=resize2fs /dev/drbd3)
+
+TASK [persist-config : Set input parameters to populate config script] *********************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Update input parameters with reconfigure system flag] ***************************************************************************************************
+
+TASK [persist-config : Update input parameters with reconfigure network flag] **************************************************************************************************
+
+TASK [persist-config : Update input parameters with reconfigure service flag] **************************************************************************************************
+
+TASK [persist-config : Update input parameters if config from previous play is missing] ****************************************************************************************
+
+TASK [persist-config : debug] **************************************************************************************************************************************************
+ok: [localhost] => {
+    "script_input": "/opt/platform/config/19.01/bootstrap_config"
+}
+
+TASK [persist-config : Shutdown Maintenance services] **************************************************************************************************************************
+
+TASK [persist-config : Shutdown FM services] ***********************************************************************************************************************************
+
+TASK [persist-config : Shut down and remove Kubernetes components] *************************************************************************************************************
+
+TASK [persist-config : Clear etcd data cache] **********************************************************************************************************************************
+
+TASK [persist-config : Restart etcd] *******************************************************************************************************************************************
+
+TASK [persist-config : Set facts derived from previous network configurations] *************************************************************************************************
+
+TASK [persist-config : Set facts derived from previous floating addresses] *****************************************************************************************************
+
+TASK [persist-config : Set facts for the removal of addresses assigned to loopback interface] **********************************************************************************
+
+TASK [persist-config : Remove loopback interface in sysinv db and associated addresses] ****************************************************************************************
+
+TASK [persist-config : Remove the .config_applied flag from previous run before reconfiguring service endpoints] ***************************************************************
+
+TASK [persist-config : Add the new management address for service endpoints reconfiguration] ***********************************************************************************
+
+TASK [persist-config : Saving config in sysinv database] ***********************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : debug] **************************************************************************************************************************************************
+ok: [localhost] => {
+    "populate_result": {
+        "changed": true, 
+        "failed": false, 
+        "failed_when_result": false, 
+        "rc": 0, 
+        "stderr": "", 
+        "stderr_lines": [], 
+        "stdout": "Populating system config...\nPopulating load config...\nPopulating management network...\nPopulating pxeboot network...\nPopulating oam network...\nPopulatin
+g multicast network...\nPopulating cluster host network...\nPopulating cluster pod network...\nPopulating cluster service network...\nNetwork config completed.\nPopulating DNS 
+config...\nPopulating docker config...\nDocker proxy config completed.\nManagement mac = 00:00:00:00:00:00\nRoot fs device = /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0\nBoot de
+vice = /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0\nConsole = tty0\nTboot = false\nInstall output = text\nHost values = {'tboot': 'false', 'install_output': 'text', 'rootfs_devi
+ce': '/dev/disk/by-path/pci-0000:00:1f.2-ata-1.0', 'boot_device': '/dev/disk/by-path/pci-0000:00:1f.2-ata-1.0', 'availability': 'offline', 'mgmt_mac': '00:00:00:00:00:00', 'con
+sole': 'tty0', 'mgmt_ip': '192.168.204.3', 'hostname': 'controller-0', 'operational': 'disabled', 'invprovision': 'provisioned', 'administrative': 'locked', 'personality': 'con
+troller'}\nPopulating ceph-mon config for controller-0...\nPopulating ceph storage backend config...\nSuccessfully updated the initial system config.\n", 
+        "stdout_lines": [
+            "Populating system config...", 
+            "Populating load config...", 
+            "Populating management network...", 
+            "Populating pxeboot network...", 
+            "Populating oam network...", 
+            "Populating multicast network...", 
+            "Populating cluster host network...", 
+            "Populating cluster pod network...", 
+            "Populating cluster service network...", 
+            "Network config completed.", 
+            "Populating DNS config...", 
+            "Populating docker config...", 
+            "Docker proxy config completed.", 
+            "Management mac = 00:00:00:00:00:00", 
+            "Root fs device = /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0", 
+            "Boot device = /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0", 
+            "Console = tty0", 
+            "Tboot = false", 
+            "Install output = text", 
+            "Host values = {'tboot': 'false', 'install_output': 'text', 'rootfs_device': '/dev/disk/by-path/pci-0000:00:1f.2-ata-1.0', 'boot_device': '/dev/disk/by-path/pci-000
+0:00:1f.2-ata-1.0', 'availability': 'offline', 'mgmt_mac': '00:00:00:00:00:00', 'console': 'tty0', 'mgmt_ip': '192.168.204.3', 'hostname': 'controller-0', 'operational': 'disab
+led', 'invprovision': 'provisioned', 'administrative': 'locked', 'personality': 'controller'}", 
+            "Populating ceph-mon config for controller-0...", 
+            "Populating ceph storage backend config...", 
+            "Successfully updated the initial system config."
+        ]
+    }
+}
+
+TASK [persist-config : Fail if populate config script throws an exception] *****************************************************************************************************
+
+TASK [persist-config : Wait for service endpoints reconfiguration to complete] *************************************************************************************************
+
+TASK [persist-config : Update sysinv API bind host with new management floating IP] ********************************************************************************************
+
+TASK [persist-config : Restart sysinv-agent and sysinv-api to pick up sysinv.conf update] **************************************************************************************
+
+TASK [persist-config : Ensure docker config directory exists] ******************************************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Ensure docker proxy config exists] **********************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Write header to docker proxy conf file] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Add http proxy URL to docker proxy conf file] ***********************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Add https proxy URL to docker proxy conf file] **********************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Add no proxy address list to docker proxy config file] **************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Restart Docker] *****************************************************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Set pxeboot files source if address allocation is dynamic] **********************************************************************************************
+ok: [localhost]
+
+TASK [persist-config : Set pxeboot files source if address allocation is static] ***********************************************************************************************
+
+TASK [persist-config : Set pxeboot files symlinks] *****************************************************************************************************************************
+changed: [localhost] => (item={u'dest': u'pxelinux.cfg/default', u'src': u'pxelinux.cfg.files/default'})
+changed: [localhost] => (item={u'dest': u'pxelinux.cfg/grub.cfg', u'src': u'pxelinux.cfg.files/grub.cfg'})
+
+TASK [persist-config : Update the management_interface in platform.conf] *******************************************************************************************************
+changed: [localhost]
+
+TASK [persist-config : Add new entries to platform.conf] ***********************************************************************************************************************
+ok: [localhost] => (item=region_config=no)
+changed: [localhost] => (item=system_mode=simplex)
+ok: [localhost] => (item=sw_version=19.01)
+ok: [localhost] => (item=vswitch_type=none)
+
+TASK [persist-config : Update resolv.conf with list of dns servers] ************************************************************************************************************
+ok: [localhost] => (item=10.248.2.1)
+ok: [localhost] => (item=10.22.224.196)
+
+TASK [persist-config : Remove localhost address from resolv.conf] **************************************************************************************************************
+changed: [localhost]                                                                                                                                                  [172/1922]
+
+TASK [bringup-essential-services : Add loopback interface] *********************************************************************************************************************
+changed: [localhost] => (item=source /etc/platform/openrc; system host-if-add controller-0 lo virtual none lo -c platform --networks mgmt -m 1500)
+changed: [localhost] => (item=source /etc/platform/openrc; system host-if-modify controller-0 -c platform --networks cluster-host lo)
+changed: [localhost] => (item=ip addr add 192.168.206.3/24  brd 192.168.206.255 dev lo scope host label lo:5)
+changed: [localhost] => (item=ip addr add 192.168.204.3/28 brd 192.168.204.15 dev lo scope host label lo:1)
+changed: [localhost] => (item=ip addr add 169.254.202.2/24 dev lo scope host)
+changed: [localhost] => (item=ip addr add 192.168.206.2/24 dev lo scope host)
+changed: [localhost] => (item=ip addr add 192.168.204.5/28 dev lo scope host)
+changed: [localhost] => (item=ip addr add 192.168.204.6/28 dev lo scope host)
+
+TASK [bringup-essential-services : Add management floating adddress if this is the initial play] *******************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Remove previous management floating address if management network config has changed] *******************************************************
+
+TASK [bringup-essential-services : Remove existing /etc/hosts] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Populate /etc/hosts] ************************************************************************************************************************
+changed: [localhost] => (item=127.0.0.1 localhost       localhost.localdomain localhost4 localhost4.localdomain4)
+changed: [localhost] => (item=192.168.204.2     controller)
+changed: [localhost] => (item=192.168.206.3     controller-0-infra)
+changed: [localhost] => (item=169.254.202.2     pxecontroller)
+changed: [localhost] => (item=10.10.10.3        oamcontroller)
+changed: [localhost] => (item=192.168.204.5     controller-platform-nfs)
+changed: [localhost] => (item=192.168.204.4     controller-1)
+changed: [localhost] => (item=192.168.204.3     controller-0)
+changed: [localhost] => (item=192.168.206.4     controller-1-infra)
+changed: [localhost] => (item=192.168.204.6     controller-nfs)
+
+TASK [bringup-essential-services : Save hosts file to permanent location] ******************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update name service caching server] *********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set default directory for image files copy] *************************************************************************************************
+
+TASK [bringup-essential-services : Copy Docker images to remote host] **********************************************************************************************************
+
+TASK [bringup-essential-services : Adjust the images directory fact for local host] ********************************************************************************************
+
+TASK [bringup-essential-services : Get list of archived files] *****************************************************************************************************************
+
+TASK [bringup-essential-services : Load system images] *************************************************************************************************************************
+TASK [bringup-essential-services : Setup iptables for Kubernetes] **************************************************************************************************************
+changed: [localhost] => (item=net.bridge.bridge-nf-call-ip6tables = 1)
+changed: [localhost] => (item=net.bridge.bridge-nf-call-iptables = 1)
+
+TASK [bringup-essential-services : Create daemon.json file for insecure registry] **********************************************************************************************
+
+TASK [bringup-essential-services : Update daemon.json with registry IP] ********************************************************************************************************
+
+TASK [bringup-essential-services : Restart docker] *****************************************************************************************************************************
+
+TASK [bringup-essential-services : Update kernel parameters for iptables] ******************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create manifests directory required by kubelet] *********************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create kubelet cgroup for minimal set] ******************************************************************************************************
+changed: [localhost] => (item=cpuset)
+changed: [localhost] => (item=cpu)
+changed: [localhost] => (item=cpuacct)
+changed: [localhost] => (item=memory)
+changed: [localhost] => (item=systemd)
+
+TASK [bringup-essential-services : Get default k8s cpuset] *********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Get default k8s nodeset] ********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set mems for cpuset controller] *************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set cpus for cpuset controller] *************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create a tasks file for cpuset controller] **************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Enable kubelet] *****************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create Kube admin yaml] *********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update Kube admin yaml with network info] ***************************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @apiserver_advertise_address %>|'$CLUSTER_IP'|g' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @etcd_endpoint %>|'http://"$CLUSTER_IP":$ETCD_PORT'|g' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @service_domain %>|'cluster.local'|g' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @pod_network_cidr %>|'$POD_NETWORK_CIDR'|g' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @service_network_cidr %>|'$SERVICE_NETWORK_CIDR'|g' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i '/<%- /d' /etc/kubernetes/kubeadm.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @k8s_registry %>|'$K8S_REGISTRY'|g' /etc/kubernetes/kubeadm.yaml)
+
+TASK [bringup-essential-services : Update image repo in admin yaml if unified registry is used] ********************************************************************************
+
+TASK [bringup-essential-services : Initializing Kubernetes master] *************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update kube admin.conf file mode and owner] *************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set up k8s environment variable] ************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create Multus config file] ******************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update Multus config file] ******************************************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @docker_registry %>|'$DOCKER_REGISTRY'|g' /etc/kubernetes/multus.yaml)
+
+TASK [bringup-essential-services : Update Multus yaml file with new registry info if unified registry is used] *****************************************************************
+
+TASK [bringup-essential-services : Activate Multus Networking] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create Calico config file] ******************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update Calico config files with networking info] ********************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @apiserver_advertise_address %>|'$CLUSTER_IP'|g' /etc/kubernetes/calico.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @pod_network_cidr %>|'$POD_NETWORK_CIDR'|g' /etc/kubernetes/calico.yaml)
+changed: [localhost] => (item=sed -i -e 's|<%= @quay_registry %>|'$QUAY_REGISTRY'|g' /etc/kubernetes/calico.yaml)
+
+TASK [bringup-essential-services : Update Calico yaml file with new registry info if unified registry is used] *****************************************************************
+
+TASK [bringup-essential-services : Activate Calico Networking] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create SRIOV Networking config file] ********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update SRIOV Networking config file] ********************************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @docker_registry %>|'$DOCKER_REGISTRY'|g' /etc/kubernetes/sriov-cni.yaml)
+                                                                                                                                                                       [31/1922]
+TASK [bringup-essential-services : Update SRIOV Networking yaml file with new registry info if unified registry is used] *******************************************************
+
+TASK [bringup-essential-services : Activate SRIOV Networking] ******************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create SRIOV device plugin config file] *****************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update SRIOV device plugin config file] *****************************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @docker_registry %>|'$DOCKER_REGISTRY'|g' /etc/kubernetes/sriovdp-daemonset.yaml)
+
+TASK [bringup-essential-services : Update SRIOV device plugin yaml file with new registry info if unified registry is used] ****************************************************
+
+TASK [bringup-essential-services : Activate SRIOV device plugin] ***************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restrict coredns to master node] ************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Use anti-affinity for coredns pods] *********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Remove taint from master node] **************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Add kubelet service override] ***************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Register kubelet with pmond] ****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Reload systemd] *****************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Mark Kubernetes config complete] ************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create www group] ***************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create www user in preparation for Helm bringup] ********************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Ensure /www/tmp exists] *********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Ensure /www/var exists] *********************************************************************************************************************
+TASK [bringup-essential-services : Ensure /www/tmp exists] *********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Ensure /www/var exists] *********************************************************************************************************************
+changed: [localhost] => (item=/www/var)
+changed: [localhost] => (item=/www/var/log)
+
+TASK [bringup-essential-services : Set up lighttpd.conf] ***********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update lighttpd.conf] ***********************************************************************************************************************
+changed: [localhost] => (item=sed -i -e 's|<%= @http_port %>|'$PORT_NUM'|g' /etc/lighttpd/lighttpd.conf)
+changed: [localhost] => (item=sed -i '/@enable_https/,/% else/d' /etc/lighttpd/lighttpd.conf)
+changed: [localhost] => (item=sed -i '/@tmp_object/,/%- end/d' /etc/lighttpd/lighttpd.conf)
+changed: [localhost] => (item=sed -i '/<% end/d' /etc/lighttpd/lighttpd.conf)
+changed: [localhost] => (item=sed -i '/@tpm_object/,/%- end/d' /etc/lighttpd/lighttpd.conf)
+
+TASK [bringup-essential-services : Set up lighttpd-inc.conf] *******************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update management subnet in lighttpd-inc.conf] **********************************************************************************************
+ [WARNING]: Module remote_tmp /tmp/.ansible-root/tmp did not exist and was created with a mode of 0700, this may cause issues when running as another user. To avoid this,
+create the remote_tmp dir with the correct permissions manually
+
+changed: [localhost]
+
+TASK [bringup-essential-services : Update pxe subnet in lighttp-inc.conf] ******************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update tiller image tag if using unified registry] ******************************************************************************************
+
+TASK [bringup-essential-services : Pull Tiller and Armada images] **************************************************************************************************************
+changed: [localhost] => (item=gcr.io/kubernetes-helm/tiller:v2.13.1)
+changed: [localhost] => (item=quay.io/airshipit/armada:af8a9ffd0873c2fbc915794e235dbd357f2adab1)
+
+TASK [bringup-essential-services : Create source and target helm bind directories] *********************************************************************************************
+changed: [localhost] => (item=/opt/cgcs/helm_charts)
+changed: [localhost] => (item=/www/pages/helm_charts)
+
+TASK [bringup-essential-services : Create helm repository directories] *********************************************************************************************************
+changed: [localhost] => (item=/opt/cgcs/helm_charts/starlingx)
+changed: [localhost] => (item=/opt/cgcs/helm_charts/stx-platform)
+
+TASK [bringup-essential-services : Create service account for Tiller] **********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Create cluster role binding for Tiller service account] *************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Initialize Helm (local host)] ***************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Initialize Helm (remote host)] **************************************************************************************************************
+
+TASK [bringup-essential-services : Change helm directory ownership (remote host)] **********************************************************************************************
+
+TASK [bringup-essential-services : Generate Helm repo indicies] ****************************************************************************************************************
+changed: [localhost] => (item=starlingx)
+changed: [localhost] => (item=stx-platform)
+
+TASK [bringup-essential-services : Stop lighttpd] ******************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Disable lighttpd] ***************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Bind mount on /www/pages/helm_charts] *******************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Enable lighttpd] ****************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restart lighttpd for Helm] ******************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Add Helm repos (local host)] ****************************************************************************************************************
+changed: [localhost] => (item=starlingx)
+changed: [localhost] => (item=stx-platform)
+
+TASK [bringup-essential-services : Add Helm repos (remote host)] ***************************************************************************************************************
+
+TASK [bringup-essential-services : Change helm directory ownership to pick up newly generated files (remote host)] *************************************************************
+
+TASK [bringup-essential-services : Update info of available charts locally from chart repos] ***********************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update info of available charts locally from chart repos (remote host)] *********************************************************************
+
+TASK [bringup-essential-services : Change helm directory ownership (remote host)] **********************************************************************************************
+
+TASK [bringup-essential-services : Generate cnf file from template] ************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update cnf file with network info] **********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Generate certificate and key files] *********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Generate pkcs1 key file] ********************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Remove extfile used in certificate generation] **********************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set certificate file and key permissions to root read-only] *********************************************************************************
+changed: [localhost] => (item=/etc/ssl/private/registry-cert.key)
+changed: [localhost] => (item=/etc/ssl/private/registry-cert.crt)
+changed: [localhost] => (item=/etc/ssl/private/registry-cert-pkcs1.key)
+                                                                                                                                                                       [46/1891]
+TASK [bringup-essential-services : Copy certificate and keys to shared filesystem for mate] ************************************************************************************
+changed: [localhost] => (item=/etc/ssl/private/registry-cert.key)
+changed: [localhost] => (item=/etc/ssl/private/registry-cert.crt)
+changed: [localhost] => (item=/etc/ssl/private/registry-cert-pkcs1.key)
+
+TASK [bringup-essential-services : Create docker certificate directory] ********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Copy certificate file to docker certificate directory] **************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Wait for service endpoints reconfiguration to complete] *************************************************************************************
+ok: [localhost]
+
+TASK [bringup-essential-services : Update sysinv API bind host with management floating IP] ************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restart sysinv-agent and sysinv-api] ********************************************************************************************************
+changed: [localhost] => (item=/etc/init.d/sysinv-agent restart)
+changed: [localhost] => (item=/usr/lib/ocf/resource.d/platform/sysinv-api reload)
+
+TASK [bringup-essential-services : Update barbican bind host with management floating IP] **************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restart barbican] ***************************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Apply workaround for fm-api] ****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Update bind_host config parameter in fm config file] ****************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restart FM API and bring up FM Manager] *****************************************************************************************************
+changed: [localhost] => (item=/etc/init.d/fm-api restart)
+changed: [localhost] => (item=/etc/init.d/fminit start)
+
+TASK [bringup-essential-services : Bring up Maintenance Agent] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Restart Maintenance Client] *****************************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Set dnsmasq.leases flag for unlock] *********************************************************************************************************
+changed: [localhost]
+
+                                                                                                                                                                        [0/1891]
+TASK [bringup-essential-services : Update resolv.conf file for unlock] *********************************************************************************************************
+changed: [localhost]
+
+TASK [bringup-essential-services : Remove config file from previous play] ******************************************************************************************************
+ok: [localhost]
+
+TASK [bringup-essential-services : Save the current system and network config for reference in subsequent replays] *************************************************************
+changed: [localhost] => (item=prev_system_mode: duplex)
+changed: [localhost] => (item=prev_timezone: UTC)
+changed: [localhost] => (item=prev_dynamic_address_allocation: True)
+changed: [localhost] => (item=prev_pxeboot_subnet: 169.254.202.0/24)
+changed: [localhost] => (item=prev_management_subnet: 192.168.204.0/28)
+changed: [localhost] => (item=prev_cluster_host_subnet: 192.168.206.0/24)
+changed: [localhost] => (item=prev_cluster_pod_subnet: 172.16.0.0/16)
+changed: [localhost] => (item=prev_cluster_service_subnet: 10.96.0.0/12)
+changed: [localhost] => (item=prev_external_oam_subnet: 10.10.10.0/24)
+changed: [localhost] => (item=prev_external_oam_gateway_address: 10.10.10.1)
+changed: [localhost] => (item=prev_external_oam_floating_address: 10.10.10.3)
+changed: [localhost] => (item=prev_management_multicast_subnet: 239.1.1.0/28)
+changed: [localhost] => (item=prev_dns_servers: 10.248.2.1,10.22.224.196)
+changed: [localhost] => (item=prev_docker_registries: k8s.gcr.io,gcr.io,quay.io,docker.io)
+changed: [localhost] => (item=prev_docker_http_proxy: http://proxy-chain.intel.com:911)
+changed: [localhost] => (item=prev_docker_https_proxy: http://proxy-chain.intel.com:912)
+changed: [localhost] => (item=prev_docker_no_proxy: localhost,127.0.0.1,192.168.204.2,192.168.204.3,192.168.204.4,10.10.10.3,10.10.10.4,10.10.10.5)
+changed: [localhost] => (item=prev_admin_username: d033e22ae348aeb5660fc2140aec35850c4da997)
+changed: [localhost] => (item=prev_admin_password: 619e17c6392297cf2a08dcf5ebd62114e376ea12)
+changed: [localhost] => (item=prev_pxeboot_start_address: derived)
+changed: [localhost] => (item=prev_pxeboot_end_address: derived)
+changed: [localhost] => (item=prev_management_start_address: derived)
+changed: [localhost] => (item=prev_management_end_address: derived)
+changed: [localhost] => (item=prev_cluster_host_start_address: derived)
+changed: [localhost] => (item=prev_cluster_host_end_address: derived)
+changed: [localhost] => (item=prev_cluster_pod_start_address: derived)
+changed: [localhost] => (item=prev_cluster_pod_end_address: derived)
+changed: [localhost] => (item=prev_cluster_service_start_address: derived)
+changed: [localhost] => (item=prev_cluster_service_end_address:  derived)
+changed: [localhost] => (item=prev_external_oam_start_address: derived)
+changed: [localhost] => (item=prev_external_oam_end_address: derived)
+changed: [localhost] => (item=prev_management_multicast_start_address: derived)
+changed: [localhost] => (item=prev_management_multicast_end_address: derived)
+changed: [localhost] => (item=prev_external_oam_node_0_address: derived)
+changed: [localhost] => (item=prev_external_oam_node_1_address: derived)
+
+PLAY RECAP *********************************************************************************************************************************************************************
+localhost                  : ok=225  changed=139  unreachable=0    failed=0   
+```
+
 ### Provisioning Controller-0
 
 #### Configure OAM, Management and Cluster interfaces
