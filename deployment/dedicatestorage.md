@@ -2998,50 +2998,6 @@ cgts-vg volume group already exists
 | uuid                | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
-Insufficient memory reserved for platform on compute-1. Platform memory must be at least 1100 MiB summed across all numa nodes.
-```
-
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-reboot compute-1
-+---------------------+--------------------------------------+
-| Property            | Value                                |
-+---------------------+--------------------------------------+
-| action              | none                                 |
-| administrative      | locked                               |
-| availability        | online                               |
-| bm_ip               | None                                 |
-| bm_type             | None                                 |
-| bm_username         | None                                 |
-| boot_device         | sda                                  |
-| capabilities        | {}                                   |
-| config_applied      | 74c228ad-9232-450e-aecb-aae1992a4aed |
-| config_status       | None                                 |
-| config_target       | 74c228ad-9232-450e-aecb-aae1992a4aed |
-| console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T14:10:23.228399+00:00     |
-| hostname            | compute-1                            |
-| id                  | 6                                    |
-| install_output      | text                                 |
-| install_state       | completed                            |
-| install_state_info  | None                                 |
-| invprovision        | unprovisioned                        |
-| location            | {}                                   |
-| mgmt_ip             | 192.168.204.8                        |
-| mgmt_mac            | 52:54:00:bb:9b:06                    |
-| operational         | disabled                             |
-| personality         | worker                               |
-| reserved            | False                                |
-| rootfs_device       | sda                                  |
-| serialid            | None                                 |
-| software_load       | 19.01                                |
-| task                | Rebooting                            |
-| tboot               | false                                |
-| ttys_dcd            | None                                 |
-| updated_at          | 2019-05-29T15:19:16.393857+00:00     |
-| uptime              | 3518                                 |
-| uuid                | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
-| vim_progress_status | None                                 |
-+---------------------+--------------------------------------+
 ```
 
 ## Using sysinv to bring up/down the containerized services
@@ -3150,12 +3106,74 @@ Please use 'system application-list' or 'system application-show stx-openstack' 
 After ~ 15 minutes...
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------------------------+-------------------------------+---------------+----------+-----------------------------------------------------+
+| application         | version                   | manifest name                 | manifest file | status   | progress                                            |
++---------------------+---------------------------+-------------------------------+---------------+----------+-----------------------------------------------------+
+| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | applied  | completed                                           |
+| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest.yaml | applying | processing chart: osh-kube-system-ingress, overall  |
+|                     | latest                    |                               |               |          | completion: 5.0%                                    |
+|                     |                           |                               |               |          |                                                     |
++---------------------+---------------------------+-------------------------------+---------------+----------+-----------------------------------------------------+
+```
+
+After ~ 30 minutes...
+
+```sh
 
 ```
 
 ## Verify the cluster endpoints
 
 
+## Failures
+
+```sh
+Insufficient memory reserved for platform on compute-1. Platform memory must be at least 1100 MiB summed across all numa nodes.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-reboot compute-1
++---------------------+--------------------------------------+
+| Property            | Value                                |
++---------------------+--------------------------------------+
+| action              | none                                 |
+| administrative      | locked                               |
+| availability        | online                               |
+| bm_ip               | None                                 |
+| bm_type             | None                                 |
+| bm_username         | None                                 |
+| boot_device         | sda                                  |
+| capabilities        | {}                                   |
+| config_applied      | 74c228ad-9232-450e-aecb-aae1992a4aed |
+| config_status       | None                                 |
+| config_target       | 74c228ad-9232-450e-aecb-aae1992a4aed |
+| console             | ttyS0,115200                         |
+| created_at          | 2019-05-29T14:10:23.228399+00:00     |
+| hostname            | compute-1                            |
+| id                  | 6                                    |
+| install_output      | text                                 |
+| install_state       | completed                            |
+| install_state_info  | None                                 |
+| invprovision        | unprovisioned                        |
+| location            | {}                                   |
+| mgmt_ip             | 192.168.204.8                        |
+| mgmt_mac            | 52:54:00:bb:9b:06                    |
+| operational         | disabled                             |
+| personality         | worker                               |
+| reserved            | False                                |
+| rootfs_device       | sda                                  |
+| serialid            | None                                 |
+| software_load       | 19.01                                |
+| task                | Rebooting                            |
+| tboot               | false                                |
+| ttys_dcd            | None                                 |
+| updated_at          | 2019-05-29T15:19:16.393857+00:00     |
+| uptime              | 3518                                 |
+| uuid                | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
+| vim_progress_status | None                                 |
++---------------------+--------------------------------------+
+```
 
 ## Others
 
