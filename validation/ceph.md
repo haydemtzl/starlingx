@@ -619,7 +619,275 @@ Trying to recover controller-1 by locking and unlocking controller-1:
  
 ```
 
-Under Horizon, Testing...
+Under Horizon, Testing... After ~30 minutes...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 3  | compute-1    | worker      | unlocked       | enabled     | available    |
+| 4  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 7  | storage-2    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  dat           Reduced data availability: 284 pgs stale
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.82 k objects, 1.7 GiB
+    usage:   1.5 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+```
+
+```sh
+800.001	Storage Alarm Condition: HEALTH_WARN [PGs are degraded/stuck or undersized]. Please check 'ceph -s' for more details.	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac	warning	2019-05-28T16:05:05.486930
+```
+
+After 30 minutes:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     ea5b5cfa-c8f4-454f-9b8a-92afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 32afb56973ac
+    health: HEALTH_WARN
+            Reduced data availability: 284 pgs stale
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.82 k objects, 1.7 GiB
+    usage:   1.5 GiB used, 1.3 TiB / 1.3 TiB avail
+    pgs:     572 active+clean
+             284 stale+active+clean
+ 
+  io:
+    client:   170 B/s rd, 0 op/s rd, 0 op/s wr
+ 
+```
+
+- http://docs.ceph.com/docs/mimic/rados/troubleshooting/troubleshooting-pg/
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd lspools
+1 .rgw.root
+2 kube-rbd
+3 default.rgw.control
+4 default.rgw.meta
+5 default.rgw.log
+6 images
+7 ephemeral
+8 cinder-volumes
+9 gnocchi.metrics
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ rados df
+POOL_NAME              USED OBJECTS CLONES COPIES MISSING_ON_PRIMARY UNFOUND DEGRADED  RD_OPS      RD   WR_OPS      WR 
+.rgw.root           1.1 KiB       4      0      4                  0       0        0      18  12 KiB        4   4 KiB 
+cinder-volumes          0 B       0      0      0                  0       0        0       0     0 B        0     0 B 
+default.rgw.control     0 B       8      0      8                  0       0        0       0     0 B        0     0 B 
+default.rgw.log         0 B    1152      0   1152                  0       0        0 5469977 5.2 GiB  3646523     0 B 
+default.rgw.meta        0 B       0      0      0                  0       0        0       0     0 B        0     0 B 
+ephemeral               0 B       0      0      0                  0       0        0       0     0 B        0     0 B 
+gnocchi.metrics     382 KiB      63      0     63                  0       0        0  661146 590 MiB   333669 218 MiB 
+images                 19 B       2      0      2                  0       0        0     224 182 KiB       55  12 MiB 
+kube-rbd            1.7 GiB     588      0    588                  0       0        0    3353  67 MiB 40847794 198 GiB 
+
+total_objects    1817
+total_used       1.5 GiB
+total_avail      1.3 TiB
+total_space      1.3 TiB
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph pg dump_stuck inactive
+ok
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph pg dump_stuck unclean
+ok
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph pg dump_stuck stale
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph pg dump_stuck stale | more
+PG_STAT STATE              UP  UP_PRIMARY ACTING ACTING_PRIMARY 
+7.1eb   stale+active+clean [0]          0    [0]              0 
+7.1e2   stale+active+clean [0]          0    [0]              0 
+...
+...
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph health detail
+HEALTH_WARN Reduced data availability: 284 pgs stale
+PG_AVAILABILITY Reduced data availability: 284 pgs stale
+    pg 1.2f is stuck stale for 6725.774777, current state stale+active+clean, last acting [0]
+    pg 1.30 is stuck stale for 6725.774778, current state stale+active+clean, last acting [0]
+    pg 1.36 is stuck stale for 6725.774784, current state stale+active+clean, last acting [0]
+    pg 1.37 is stuck stale for 6725.774785, current state stale+active+clean, last acting [0]
+    pg 1.3a is stuck stale for 6725.774788, current state stale+active+clean, last acting [0]
+    pg 1.3b is stuck stale for 6725.774790, current state stale+active+clean, last acting [0]
+    ...
+    ...
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph pg 1.2 query                                                                                                                     
+{
+    "state": "active+clean",
+    "snap_trimq": "[]",
+    "snap_trimq_len": 0,
+    "epoch": 96,
+    "up": [
+        1
+    ],
+...
+...
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph health detail | grep stale
+HEALTH_WARN Reduced data availability: 284 pgs stale
+PG_AVAILABILITY Reduced data availability: 284 pgs stale
+    pg 1.2f is stuck stale for 7110.113774, current state stale+active+clean, last acting [0]
+    pg 1.30 is stuck stale for 7110.113774, current state stale+active+clean, last acting [0]
+    pg 1.36 is stuck stale for 7110.113780, current state stale+active+clean, last acting [0]
+    pg 1.37 is stuck stale for 7110.113781, current state stale+active+clean, last acting [0]
+    pg 1.3a is stuck stale for 7110.113784, current state stale+active+clean, last acting [0]
+...
+...
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock storage-0
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-reboot storage-0
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool get default.rgw.log pg_num
+pg_num: 64
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd lspools
+1 .rgw.root
+2 kube-rbd
+3 default.rgw.control
+4 default.rgw.meta
+5 default.rgw.log
+6 images
+7 ephemeral
+8 cinder-volumes
+9 gnocchi.metrics
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool get {} size
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool set {} size 5
+set pool 1 size to 10
+set pool 2 size to 10
+set pool 3 size to 10
+set pool 4 size to 10
+set pool 5 size to 10
+set pool 6 size to 10
+Error ERANGE: pool id 7 pg_num 512 size 10 would mean 8416 total pgs, which exceeds max 6144 (mon_max_pg_per_osd 2048 * num_in_osds 3)
+set pool 8 size to 10
+set pool 9 size to 10
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool get {} pg_num
+pg_num: 64
+pg_num: 64
+pg_num: 64
+pg_num: 64
+pg_num: 64
+pg_num: 8
+pg_num: 512
+pg_num: 8
+pg_num: 8
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool set {} pg_num 128
+set pool 1 pg_num to 128
+set pool 2 pg_num to 128
+set pool 3 pg_num to 128
+set pool 4 pg_num to 128
+set pool 5 pg_num to 128
+Error E2BIG: specified pg_num 128 is too large (creating 120 new PGs on ~3 OSDs exceeds per-OSD max with mon_osd_max_split_count of 32)
+Error EEXIST: specified pg_num 128 <= current 512
+Error E2BIG: specified pg_num 128 is too large (creating 120 new PGs on ~3 OSDs exceeds per-OSD max with mon_osd_max_split_count of 32)
+Error E2BIG: specified pg_num 128 is too large (creating 120 new PGs on ~3 OSDs exceeds per-OSD max with mon_osd_max_split_count of 32)
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool get {} pgp_num
+pgp_num: 64
+pgp_num: 64
+pgp_num: 64
+pgp_num: 64
+pgp_num: 64
+pgp_num: 8
+pgp_num: 512
+pgp_num: 8
+pgp_num: 8
+```
+
+```sh
+wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls | xargs -i ceph osd pool set {} pgp_num 128
+set pool 1 pgp_num to 128
+set pool 2 pgp_num to 128
+set pool 3 pgp_num to 128
+set pool 4 pgp_num to 128
+set pool 5 pgp_num to 128
+Error EINVAL: specified pgp_num 128 > pg_num 8
+set pool 7 pgp_num to 128
+Error EINVAL: specified pgp_num 128 > pg_num 8
+Error EINVAL: specified pgp_num 128 > pg_num 8
+```
 
 6. Check that ceph reports HEALTH_OK via
 
