@@ -1678,3 +1678,57 @@ cgts-vg volume group already exists
 | 6  | storage-1    | storage     | unlocked       | enabled     | available    |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
+
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+| application         | version | manifest name                 | manifest file | status    | progress                        |
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploading | validating and uploading charts |
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------+-------------------------------+---------------+----------+-----------+
+| application         | version | manifest name                 | manifest file | status   | progress  |
++---------------------+---------+-------------------------------+---------------+----------+-----------+
+| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploaded | completed |
++---------------------+---------+-------------------------------+---------------+----------+-----------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ls
+ansible.log  localhost.yml  stx-openstack-1.0-13-centos-stable-latest.tgz
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-upload stx-openstack-1.0-13-centos-stable-latest.tgz
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
+| application         | version                   | manifest name                 | manifest file | status    | progress                        |
++---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
+| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | applying  | completed                       |
+| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest.yaml | uploading | validating and uploading charts |
+|                     | latest                    |                               |               |           |                                 |
+|                     |                           |                               |               |           |                                 |
++---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
+| application         | version                   | manifest name                 | manifest file | status       | progress                             |
++---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
+| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | apply-failed | operation aborted, check logs for    |
+|                     |                           |                               |               |              | detail                               |
+|                     |                           |                               |               |              |                                      |
+| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest.yaml | uploaded     | completed                            |
+|                     | latest                    |                               |               |              |                                      |
+|                     |                           |                               |               |              |                                      |
++---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
+```
