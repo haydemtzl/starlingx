@@ -2159,14 +2159,26 @@ Power on compute-1
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
-```sh
+After ~ 15 minutes...
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | storage-0    | storage     | locked         | disabled    | online       |
+| 4  | storage-1    | storage     | locked         | disabled    | online       |
+| 5  | compute-0    | worker      | locked         | disabled    | online       |
+| 6  | compute-1    | worker      | locked         | disabled    | online       |
++----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
   cluster:
-    id:     88457a91-6b7f-4069-917d-03f7adc9366a
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
     health: HEALTH_WARN
             Reduced data availability: 64 pgs inactive
  
@@ -2201,20 +2213,20 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s2']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:df:ef:b5                    |
+| imac         | 52:54:00:d2:e5:5b                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | cluster-host,mgmt                    |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | fc42680f-da82-4711-bd3d-d2779d0c74a4 |
-| ihost_uuid   | 1190f0c2-1c5c-4017-95a0-f0c46c2ac2df |
+| uuid         | 2bca8281-dcb4-41fd-9e99-8eb51a156331 |
+| ihost_uuid   | 62acd311-72fa-4535-b542-c5419c0df36a |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:25:15.939175+00:00     |
-| updated_at   | 2019-05-29T09:36:35.224269+00:00     |
+| created_at   | 2019-05-29T14:18:22.649481+00:00     |
+| updated_at   | 2019-05-29T14:43:19.779850+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
@@ -2231,20 +2243,20 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s2']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:31:f2:21                    |
+| imac         | 52:54:00:7b:80:cd                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | cluster-host,mgmt                    |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | daaa7a48-9880-4a8b-b4d6-e3e11cc37422 |
-| ihost_uuid   | 5353214c-686e-47ef-847c-5cba7273290d |
+| uuid         | 9b33ac4f-580d-43be-bd65-c7cb9f6fa82f |
+| ihost_uuid   | d472b007-f9d0-4947-bff0-6484ab7fa40e |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:25:40.480775+00:00     |
-| updated_at   | 2019-05-29T09:36:44.976431+00:00     |
+| created_at   | 2019-05-29T14:19:28.044123+00:00     |
+| updated_at   | 2019-05-29T14:43:46.498227+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
@@ -2255,6 +2267,10 @@ Power on compute-1
 ### Add an OSD to the storage hosts
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-0 $(system host-disk-list storage-0 | awk '/sdb/{print $2}')
 +------------------+--------------------------------------------------+
 | Property         | Value                                            |
@@ -2262,16 +2278,16 @@ Power on compute-1
 | osdid            | 0                                                |
 | function         | osd                                              |
 | state            | configuring-on-unlock                            |
-| journal_location | f5215a6f-1807-4293-b935-1bf3300d1722             |
+| journal_location | 620ae832-acf9-4029-8040-ed78ff585da2             |
 | journal_size_gib | 1024                                             |
 | journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
 | journal_node     | /dev/sdb2                                        |
-| uuid             | f5215a6f-1807-4293-b935-1bf3300d1722             |
-| ihost_uuid       | 1190f0c2-1c5c-4017-95a0-f0c46c2ac2df             |
-| idisk_uuid       | b2c41d26-880b-4850-b841-6be8ed355201             |
-| tier_uuid        | c478adaf-97b1-4faa-8054-435f47c5022f             |
+| uuid             | 620ae832-acf9-4029-8040-ed78ff585da2             |
+| ihost_uuid       | 62acd311-72fa-4535-b542-c5419c0df36a             |
+| idisk_uuid       | aed89456-43c1-4b77-a6c1-af05660b83d4             |
+| tier_uuid        | a9d1d16f-68d6-4aa6-9274-d417da4a4068             |
 | tier_name        | storage                                          |
-| created_at       | 2019-05-29T09:36:56.225007+00:00                 |
+| created_at       | 2019-05-29T14:44:26.039558+00:00                 |
 | updated_at       | None                                             |
 +------------------+--------------------------------------------------+
 ```
@@ -2284,21 +2300,25 @@ Power on compute-1
 | osdid            | 1                                                |
 | function         | osd                                              |
 | state            | configuring-on-unlock                            |
-| journal_location | d75a341a-1a4a-42a2-a543-0fa5c54c801c             |
+| journal_location | fea553fe-dd9a-4962-baa5-2710ec3c4669             |
 | journal_size_gib | 1024                                             |
 | journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
 | journal_node     | /dev/sdb2                                        |
-| uuid             | d75a341a-1a4a-42a2-a543-0fa5c54c801c             |
-| ihost_uuid       | 5353214c-686e-47ef-847c-5cba7273290d             |
-| idisk_uuid       | 40b1bc3d-70f1-41f3-b742-89e08231aaca             |
-| tier_uuid        | c478adaf-97b1-4faa-8054-435f47c5022f             |
+| uuid             | fea553fe-dd9a-4962-baa5-2710ec3c4669             |
+| ihost_uuid       | d472b007-f9d0-4947-bff0-6484ab7fa40e             |
+| idisk_uuid       | ed276e6c-7a01-4d44-951c-c1174f0a64b0             |
+| tier_uuid        | a9d1d16f-68d6-4aa6-9274-d417da4a4068             |
 | tier_name        | storage                                          |
-| created_at       | 2019-05-29T09:37:02.283811+00:00                 |
+| created_at       | 2019-05-29T14:44:47.905042+00:00                 |
 | updated_at       | None                                             |
 +------------------+--------------------------------------------------+
 ```
 
 ### Unlock the storage hosts
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
@@ -2315,18 +2335,18 @@ Power on compute-1
 | capabilities        | {u'stor_function': u'monitor'}                                |
 | config_applied      | None                                                          |
 | config_status       | Config out-of-date                                            |
-| config_target       | a18000ba-0696-46cd-a44e-da4c3203bd44                          |
+| config_target       | ce0f0c4a-3974-4e26-9c99-dcb0d1c41c9d                          |
 | console             | ttyS0,115200                                                  |
-| created_at          | 2019-05-29T09:13:53.664236+00:00                              |
+| created_at          | 2019-05-29T14:07:10.797882+00:00                              |
 | hostname            | storage-0                                                     |
-| id                  | 5                                                             |
+| id                  | 3                                                             |
 | install_output      | text                                                          |
 | install_state       | completed                                                     |
 | install_state_info  | None                                                          |
 | invprovision        | unprovisioned                                                 |
 | location            | {}                                                            |
-| mgmt_ip             | 192.168.204.7                                                 |
-| mgmt_mac            | 52:54:00:df:ef:b5                                             |
+| mgmt_ip             | 192.168.204.9                                                 |
+| mgmt_mac            | 52:54:00:d2:e5:5b                                             |
 | operational         | disabled                                                      |
 | peers               | {u'hosts': [u'storage-1', u'storage-0'], u'name': u'group-0'} |
 | personality         | storage                                                       |
@@ -2337,9 +2357,9 @@ Power on compute-1
 | task                | Unlocking                                                     |
 | tboot               | false                                                         |
 | ttys_dcd            | None                                                          |
-| updated_at          | 2019-05-29T09:37:10.589276+00:00                              |
-| uptime              | 753                                                           |
-| uuid                | 1190f0c2-1c5c-4017-95a0-f0c46c2ac2df                          |
+| updated_at          | 2019-05-29T14:45:15.797490+00:00                              |
+| uptime              | 1642                                                          |
+| uuid                | 62acd311-72fa-4535-b542-c5419c0df36a                          |
 | vim_progress_status | None                                                          |
 +---------------------+---------------------------------------------------------------+
 ```
@@ -2359,18 +2379,18 @@ Power on compute-1
 | capabilities        | {}                                                            |
 | config_applied      | None                                                          |
 | config_status       | Config out-of-date                                            |
-| config_target       | e81ff4ce-25e3-4af1-a96c-0fba13a29dd8                          |
+| config_target       | d17518f0-68c7-4e86-961e-18f210726c12                          |
 | console             | ttyS0,115200                                                  |
-| created_at          | 2019-05-29T09:14:28.888055+00:00                              |
+| created_at          | 2019-05-29T14:08:09.929773+00:00                              |
 | hostname            | storage-1                                                     |
-| id                  | 6                                                             |
+| id                  | 4                                                             |
 | install_output      | text                                                          |
 | install_state       | completed                                                     |
 | install_state_info  | None                                                          |
 | invprovision        | unprovisioned                                                 |
 | location            | {}                                                            |
-| mgmt_ip             | 192.168.204.12                                                |
-| mgmt_mac            | 52:54:00:31:f2:21                                             |
+| mgmt_ip             | 192.168.204.14                                                |
+| mgmt_mac            | 52:54:00:7b:80:cd                                             |
 | operational         | disabled                                                      |
 | peers               | {u'hosts': [u'storage-0', u'storage-1'], u'name': u'group-0'} |
 | personality         | storage                                                       |
@@ -2381,9 +2401,9 @@ Power on compute-1
 | task                | Unlocking                                                     |
 | tboot               | false                                                         |
 | ttys_dcd            | None                                                          |
-| updated_at          | 2019-05-29T09:37:10.588845+00:00                              |
-| uptime              | 720                                                           |
-| uuid                | 5353214c-686e-47ef-847c-5cba7273290d                          |
+| updated_at          | 2019-05-29T14:45:15.811526+00:00                              |
+| uptime              | 1567                                                          |
+| uuid                | d472b007-f9d0-4947-bff0-6484ab7fa40e                          |
 | vim_progress_status | None                                                          |
 +---------------------+---------------------------------------------------------------+
 ```
@@ -2394,18 +2414,35 @@ Power on compute-1
 | id | hostname     | personality | administrative | operational | availability |
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | enabled     | degraded     |
-| 3  | compute-0    | worker      | locked         | disabled    | online       |
-| 4  | compute-1    | worker      | locked         | disabled    | online       |
-| 5  | storage-0    | storage     | unlocked       | disabled    | intest       |
-| 6  | storage-1    | storage     | unlocked       | disabled    | intest       |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | storage-0    | storage     | unlocked       | disabled    | offline      |
+| 4  | storage-1    | storage     | unlocked       | disabled    | offline      |
+| 5  | compute-0    | worker      | locked         | disabled    | online       |
+| 6  | compute-1    | worker      | locked         | disabled    | online       |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+After ~ 10 minutes...
+
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 4  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 5  | compute-0    | worker      | locked         | disabled    | online       |
+| 6  | compute-1    | worker      | locked         | disabled    | online       |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
   cluster:
-    id:     88457a91-6b7f-4069-917d-03f7adc9366a
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
     health: HEALTH_OK
  
   services:
@@ -2419,10 +2456,14 @@ Power on compute-1
     objects: 1.13 k objects, 1.1 KiB
     usage:   225 MiB used, 398 GiB / 398 GiB avail
     pgs:     256 active+clean
- 
-  io:
-    client:   9.3 KiB/s rd, 0 B/s wr, 13 op/s rd, 9 op/s wr 
+```
 
+## Provision Computes
+
+### Setup the cluster-host interfaces on the computes
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
 ```
 
 ```sh
@@ -2434,20 +2475,20 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s2']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:77:70:e6                    |
+| imac         | 52:54:00:19:e2:ea                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | cluster-host,mgmt                    |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | 196ce0c6-b8a5-40ce-92e7-55bc46d0cb2f |
-| ihost_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid         | 2317233a-2243-4c5d-b4ea-3a26397ac37f |
+| ihost_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:23:43.241306+00:00     |
-| updated_at   | 2019-05-29T09:41:32.791324+00:00     |
+| created_at   | 2019-05-29T14:20:36.097240+00:00     |
+| updated_at   | 2019-05-29T15:04:37.163220+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
@@ -2464,26 +2505,28 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s2']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:69:a0:5c                    |
+| imac         | 52:54:00:bb:9b:06                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | cluster-host,mgmt                    |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | fb2a30f1-cb75-48fc-b513-74c16181d7e1 |
-| ihost_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid         | 966a07aa-d4e9-4569-8630-b4c59744a6ca |
+| ihost_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:24:49.252601+00:00     |
-| updated_at   | 2019-05-29T09:41:42.254207+00:00     |
+| created_at   | 2019-05-29T14:21:23.695143+00:00     |
+| updated_at   | 2019-05-29T15:04:41.514166+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
 | accelerated  | [False]                              |
 +--------------+--------------------------------------+
 ```
+
+### Configure data interfaces for computes
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ DATA0IF=eth1000
@@ -2492,12 +2535,16 @@ Power on compute-1
 [wrsroot@controller-0 ~(keystone_admin)]$ PHYSNET1='physnet1'
 [wrsroot@controller-0 ~(keystone_admin)]$ SPL=/tmp/tmp-system-port-list
 [wrsroot@controller-0 ~(keystone_admin)]$ SPIL=/tmp/tmp-system-host-if-list
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ # configure the datanetworks in sysinv, prior to referencing it in the 'system host-if-modify command'.
 [wrsroot@controller-0 ~(keystone_admin)]$ system datanetwork-add ${PHYSNET0} vlan
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
 | id           | 1                                    |
-| uuid         | 3068d692-8745-4d8e-9a4b-fd5efadb8ebe |
+| uuid         | 2027954a-4f1d-47eb-85d1-fdde0ae9b314 |
 | name         | physnet0                             |
 | network_type | vlan                                 |
 | mtu          | 1500                                 |
@@ -2508,7 +2555,7 @@ Power on compute-1
 | Property     | Value                                |
 +--------------+--------------------------------------+
 | id           | 2                                    |
-| uuid         | e9cfbd7e-53fd-45af-9605-846f5fc32b75 |
+| uuid         | aad8fcd6-a304-4fd1-9f5c-66dcae174704 |
 | name         | physnet1                             |
 | network_type | vlan                                 |
 | mtu          | 1500                                 |
@@ -2528,8 +2575,7 @@ Power on compute-1
 >   DATA1PORTUUID=$(cat $SPL | grep ${DATA1PCIADDR} | awk '{print $2}')
 >   DATA0PORTNAME=$(cat $SPL | grep ${DATA0PCIADDR} | awk '{print $4}')
 >   DATA1PORTNAME=$(cat  $SPL | grep ${DATA1PCIADDR} | awk '{print $4}')
->   DATA0IFUUID=$(cat $SPIL | awk -v DATA0PORTNAME=$DATA0PORTNAME '($12 ~ DATA0PORTNAME) {print $2}')
->   DATA1IFUUID=$(cat $SPIL | awk -v DATA1PORTNAME=$DATA1PORTNAME '($12 ~ DATA1PORTNAME) {print $2}')
+>   DATA0IFUUID=$(cat $SPIL | awk -v DATA0PORTNAME=$DATA0PORTNAME '($12 ~ DATA0PORTNAME) {print $2}')                                                               >   DATA1IFUUID=$(cat $SPIL | awk -v DATA1PORTNAME=$DATA1PORTNAME '($12 ~ DATA1PORTNAME) {print $2}')
 >   system host-if-modify -m 1500 -n data0 -d ${PHYSNET0} -c data ${COMPUTE} ${DATA0IFUUID}
 >   system host-if-modify -m 1500 -n data1 -d ${PHYSNET1} -c data ${COMPUTE} ${DATA1IFUUID}
 >   set +ex
@@ -2538,8 +2584,8 @@ Configuring interface for: compute-0
 + system host-port-list compute-0 --nowrap
 + system host-if-list -a compute-0 --nowrap
 ++ cat /tmp/tmp-system-port-list
-++ awk '{print $8}'
 ++ grep --color=auto eth1000
+++ awk '{print $8}'
 + DATA0PCIADDR=0000:02:03.0
 ++ cat /tmp/tmp-system-port-list
 ++ grep --color=auto eth1001
@@ -2548,11 +2594,11 @@ Configuring interface for: compute-0
 ++ grep --color=auto 0000:02:03.0
 ++ awk '{print $2}'
 ++ cat /tmp/tmp-system-port-list
-+ DATA0PORTUUID=559c0d10-24f1-419e-98a2-96664ebac145
++ DATA0PORTUUID=d94e891a-5048-464e-886b-9c254c8dc60e
 ++ cat /tmp/tmp-system-port-list
 ++ grep --color=auto 0000:02:04.0
-++ awk '{print $2}'                                                                                                                                                   [403/1930]
-+ DATA1PORTUUID=0fe052f3-dc1c-4d51-a2c5-7a3728e450b5
+++ awk '{print $2}'
++ DATA1PORTUUID=aa5a1206-9b34-40ac-a2a2-813bce4e7d8b
 ++ cat /tmp/tmp-system-port-list
 ++ grep --color=auto 0000:02:03.0
 ++ awk '{print $4}'
@@ -2562,39 +2608,57 @@ Configuring interface for: compute-0
 ++ awk '{print $4}'
 + DATA1PORTNAME=eth1001
 ++ cat /tmp/tmp-system-host-if-list
-++ awk -v DATA0PORTNAME=eth1000 '($12 ~ DATA0PORTNAME) {print $2}'
-+ DATA0IFUUID=247605bd-0e62-4628-bee5-3ae57ca5fb87
-++ awk -v DATA1PORTNAME=eth1001 '($12 ~ DATA1PORTNAME) {print $2}'
+++ awk -v DATA0PORTNAME=eth1000 '($12 ~ DATA0PORTNAME) {print $2}'mkdir -p /etc/openstack
+tee /etc/openstack/clouds.yaml << EOF
+clouds:
+  openstack_helm:
+    region_name: RegionOne
+    identity_api_version: 3
+    endpoint_type: internalURL
+    auth:
+      username: 'admin'
+      password: 'Li69nux*'
+      project_name: 'admin'
+      project_domain_name: 'default'
+      user_domain_name: 'default'
+      auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
+EOF
+
+export OS_CLOUD=openstack_helm
+openstack endpoint list
+
++ DATA0IFUUID=a69f68e6-8e5e-4791-9669-4f76cba8d9ef
 ++ cat /tmp/tmp-system-host-if-list
-+ DATA1IFUUID=43bd3a7c-4181-49d2-a8f7-e15db0902d82
-+ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-0 247605bd-0e62-4628-bee5-3ae57ca5fb87
+++ awk -v DATA1PORTNAME=eth1001 '($12 ~ DATA1PORTNAME) {print $2}'
++ DATA1IFUUID=e14a7551-a7e5-4774-b001-c788ec0ea2a1
++ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-0 a69f68e6-8e5e-4791-9669-4f76cba8d9ef
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
 | ifname       | data0                                |
 | iftype       | ethernet                             |
-| ports        | [u'eth1000']                         |
+| ports        | [u'eth1000']                         |                                                                                                              [90/1829]
 | datanetworks | [u'physnet0']                        |
-| imac         | 52:54:00:36:7f:de                    |
+| imac         | 52:54:00:37:9f:75                    |
 | imtu         | 1500                                 |
 | ifclass      | data                                 |
 | networks     |                                      |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | 247605bd-0e62-4628-bee5-3ae57ca5fb87 |
-| ihost_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid         | a69f68e6-8e5e-4791-9669-4f76cba8d9ef |
+| ihost_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:23:43.470520+00:00     |
-| updated_at   | 2019-05-29T09:42:31.058061+00:00     |
+| created_at   | 2019-05-29T14:20:36.380837+00:00     |
+| updated_at   | 2019-05-29T15:07:28.596229+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | disabled                             |
 | ipv6_mode    | disabled                             |
 | accelerated  | [True]                               |
 +--------------+--------------------------------------+
-+ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-0 43bd3a7c-4181-49d2-a8f7-e15db0902d82
++ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-0 e14a7551-a7e5-4774-b001-c788ec0ea2a1
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
@@ -2602,20 +2666,20 @@ Configuring interface for: compute-0
 | iftype       | ethernet                             |
 | ports        | [u'eth1001']                         |
 | datanetworks | [u'physnet1']                        |
-| imac         | 52:54:00:05:d6:54                    |
+| imac         | 52:54:00:0d:03:2f                    |
 | imtu         | 1500                                 |
 | ifclass      | data                                 |
 | networks     |                                      |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | 43bd3a7c-4181-49d2-a8f7-e15db0902d82 |
-| ihost_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid         | e14a7551-a7e5-4774-b001-c788ec0ea2a1 |
+| ihost_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:23:43.784523+00:00     |
-| updated_at   | 2019-05-29T09:42:34.259687+00:00     |
+| created_at   | 2019-05-29T14:20:36.632473+00:00     |
+| updated_at   | 2019-05-29T15:07:31.456005+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | disabled                             |
 | ipv6_mode    | disabled                             |
@@ -2636,13 +2700,13 @@ Configuring interface for: compute-1
 ++ cat /tmp/tmp-system-port-list
 ++ grep --color=auto 0000:02:03.0
 ++ awk '{print $2}'
-+ DATA0PORTUUID=91026ab6-8399-4c39-85f3-9c249b76106f                                                                                                                  [318/1930]
++ DATA0PORTUUID=3ea9b452-3895-46ba-bd44-652685f2a3c0
 ++ cat /tmp/tmp-system-port-list
 ++ grep --color=auto 0000:02:04.0
 ++ awk '{print $2}'
-+ DATA1PORTUUID=918b89bd-9cb4-49a5-801f-435f969c87d4
-++ grep --color=auto 0000:02:03.0
++ DATA1PORTUUID=0d25e26e-ff4b-4f98-8c32-0176ae239bd6
 ++ cat /tmp/tmp-system-port-list
+++ grep --color=auto 0000:02:03.0
 ++ awk '{print $4}'
 + DATA0PORTNAME=eth1000
 ++ cat /tmp/tmp-system-port-list
@@ -2651,11 +2715,11 @@ Configuring interface for: compute-1
 + DATA1PORTNAME=eth1001
 ++ cat /tmp/tmp-system-host-if-list
 ++ awk -v DATA0PORTNAME=eth1000 '($12 ~ DATA0PORTNAME) {print $2}'
-+ DATA0IFUUID=ad62b8ab-a6ae-42d6-84aa-e2f9fd8dcf60
++ DATA0IFUUID=2e6c98ce-7d96-4824-a7fa-319378b8591d
 ++ cat /tmp/tmp-system-host-if-list
 ++ awk -v DATA1PORTNAME=eth1001 '($12 ~ DATA1PORTNAME) {print $2}'
-+ DATA1IFUUID=d61d1b70-c1df-4f92-a389-eacc15159706
-+ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-1 ad62b8ab-a6ae-42d6-84aa-e2f9fd8dcf60
++ DATA1IFUUID=04d35fd3-7309-4d56-ac96-0f21851539d7
++ system host-if-modify -m 1500 -n data0 -d physnet0 -c data compute-1 2e6c98ce-7d96-4824-a7fa-319378b8591d
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
@@ -2663,26 +2727,26 @@ Configuring interface for: compute-1
 | iftype       | ethernet                             |
 | ports        | [u'eth1000']                         |
 | datanetworks | [u'physnet0']                        |
-| imac         | 52:54:00:ec:d9:79                    |
+| imac         | 52:54:00:87:5f:36                    |
 | imtu         | 1500                                 |
 | ifclass      | data                                 |
 | networks     |                                      |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | ad62b8ab-a6ae-42d6-84aa-e2f9fd8dcf60 |
-| ihost_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid         | 2e6c98ce-7d96-4824-a7fa-319378b8591d |
+| ihost_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:24:49.572714+00:00     |
-| updated_at   | 2019-05-29T09:42:39.940572+00:00     |
+| created_at   | 2019-05-29T14:21:23.988766+00:00     |
+| updated_at   | 2019-05-29T15:07:37.029628+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | disabled                             |
 | ipv6_mode    | disabled                             |
 | accelerated  | [True]                               |
 +--------------+--------------------------------------+
-+ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-1 d61d1b70-c1df-4f92-a389-eacc15159706
++ system host-if-modify -m 1500 -n data1 -d physnet1 -c data compute-1 04d35fd3-7309-4d56-ac96-0f21851539d7
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
@@ -2690,20 +2754,20 @@ Configuring interface for: compute-1
 | iftype       | ethernet                             |
 | ports        | [u'eth1001']                         |
 | datanetworks | [u'physnet1']                        |
-| imac         | 52:54:00:8a:42:a8                    |
+| imac         | 52:54:00:f6:ee:79                    |
 | imtu         | 1500                                 |
 | ifclass      | data                                 |
 | networks     |                                      |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | d61d1b70-c1df-4f92-a389-eacc15159706 |
-| ihost_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid         | 04d35fd3-7309-4d56-ac96-0f21851539d7 |
+| ihost_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:24:49.895596+00:00     |
-| updated_at   | 2019-05-29T09:42:42.259706+00:00     |
+| created_at   | 2019-05-29T14:21:24.126199+00:00     |
+| updated_at   | 2019-05-29T15:07:39.554004+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | disabled                             |
 | ipv6_mode    | disabled                             |
@@ -2711,6 +2775,8 @@ Configuring interface for: compute-1
 +--------------+--------------------------------------+
 + set +ex
 ```
+
+### Create volume groups for computes
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
@@ -2733,10 +2799,10 @@ cgts-vg volume group already exists
 +--------------------------+--------------------------------------------------+
 | Property                 | Value                                            |
 +--------------------------+--------------------------------------------------+
-| uuid                     | 8f9ed060-19cb-4173-9707-142fe8793dbb             |
+| uuid                     | bb5f08cb-d130-4155-a93f-1e51116de676             |
 | pv_state                 | adding                                           |
 | pv_type                  | partition                                        |
-| disk_or_part_uuid        | 3f02208d-f205-4857-b9bf-681b7806c379             |
+| disk_or_part_uuid        | a2561c83-9248-4b09-bd22-3c920a1b1d35             |
 | disk_or_part_device_node | /dev/sda5                                        |
 | disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
 | lvm_pv_name              | /dev/sda5                                        |
@@ -2745,8 +2811,8 @@ cgts-vg volume group already exists
 | lvm_pv_size_gib          | 0.0                                              |
 | lvm_pe_total             | 0                                                |
 | lvm_pe_alloced           | 0                                                |
-| ihost_uuid               | b27ddfa9-9d87-4580-ad09-dcc83056195d             |
-| created_at               | 2019-05-29T09:43:15.123856+00:00                 |
+| ihost_uuid               | e2efc721-727f-4166-a2dd-9623dc8fa23b             |
+| created_at               | 2019-05-29T15:12:59.553520+00:00                 |
 | updated_at               | None                                             |
 +--------------------------+--------------------------------------------------+
 +-----------------------+-------------------------------------------------------------------+
@@ -2754,8 +2820,8 @@ cgts-vg volume group already exists
 +-----------------------+-------------------------------------------------------------------+
 | lvm_vg_name           | nova-local                                                        |
 | vg_state              | adding                                                            |
-| uuid                  | 5a8feae2-3caa-4067-ab97-f26b5d05fd41                              |
-| ihost_uuid            | b27ddfa9-9d87-4580-ad09-dcc83056195d                              |
+| uuid                  | 96effd94-b892-4fe9-803e-92a48044a80d                              |
+| ihost_uuid            | e2efc721-727f-4166-a2dd-9623dc8fa23b                              |
 | lvm_vg_access         | None                                                              |
 | lvm_max_lv            | 0                                                                 |
 | lvm_cur_lv            | 0                                                                 |
@@ -2765,17 +2831,17 @@ cgts-vg volume group already exists
 | lvm_vg_avail_size_gib | 0.0                                                               |
 | lvm_vg_total_pe       | 0                                                                 |
 | lvm_vg_free_pe        | 0                                                                 |
-| created_at            | 2019-05-29T09:43:20.054730+00:00                                  |
+| created_at            | 2019-05-29T15:13:04.727690+00:00                                  |
 | updated_at            | None                                                              |
 | parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
 +-----------------------+-------------------------------------------------------------------+
 +--------------------------+--------------------------------------------------+
 | Property                 | Value                                            |
 +--------------------------+--------------------------------------------------+
-| uuid                     | 2c6e4fda-2ac0-4bc0-8d48-23b23009d6d1             |
+| uuid                     | a5149515-3c01-4ab0-a63f-61c29e6578fe             |
 | pv_state                 | adding                                           |
 | pv_type                  | partition                                        |
-| disk_or_part_uuid        | 4b73f567-8666-4d76-8b74-75c18dec1487             |
+| disk_or_part_uuid        | 82b5e3bf-b39a-4c4d-a6ba-0d7fb35b02a4             |
 | disk_or_part_device_node | /dev/sda6                                        |
 | disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part6 |
 | lvm_pv_name              | /dev/sda6                                        |
@@ -2784,8 +2850,8 @@ cgts-vg volume group already exists
 | lvm_pv_size_gib          | 0.0                                              |
 | lvm_pe_total             | 0                                                |
 | lvm_pe_alloced           | 0                                                |
-| ihost_uuid               | b27ddfa9-9d87-4580-ad09-dcc83056195d             |
-| created_at               | 2019-05-29T09:43:22.068603+00:00                 |
+| ihost_uuid               | e2efc721-727f-4166-a2dd-9623dc8fa23b             |
+| created_at               | 2019-05-29T15:13:06.596774+00:00                 |
 | updated_at               | None                                             |
 +--------------------------+--------------------------------------------------+
 +-----------------------+-------------------------------------------------------------------+
@@ -2793,8 +2859,8 @@ cgts-vg volume group already exists
 +-----------------------+-------------------------------------------------------------------+
 | lvm_vg_name           | nova-local                                                        |
 | vg_state              | adding                                                            |
-| uuid                  | 5a8feae2-3caa-4067-ab97-f26b5d05fd41                              |
-| ihost_uuid            | b27ddfa9-9d87-4580-ad09-dcc83056195d                              |
+| uuid                  | 96effd94-b892-4fe9-803e-92a48044a80d                              |
+| ihost_uuid            | e2efc721-727f-4166-a2dd-9623dc8fa23b                              |
 | lvm_vg_access         | None                                                              |
 | lvm_max_lv            | 0                                                                 |
 | lvm_cur_lv            | 0                                                                 |
@@ -2804,7 +2870,7 @@ cgts-vg volume group already exists
 | lvm_vg_avail_size_gib | 0.0                                                               |
 | lvm_vg_total_pe       | 0                                                                 |
 | lvm_vg_free_pe        | 0                                                                 |
-| created_at            | 2019-05-29T09:43:20.054730+00:00                                  |
+| created_at            | 2019-05-29T15:13:04.727690+00:00                                  |
 | updated_at            | None                                                              |
 | parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
 +-----------------------+-------------------------------------------------------------------+
@@ -2812,10 +2878,10 @@ cgts-vg volume group already exists
 +--------------------------+--------------------------------------------------+
 | Property                 | Value                                            |
 +--------------------------+--------------------------------------------------+
-| uuid                     | c89c1e41-fbe2-46d9-98b9-9d5c2ff04788             |
+| uuid                     | 9d3d66c7-4da3-4244-8fec-d076a81e9896             |
 | pv_state                 | adding                                           |
 | pv_type                  | partition                                        |
-| disk_or_part_uuid        | 1c4853a5-666e-4e6b-b110-2de6fb0f96f9             |
+| disk_or_part_uuid        | b06c2717-b6df-4d78-9c24-bbee47c6a7eb             |
 | disk_or_part_device_node | /dev/sda5                                        |
 | disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part5 |
 | lvm_pv_name              | /dev/sda5                                        |
@@ -2824,17 +2890,17 @@ cgts-vg volume group already exists
 | lvm_pv_size_gib          | 0.0                                              |
 | lvm_pe_total             | 0                                                |
 | lvm_pe_alloced           | 0                                                |
-| ihost_uuid               | f94c8e04-da78-4a63-ba5b-01d793eaa59a             |
-| created_at               | 2019-05-29T09:43:34.198338+00:00                 |
+| ihost_uuid               | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba             |
+| created_at               | 2019-05-29T15:13:19.449844+00:00                 |
 | updated_at               | None                                             |
 +--------------------------+--------------------------------------------------+
-+-----------------------+-------------------------------------------------------------------+
++-----------------------+-------------------------------------------------------------------+                                                                        [12/1804]
 | Property              | Value                                                             |
 +-----------------------+-------------------------------------------------------------------+
 | lvm_vg_name           | nova-local                                                        |
 | vg_state              | adding                                                            |
-| uuid                  | 4f30ad74-d104-49a1-b7b9-21f8d5efcda8                              |
-| ihost_uuid            | f94c8e04-da78-4a63-ba5b-01d793eaa59a                              |
+| uuid                  | 729e32d6-defd-4124-8c31-5667da180a27                              |
+| ihost_uuid            | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba                              |
 | lvm_vg_access         | None                                                              |
 | lvm_max_lv            | 0                                                                 |
 | lvm_cur_lv            | 0                                                                 |
@@ -2844,17 +2910,17 @@ cgts-vg volume group already exists
 | lvm_vg_avail_size_gib | 0.0                                                               |
 | lvm_vg_total_pe       | 0                                                                 |
 | lvm_vg_free_pe        | 0                                                                 |
-| created_at            | 2019-05-29T09:43:39.245773+00:00                                  |
+| created_at            | 2019-05-29T15:13:24.392637+00:00                                  |
 | updated_at            | None                                                              |
 | parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
 +-----------------------+-------------------------------------------------------------------+
 +--------------------------+--------------------------------------------------+
 | Property                 | Value                                            |
 +--------------------------+--------------------------------------------------+
-| uuid                     | 56d855f3-5396-4646-87c6-971c9c4b355e             |
+| uuid                     | 2bbe459d-f7c0-4fe9-a6cc-f47d9734385a             |
 | pv_state                 | adding                                           |
 | pv_type                  | partition                                        |
-| disk_or_part_uuid        | b123ed8d-b1f5-4f30-a4e8-30ca8e263fc3             |
+| disk_or_part_uuid        | cba9aaac-9f98-4934-9fd4-1bfc643f95ba             |
 | disk_or_part_device_node | /dev/sda6                                        |
 | disk_or_part_device_path | /dev/disk/by-path/pci-0000:00:1f.2-ata-1.0-part6 |
 | lvm_pv_name              | /dev/sda6                                        |
@@ -2863,8 +2929,8 @@ cgts-vg volume group already exists
 | lvm_pv_size_gib          | 0.0                                              |
 | lvm_pe_total             | 0                                                |
 | lvm_pe_alloced           | 0                                                |
-| ihost_uuid               | f94c8e04-da78-4a63-ba5b-01d793eaa59a             |
-| created_at               | 2019-05-29T09:43:41.207194+00:00                 |
+| ihost_uuid               | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba             |
+| created_at               | 2019-05-29T15:13:26.276962+00:00                 |
 | updated_at               | None                                             |
 +--------------------------+--------------------------------------------------+
 +-----------------------+-------------------------------------------------------------------+
@@ -2872,8 +2938,8 @@ cgts-vg volume group already exists
 +-----------------------+-------------------------------------------------------------------+
 | lvm_vg_name           | nova-local                                                        |
 | vg_state              | adding                                                            |
-| uuid                  | 4f30ad74-d104-49a1-b7b9-21f8d5efcda8                              |
-| ihost_uuid            | f94c8e04-da78-4a63-ba5b-01d793eaa59a                              |
+| uuid                  | 729e32d6-defd-4124-8c31-5667da180a27                              |
+| ihost_uuid            | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba                              |
 | lvm_vg_access         | None                                                              |
 | lvm_max_lv            | 0                                                                 |
 | lvm_cur_lv            | 0                                                                 |
@@ -2883,68 +2949,10 @@ cgts-vg volume group already exists
 | lvm_vg_avail_size_gib | 0.0                                                               |
 | lvm_vg_total_pe       | 0                                                                 |
 | lvm_vg_free_pe        | 0                                                                 |
-| created_at            | 2019-05-29T09:43:39.245773+00:00                                  |
+| created_at            | 2019-05-29T15:13:24.392637+00:00                                  |
 | updated_at            | None                                                              |
 | parameters            | {u'concurrent_disk_operations': 2, u'instance_backing': u'image'} |
 +-----------------------+-------------------------------------------------------------------+
-```
-
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do                                                                                        [8/1955]
->    system host-if-modify $COMPUTE mgmt0 --networks cluster-host
-> done
-+--------------+--------------------------------------+
-| Property     | Value                                |
-+--------------+--------------------------------------+
-| ifname       | mgmt0                                |
-| iftype       | ethernet                             |
-| ports        | [u'enp2s2']                          |
-| datanetworks | []                                   |
-| imac         | 52:54:00:77:70:e6                    |
-| imtu         | 1500                                 |
-| ifclass      | platform                             |
-| networks     | cluster-host,mgmt                    |
-| aemode       | None                                 |
-| schedpolicy  | None                                 |
-| txhashpolicy | None                                 |
-| uuid         | 196ce0c6-b8a5-40ce-92e7-55bc46d0cb2f |
-| ihost_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
-| vlan_id      | None                                 |
-| uses         | []                                   |
-| used_by      | []                                   |
-| created_at   | 2019-05-29T09:23:43.241306+00:00     |
-| updated_at   | 2019-05-29T09:41:32.791324+00:00     |
-| sriov_numvfs | 0                                    |
-| ipv4_mode    | static                               |
-| ipv6_mode    | disabled                             |
-| accelerated  | [False]                              |
-+--------------+--------------------------------------+
-+--------------+--------------------------------------+
-| Property     | Value                                |
-+--------------+--------------------------------------+
-| ifname       | mgmt0                                |
-| iftype       | ethernet                             |
-| ports        | [u'enp2s2']                          |
-| datanetworks | []                                   |
-| imac         | 52:54:00:69:a0:5c                    |
-| imtu         | 1500                                 |
-| ifclass      | platform                             |
-| networks     | cluster-host,mgmt                    |
-| aemode       | None                                 |
-| schedpolicy  | None                                 |
-| txhashpolicy | None                                 |
-| uuid         | fb2a30f1-cb75-48fc-b513-74c16181d7e1 |
-| ihost_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
-| vlan_id      | None                                 |
-| uses         | []                                   |
-| used_by      | []                                   |
-| created_at   | 2019-05-29T09:24:49.252601+00:00     |
-| updated_at   | 2019-05-29T09:41:42.254207+00:00     |
-| sriov_numvfs | 0                                    |
-| ipv4_mode    | static                               |
-| ipv6_mode    | disabled                             |
-| accelerated  | [False]                              |
-+--------------+--------------------------------------+
 ```
 
 ```sh
@@ -2962,20 +2970,20 @@ cgts-vg volume group already exists
 | bm_username         | None                                 |
 | boot_device         | sda                                  |
 | capabilities        | {}                                   |
-| config_applied      | 7c653bb5-de5d-4a50-98c3-a3dedfbad4f3 |
+| config_applied      | 22487d47-7be0-43f4-8b58-8f405246274c |
 | config_status       | None                                 |
-| config_target       | 7c653bb5-de5d-4a50-98c3-a3dedfbad4f3 |
+| config_target       | 22487d47-7be0-43f4-8b58-8f405246274c |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:12:09.750282+00:00     |
+| created_at          | 2019-05-29T14:09:15.968293+00:00     |
 | hostname            | compute-0                            |
-| id                  | 3                                    |
+| id                  | 5                                    |
 | install_output      | text                                 |
 | install_state       | completed                            |
 | install_state_info  | None                                 |
 | invprovision        | unprovisioned                        |
 | location            | {}                                   |
-| mgmt_ip             | 192.168.204.8                        |
-| mgmt_mac            | 52:54:00:77:70:e6                    |
+| mgmt_ip             | 192.168.204.10                       |
+| mgmt_mac            | 52:54:00:19:e2:ea                    |
 | operational         | disabled                             |
 | personality         | worker                               |
 | reserved            | False                                |
@@ -2985,12 +2993,16 @@ cgts-vg volume group already exists
 | task                | Unlocking                            |
 | tboot               | false                                |
 | ttys_dcd            | None                                 |
-| ttys_dcd            | None                                 |
-| updated_at          | 2019-05-29T09:43:45.715089+00:00     |
-| uptime              | 1250                                 |
-| uuid                | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| updated_at          | 2019-05-29T15:14:16.043084+00:00     |
+| uptime              | 3269                                 |
+| uuid                | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
+Insufficient memory reserved for platform on compute-1. Platform memory must be at least 1100 MiB summed across all numa nodes.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-reboot compute-1
 +---------------------+--------------------------------------+
 | Property            | Value                                |
 +---------------------+--------------------------------------+
@@ -3002,77 +3014,51 @@ cgts-vg volume group already exists
 | bm_username         | None                                 |
 | boot_device         | sda                                  |
 | capabilities        | {}                                   |
-| config_applied      | 05e2267f-8c7d-49b6-98e2-b59d2c1e893e |
+| config_applied      | 74c228ad-9232-450e-aecb-aae1992a4aed |
 | config_status       | None                                 |
-| config_target       | 05e2267f-8c7d-49b6-98e2-b59d2c1e893e |
+| config_target       | 74c228ad-9232-450e-aecb-aae1992a4aed |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:13:01.680278+00:00     |
+| created_at          | 2019-05-29T14:10:23.228399+00:00     |
 | hostname            | compute-1                            |
-| id                  | 4                                    |
+| id                  | 6                                    |
 | install_output      | text                                 |
 | install_state       | completed                            |
 | install_state_info  | None                                 |
 | invprovision        | unprovisioned                        |
 | location            | {}                                   |
-| mgmt_ip             | 192.168.204.14                       |
-| mgmt_mac            | 52:54:00:69:a0:5c                    |
+| mgmt_ip             | 192.168.204.8                        |
+| mgmt_mac            | 52:54:00:bb:9b:06                    |
 | operational         | disabled                             |
 | personality         | worker                               |
 | reserved            | False                                |
 | rootfs_device       | sda                                  |
 | serialid            | None                                 |
 | software_load       | 19.01                                |
-| task                | Unlocking                            |
+| task                | Rebooting                            |
 | tboot               | false                                |
 | ttys_dcd            | None                                 |
-| updated_at          | 2019-05-29T09:43:45.737225+00:00     |
-| uptime              | 1186                                 |
-| uuid                | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| updated_at          | 2019-05-29T15:19:16.393857+00:00     |
+| uptime              | 3518                                 |
+| uuid                | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
-(reverse-i-search)`-list': for COMPUTE in compute-0 compute-1; do   ROOT_DISK=$(system host-show ${COMPUTE} | grep rootfs | awk '{print $4}');   ROOT_DISK_UUID=$(system host-disk-list ${COMPUTE} --nowrap | awk /${ROOT_DISK}/'{print $2}');   AVAIL_SIZE=$(system host-disk^Cist ${COMPUTE} | awk /${ROOT_DISK}/'{printf("%d",$12)}');   CGTS_PARTITION_SIZE=4;   NOVA_PARTITION_SIZE=$(($AVAIL_SIZE - $CGTS_PARTITION_SIZE));   CGTS_PARTITION=$(system host-disk-partition-add -t lvm_phys_vol ${COMPUTE} ${ROOT_DISK_UUID} ${CGTS_PARTITION_SIZE});   CGTS_PARTITION_UUID=$(echo ${CGTS_PARTITION} | grep -ow "| uuid | [a-z0-9\-]* |" | awk '{print $4}');   NOVA_PARTITION=$(system host-disk-partition-add -t lvm_phys_vol ${COMPUTE} ${ROOT_DISK_UUID} ${NOVA_PARTITION_SIZE});   NOVA_PARTITION_UUID=$(echo ${NOVA_PARTITION} | grep -ow "| uuid | [a-z0-9\-]* |" | awk '{print $4}');   system host-lvg-add ${COMPUTE} cgts-vg;   system host-pv-add ${COMPUTE} cgts-vg  ${CGTS_PARTITION_UUID};   system host-lvg-add ${COMPUTE} nova-local;   system host-pv-add ${COMPUTE} nova-local ${NOVA_PARTITION_UUID};   system host-lvg-modify -b image ${COMPUTE} nova-local; done
-(reverse-i-search)`host': for COMPUTE in compute-0 compute-1; do     system ^Cst-unlock $COMPUTE; done
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
-| 3  | compute-0    | worker      | unlocked       | disabled    | offline      |
-| 4  | compute-1    | worker      | unlocked       | disabled    | offline      |
-| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
-| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
-| 3  | compute-0    | worker      | unlocked       | disabled    | offline      |
-| 4  | compute-1    | worker      | unlocked       | disabled    | offline      |
-| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
-| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
 ```
 
+## Using sysinv to bring up/down the containerized services
+
+### Generate the stx-openstack application tarball
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
-| application         | version | manifest name                 | manifest file | status    | progress                        |
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
-| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploading | validating and uploading charts |
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+user@workstation:~/stx-tools/deployment/libvirt$ wget http://mirror.starlingx.cengn.ca/mirror/starlingx/master/centos/20190523T013000Z/outputs/helm-charts/stx-openstack-1.0-13-centos-stable-latest.tgz
 ```
 
+### Stage application for deployment
+
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
-+---------------------+---------+-------------------------------+---------------+----------+-----------+
-| application         | version | manifest name                 | manifest file | status   | progress  |
-+---------------------+---------+-------------------------------+---------------+----------+-----------+
-| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploaded | completed |
-+---------------------+---------+-------------------------------+---------------+----------+-----------+
+user@workstation:~/stx-tools/deployment/libvirt$ scp stx-openstack-1.0-13-centos-stable-latest.tgz wrsroot@10.10.10.3:~/
+...
+wrsroot@10.10.10.3's password: 
+stx-openstack-1.0-13-centos-stable-latest.tgz                                                                                               100% 1083KB   1.1MB/s   00:00
 ```
 
 ```sh
@@ -3081,7 +3067,30 @@ ansible.log  localhost.yml  stx-openstack-1.0-13-centos-stable-latest.tgz
 ```
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------+-------------------------------+---------------+---------+-----------+
+| application         | version | manifest name                 | manifest file | status  | progress  |
++---------------------+---------+-------------------------------+---------------+---------+-----------+
+| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | applied | completed |
++---------------------+---------+-------------------------------+---------------+---------+-----------+
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system application-upload stx-openstack-1.0-13-centos-stable-latest.tgz
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| active        | False                            |
+| app_version   | 1.0-13-centos-stable-latest      |
+| created_at    | 2019-05-29T15:41:38.332856+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | uploading                        |
+| updated_at    | None                             |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
 ```
 
 ```sh
@@ -3089,109 +3098,66 @@ ansible.log  localhost.yml  stx-openstack-1.0-13-centos-stable-latest.tgz
 +---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
 | application         | version                   | manifest name                 | manifest file | status    | progress                        |
 +---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
-| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | applying  | completed                       |
+| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | applied   | completed                       |
 | stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest.yaml | uploading | validating and uploading charts |
 |                     | latest                    |                               |               |           |                                 |
 |                     |                           |                               |               |           |                                 |
 +---------------------+---------------------------+-------------------------------+---------------+-----------+---------------------------------+
 ```
 
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
-+---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
-| application         | version                   | manifest name                 | manifest file | status       | progress                             |
-+---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
-| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest.yaml | apply-failed | operation aborted, check logs for    |
-|                     |                           |                               |               |              | detail                               |
-|                     |                           |                               |               |              |                                      |
-| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest.yaml | uploaded     | completed                            |
-|                     | latest                    |                               |               |              |                                      |
-|                     |                           |                               |               |              |                                      |
-+---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
-```
+After ~ 15 minutes...
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system application-list
-+---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
-| application         | version                   | manifest name                 | manifest  | status       | progress                                           |
-|                     |                           |                               | file      |              |                                                    |
-+---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
-| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest. | apply-failed | operation aborted, check logs for detail           |
-|                     |                           |                               | yaml      |              |                                                    |
-|                     |                           |                               |           |              |                                                    |
-| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest. | apply-failed | platform-integ-apps is required and is not applied |
-|                     | latest                    |                               | yaml      |              |                                                    |
-|                     |                           |                               |           |              |                                                    |
-+---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
++---------------------+-----------------------------+-------------------------------+---------------+----------+-----------+
+| application         | version                     | manifest name                 | manifest file | status   | progress  |
++---------------------+-----------------------------+-------------------------------+---------------+----------+-----------+
+| platform-integ-apps | 1.0-5                       | platform-integration-manifest | manifest.yaml | applied  | completed |
+| stx-openstack       | 1.0-13-centos-stable-latest | armada-manifest               | manifest.yaml | uploaded | completed |
++---------------------+-----------------------------+-------------------------------+---------------+----------+-----------+
 ```
 
+### Bring Up Services
+
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-remove stx-openstack
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-apply stx-openstack
 +---------------+----------------------------------+
 | Property      | Value                            |
 +---------------+----------------------------------+
 | active        | False                            |
 | app_version   | 1.0-13-centos-stable-latest      |
-| created_at    | 2019-05-29T10:19:35.835738+00:00 |
+| created_at    | 2019-05-29T15:41:38.332856+00:00 |
 | manifest_file | manifest.yaml                    |
 | manifest_name | armada-manifest                  |
 | name          | stx-openstack                    |
 | progress      | None                             |
-| status        | removing                         |
-| updated_at    | 2019-05-29T10:26:40.763072+00:00 |
+| status        | applying                         |
+| updated_at    | 2019-05-29T15:44:03.135360+00:00 |
 +---------------+----------------------------------+
 Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-delete stx-openstack
-Application stx-openstack deleted.
-```
-
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-remove platform-integ-apps
-+---------------+----------------------------------+
-| Property      | Value                            |
-+---------------+----------------------------------+
-| active        | False                            |
-| app_version   | 1.0-5                            |
-| created_at    | 2019-05-29T10:16:46.752035+00:00 |
-| manifest_file | manifest.yaml                    |
-| manifest_name | platform-integration-manifest    |
-| name          | platform-integ-apps              |
-| progress      | None                             |
-| status        | removing                         |
-| updated_at    | 2019-05-29T10:22:03.525403+00:00 |
-+---------------+----------------------------------+
-Please use 'system application-list' or 'system application-show platform-integ-apps' to view the current progress.
-[wrsroot@controller-0 ~(keystone_admin)]$ system application-delete platform-integ-apps
-Application platform-integ-apps deleted.
 ```
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system application-list
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
-| application         | version | manifest name                 | manifest file | status    | progress                        |
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
-| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploading | validating and uploading charts |
-+---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
++---------------------+-----------------------------+-------------------------------+---------------+----------+--------------------------+
+| application         | version                     | manifest name                 | manifest file | status   | progress                 |
++---------------------+-----------------------------+-------------------------------+---------------+----------+--------------------------+
+| platform-integ-apps | 1.0-5                       | platform-integration-manifest | manifest.yaml | applied  | completed                |
+| stx-openstack       | 1.0-13-centos-stable-latest | armada-manifest               | manifest.yaml | applying | retrieving docker images |
++---------------------+-----------------------------+-------------------------------+---------------+----------+--------------------------+
 ```
 
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list                                                                                                                      
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
-| 3  | compute-0    | worker      | unlocked       | disabled    | failed       |
-| 4  | compute-1    | worker      | unlocked       | disabled    | failed       |
-| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
-| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
-+----+--------------+-------------+----------------+-------------+--------------+
-```
+After ~ 15 minutes...
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock compute-0
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock compute-1
+
 ```
+
+## Verify the cluster endpoints
+
+
+
+## Others
 
 - https://www.google.com/search?client=ubuntu&channel=fs&q=%22operation+aborted%2C+check+logs+for+detail%22&ie=utf-8&oe=utf-8
 
