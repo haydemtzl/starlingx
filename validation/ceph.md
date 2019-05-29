@@ -276,6 +276,8 @@ ID  CLASS WEIGHT  TYPE NAME              STATUS REWEIGHT PRI-AFF
   2   ssd 0.43549             osd.2          up  1.00000 1.00000 
 ```
 
+In Dedicated Storage, Baremetal:
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls
 .rgw.root
@@ -287,6 +289,16 @@ images
 ephemeral
 cinder-volumes
 gnocchi.metrics
+```
+
+In Simplex, Virtual:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd pool ls
+.rgw.root
+default.rgw.control
+default.rgw.meta
+default.rgw.log
 ```
 
 #### Checking Monitor Status
@@ -897,6 +909,51 @@ Error EINVAL: specified pgp_num 128 > pg_num 8
 800.011	Loss of replication in replication group group-1: peer host down	cluster=ea5b5cfa-c8f4-454f-9b8a-92afb56973ac.peergroup=group-1	major	2019-05-28T16:04:04.757143	
 200.006	compute-1 is degraded due to the failure of its 'pci-irq-affinity-agent' process. Auto recovery of this major process is in progress.	host=compute-1.process=pci-irq-affinity-agent	major	2019-05-28T18:50:32.852847
 ```
+
+Tried:
+
+- Lock (Fail), Unlock
+
+Reboot controller-0
+
+```sh
+[578813.090734] watchdog: watchdog0: watchdog did not stop!
+[578816.471283] libceph: connect 10.10.58.4:6789 error -101
+[578820.477902] libceph: connect 10.10.58.3:6789 error -101
+[578821.458981] libceph: connect 10.10.58.3:6789 error -101
+[578822.456698] libceph: connect 10.10.58.3:6789 error -101
+[578824.451842] libceph: connect 10.10.58.3:6789 error -101
+```
+
+Lock storage-1, storage-2, from UI:
+
+```sh
+Error: Unable to force lock host: storage-1. Reason/Action: Remote error: CephMonRestfulListKeysError Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1 [u'Traceback (most recent call last):\n', u' File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/amqp.py", line 438, in _process_data\n **args)\n', u' File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/dispatcher.py", line 172, in dispatch\n result = getattr(proxyobj, method)(ctxt, **kwargs)\n', u' File "/usr/lib64/python2.7/site-packages/sysinv/conductor/manager.py", line 5280, in get_ceph_pools_df_stats\n return self._ceph.get_pools_df_stats()\n', u' File "/usr/lib64/python2.7/site-packages/sysinv/conductor/ceph.py", line 944, in get_pools_df_stats\n timeout=timeout)\n', u' File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 1391, in df\n return self._request(\'df\', **kwargs)\n', u' File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 162, in _request\n self._get_password()\n', u' File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 86, in _get_password\n raise CephMonRestfulListKeysError(str(e))\n', u"CephMonRestfulListKeysError: Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1\n"].
+```
+
+From command line:
+
+```sh
+[wrsroot@controller-1 ~(keystone_admin)]$ system host-lock storage-2
+Remote error: CephMonRestfulListKeysError Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1
+[u'Traceback (most recent call last):\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/amqp.py", line 438, in _process_data\n    **args)\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/dispatcher.py", line 172, in dispatch\n    result = getattr(proxyobj, method)(ctxt, **kwargs)\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/conductor/manager.py", line 5280, in get_ceph_pools_df_stats\n    return self._ceph.get_pools_df_stats()\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/conductor/ceph.py", line 944, in get_pools_df_stats\n    timeout=timeout)\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 1391, in df\n    return self._request(\'df\', **kwargs)\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 162, in _request\n    self._get_password()\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 86, in _get_password\n    raise CephMonRestfulListKeysError(str(e))\n', u"CephMonRestfulListKeysError: Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1\n"].
+```
+
+Alarms:
+
+```sh
+270.001	Host compute-1 compute services failure,	host=compute-1.services=compute	critical	2019-05-29T07:40:21.667039	
+250.001	compute-1 Configuration is out-of-date.	host=compute-1	major	2019-05-29T07:40:44.070493	
+200.006	compute-1 is degraded due to the failure of its 'pci-irq-affinity-agent' process. Auto recovery of this major process is in progress.	host=compute-1.process=pci-irq-affinity-agent	major	2019-05-29T07:23:41.163381	
+100.119	compute-1 is not locked to remote PTP Grand Master	host=compute-1.ptp=no-lock	major	2019-05-29T07:29:29.147505
+```
+
+Force Lock compute-0
+
+```sh
+services-disable-failed
+```
+
 
 6. Check that ceph reports HEALTH_OK via
 
