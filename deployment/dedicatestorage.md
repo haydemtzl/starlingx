@@ -1732,3 +1732,217 @@ ansible.log  localhost.yml  stx-openstack-1.0-13-centos-stable-latest.tgz
 |                     |                           |                               |               |              |                                      |
 +---------------------+---------------------------+-------------------------------+---------------+--------------+--------------------------------------+
 ```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
+| application         | version                   | manifest name                 | manifest  | status       | progress                                           |
+|                     |                           |                               | file      |              |                                                    |
++---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
+| platform-integ-apps | 1.0-5                     | platform-integration-manifest | manifest. | apply-failed | operation aborted, check logs for detail           |
+|                     |                           |                               | yaml      |              |                                                    |
+|                     |                           |                               |           |              |                                                    |
+| stx-openstack       | 1.0-13-centos-stable-     | armada-manifest               | manifest. | apply-failed | platform-integ-apps is required and is not applied |
+|                     | latest                    |                               | yaml      |              |                                                    |
+|                     |                           |                               |           |              |                                                    |
++---------------------+---------------------------+-------------------------------+-----------+--------------+----------------------------------------------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-remove stx-openstack
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| active        | False                            |
+| app_version   | 1.0-13-centos-stable-latest      |
+| created_at    | 2019-05-29T10:19:35.835738+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | armada-manifest                  |
+| name          | stx-openstack                    |
+| progress      | None                             |
+| status        | removing                         |
+| updated_at    | 2019-05-29T10:26:40.763072+00:00 |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show stx-openstack' to view the current progress.
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-delete stx-openstack
+Application stx-openstack deleted.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-remove platform-integ-apps
++---------------+----------------------------------+
+| Property      | Value                            |
++---------------+----------------------------------+
+| active        | False                            |
+| app_version   | 1.0-5                            |
+| created_at    | 2019-05-29T10:16:46.752035+00:00 |
+| manifest_file | manifest.yaml                    |
+| manifest_name | platform-integration-manifest    |
+| name          | platform-integ-apps              |
+| progress      | None                             |
+| status        | removing                         |
+| updated_at    | 2019-05-29T10:22:03.525403+00:00 |
++---------------+----------------------------------+
+Please use 'system application-list' or 'system application-show platform-integ-apps' to view the current progress.
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-delete platform-integ-apps
+Application platform-integ-apps deleted.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+| application         | version | manifest name                 | manifest file | status    | progress                        |
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+| platform-integ-apps | 1.0-5   | platform-integration-manifest | manifest.yaml | uploading | validating and uploading charts |
++---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
+```
+
+# Bare Metal
+
+```sh
+Release 19.01 localhost ttyS0
+------------------------------------------------------------------------
+W A R N I N G *** W A R N I N G *** W A R N I N G *** W A R N I N G *** 
+------------------------------------------------------------------------
+THIS IS A PRIVATE COMPUTER SYSTEM.
+This computer system including all related equipment, network devices
+(specifically including Internet access), are provided only for authorized use.
+All computer systems may be monitored for all lawful purposes, including to
+ensure that their use is authorized, for management of the system, to
+facilitate protection against unauthorized access, and to verify security
+procedures, survivability and operational security. Monitoring includes active
+attacks by authorized personnel and their entities to test or verify the
+security of the system. During monitoring, information may be examined,
+recorded, copied and used for authorized purposes. All information including
+personal information, placed on or sent over this system may be monitored. Uses
+of this system, authorized or unauthorized, constitutes consent to monitoring
+of this system. Unauthorized use may subject you to criminal prosecution.
+Evidence of any such unauthorized use collected during monitoring may be used
+for administrative, criminal or other adverse action. Use of this system
+constitutes consent to monitoring for these purposes.
+
+localhost login: wrsroot
+Password: 
+You are required to change your password immediately (root enforced)
+Changing password for wrsroot.
+(current) UNIX password: 
+New password: 
+Retype new password: 
+
+WARNING: Unauthorized access to this system is forbidden and will be
+prosecuted by law. By accessing this system, you agree that your
+actions may be monitored if unauthorized usage is suspected.
+
+localhost:~$ 
+```
+
+```
+localhost:~$ sudo config_controller --force --config-file config.ini                                                                                                            
+Parsing system configuration file...  DONE
+Validating system configuration file...  DONE
+Creating config apply file...  DONE
+
+The following configuration will be applied:
+
+System Configuration
+--------------------
+Time Zone: UTC
+System mode: duplex
+Distributed Cloud System Controller: no
+
+PXEBoot Network Configuration
+-----------------------------
+Separate PXEBoot network not configured
+PXEBoot Controller floating hostname: pxecontroller
+
+Management Network Configuration
+--------------------------------
+Management interface name: eno2
+Management interface: eno2
+Management interface MTU: 1500
+Management subnet: 10.10.58.0/24
+Controller floating address: 10.10.58.2
+Controller 0 address: 10.10.58.3
+Controller 1 address: 10.10.58.4
+NFS Management Address 1: 10.10.58.5
+NFS Management Address 2: 10.10.58.6
+Controller floating hostname: controller
+Controller hostname prefix: controller-
+OAM Controller floating hostname: oamcontroller
+Dynamic IP address allocation is selected
+Management multicast subnet: 239.1.1.0/28
+
+Kubernetes Cluster Network Configuration
+----------------------------------------
+Cluster pod network subnet: 172.16.0.0/16
+Cluster service network subnet: 10.96.0.0/12
+Cluster host interface name: eno2
+Cluster host interface: eno2
+Cluster host interface MTU: 1500
+Cluster host subnet: 192.168.206.0/24
+
+External OAM Network Configuration
+----------------------------------
+External OAM interface name: eno1
+External OAM interface: eno1
+External OAM interface MTU: 1500
+External OAM subnet: 192.168.200.0/24
+External OAM gateway address: 192.168.200.1
+External OAM floating address: 192.168.200.201
+External OAM 0 address: 192.168.200.73
+External OAM 1 address: 192.168.200.86
+
+DNS Configuration
+-----------------
+Nameserver 1: 192.168.100.60
+
+Docker Registry Configuration
+-----------------------------
+Alternative registry to k8s.gcr.io: 192.168.100.60
+Alternative registry to gcr.io: 192.168.100.60
+Alternative registry to quay.io: 192.168.100.60
+Alternative registry to docker.io: 192.168.100.60
+Is registries secure: False
+
+Applying configuration (this will take several minutes):
+
+01/08: Creating bootstrap configuration ... DONE
+02/08: Applying bootstrap manifest ... DONE
+03/08: Persisting local configuration ... DONE
+04/08: Populating initial system inventory ... DONE
+05/08: Creating system configuration ... 2019-05-29 11:51:41,730 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:41.730 76505 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:42,065 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:42.065 76505 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:42,095 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:42.095 76505 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:42,096 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:42.096 76505 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:44,413 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:44.413 76522 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:44,734 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:44.734 76522 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:44,764 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:44.764 76522 WARNING ceph_client [-] skip checking server certificate
+2019-05-29 11:51:44,766 WARNING ceph_client skip checking server certificate
+sysinv 2019-05-29 11:51:44.766 76522 WARNING ceph_client [-] skip checking server certificate
+DONE
+06/08: Applying controller manifest ... 
+```
+
+Issues
+
+```sh
+06/08: Applying controller manifest ... 
+[ 1115.133420] block drbd2: Unrelated data, aborting!
+[ 1116.194033] block drbd1: Unrelated data, aborting!
+[ 1116.274835] block drbd5: Unrelated data, aborting!
+[ 1118.807825] block drbd3: Unrelated data, aborting!
+[ 1119.807887] block drbd0: Unrelated data, aborting!
+[ 1134.299383] block drbd5: Unrelated data, aborting!
+[ 1136.749724] block drbd2: Unrelated data, aborting!
+[ 1139.486247] block drbd1: Unrelated data, aborting!
+[ 1141.610208] block drbd8: Unrelated data, aborting!
+[ 1141.615197] block drbd3: Unrelated data, aborting!
+```
+
