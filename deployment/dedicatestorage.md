@@ -1571,6 +1571,64 @@ cgts-vg volume group already exists
 ```
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do                                                                                        [8/1955]
+>    system host-if-modify $COMPUTE mgmt0 --networks cluster-host
+> done
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | mgmt0                                |
+| iftype       | ethernet                             |
+| ports        | [u'enp2s2']                          |
+| datanetworks | []                                   |
+| imac         | 52:54:00:77:70:e6                    |
+| imtu         | 1500                                 |
+| ifclass      | platform                             |
+| networks     | cluster-host,mgmt                    |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | 196ce0c6-b8a5-40ce-92e7-55bc46d0cb2f |
+| ihost_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-29T09:23:43.241306+00:00     |
+| updated_at   | 2019-05-29T09:41:32.791324+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | static                               |
+| ipv6_mode    | disabled                             |
+| accelerated  | [False]                              |
++--------------+--------------------------------------+
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | mgmt0                                |
+| iftype       | ethernet                             |
+| ports        | [u'enp2s2']                          |
+| datanetworks | []                                   |
+| imac         | 52:54:00:69:a0:5c                    |
+| imtu         | 1500                                 |
+| ifclass      | platform                             |
+| networks     | cluster-host,mgmt                    |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | fb2a30f1-cb75-48fc-b513-74c16181d7e1 |
+| ihost_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-29T09:24:49.252601+00:00     |
+| updated_at   | 2019-05-29T09:41:42.254207+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | static                               |
+| ipv6_mode    | disabled                             |
+| accelerated  | [False]                              |
++--------------+--------------------------------------+
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ for COMPUTE in compute-0 compute-1; do
 >     system host-unlock $COMPUTE
 > done
@@ -1797,6 +1855,27 @@ Application platform-integ-apps deleted.
 +---------------------+---------+-------------------------------+---------------+-----------+---------------------------------+
 ```
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list                                                                                                                      
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 3  | compute-0    | worker      | unlocked       | disabled    | failed       |
+| 4  | compute-1    | worker      | unlocked       | disabled    | failed       |
+| 5  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 6  | storage-1    | storage     | unlocked       | enabled     | available    |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock compute-0
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-lock compute-1
+```
+
+
+
 # Bare Metal
 
 ```sh
@@ -1928,6 +2007,10 @@ sysinv 2019-05-29 11:51:44.764 76522 WARNING ceph_client [-] skip checking serve
 sysinv 2019-05-29 11:51:44.766 76522 WARNING ceph_client [-] skip checking server certificate
 DONE
 06/08: Applying controller manifest ... 
+Failed to execute controller manifest
+
+Configuration failed: Failed to apply controller manifest. See /var/log/puppet/latest/puppet.log for details.
+localhost:~$ 
 ```
 
 Issues
