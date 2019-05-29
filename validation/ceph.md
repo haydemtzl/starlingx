@@ -934,6 +934,11 @@ Error: Unable to force lock host: storage-1. Reason/Action: Remote error: CephMo
 From command line:
 
 ```sh
+[wrsroot@controller-1 ~(keystone_admin)]$ system host-lock storage-1
+Cannot lock a storage node when ceph pools are not empty and replication is lost. This may result in data loss. 
+```
+
+```sh
 [wrsroot@controller-1 ~(keystone_admin)]$ system host-lock storage-2
 Remote error: CephMonRestfulListKeysError Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1
 [u'Traceback (most recent call last):\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/amqp.py", line 438, in _process_data\n    **args)\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/openstack/common/rpc/dispatcher.py", line 172, in dispatch\n    result = getattr(proxyobj, method)(ctxt, **kwargs)\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/conductor/manager.py", line 5280, in get_ceph_pools_df_stats\n    return self._ceph.get_pools_df_stats()\n', u'  File "/usr/lib64/python2.7/site-packages/sysinv/conductor/ceph.py", line 944, in get_pools_df_stats\n    timeout=timeout)\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 1391, in df\n    return self._request(\'df\', **kwargs)\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 162, in _request\n    self._get_password()\n', u'  File "/usr/lib/python2.7/site-packages/cephclient/client.py", line 86, in _get_password\n    raise CephMonRestfulListKeysError(str(e))\n', u"CephMonRestfulListKeysError: Failed to get ceph-mgr restful plugin keys. Command 'ceph restful list-keys --connect-timeout 5' returned non-zero exit status 1\n"].
@@ -952,6 +957,15 @@ Force Lock compute-0
 
 ```sh
 services-disable-failed
+```
+
+CEPH?
+
+```sh
+Cluster connection interrupted or timed out
+[wrsroot@controller-1 ~(keystone_admin)]$ ceph status
+Cluster connection interrupted or timed out
+[wrsroot@controller-1 ~(keystone_admin)]$ ceph health
 ```
 
 
