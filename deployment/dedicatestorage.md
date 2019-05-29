@@ -1947,21 +1947,26 @@ Power on compute-1
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
 | 2  | controller-1 | controller  | locked         | disabled    | online       |
-| 3  | compute-0    | worker      | locked         | disabled    | online       |
-| 4  | compute-1    | worker      | locked         | disabled    | online       |
-| 5  | storage-0    | storage     | locked         | disabled    | offline      |
-| 6  | storage-1    | storage     | locked         | disabled    | offline      |
+| 3  | storage-0    | storage     | locked         | disabled    | online       |
+| 4  | storage-1    | storage     | locked         | disabled    | online       |
+| 5  | compute-0    | worker      | locked         | disabled    | online       |
+| 6  | compute-1    | worker      | locked         | disabled    | online       |
 +----+--------------+-------------+----------------+-------------+--------------+
 ```
 
+## Prepare the remaining hosts for running the containerized services
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-label-assign controller-1 openstack-control-plane=enabled
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 32f27647-18a6-41be-97f6-94666db12acc |
-| host_uuid   | 52fbdff9-f575-42ea-b882-20fecebc3a7c |
+| uuid        | 6a95e300-eb7d-4eb0-b5e7-acda4acd9d70 |
+| host_uuid   | ba798c74-978c-40bf-8530-ba638e5a3021 |
 | label_key   | openstack-control-plane              |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
@@ -1973,60 +1978,70 @@ Power on compute-1
 >   system host-label-assign $NODE  openvswitch=enabled
 >   system host-label-assign $NODE  sriov=enabled
 > done
-
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 4f4b6ae8-2a94-491e-80f6-880bb8245b5d |
-| host_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid        | d6f1b995-83f5-447f-b2c9-bd9ece9d1160 |
+| host_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | label_key   | openstack-compute-node               |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 97c38ef8-9a40-4e78-a13f-4a927718675c |
-| host_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid        | 683e15bf-6359-43b5-aff0-1c2f05b58ba6 |
+| host_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | label_key   | openvswitch                          |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 2589d9ac-0a8e-4efa-b7c3-a5aa475ed601 |
-| host_uuid   | b27ddfa9-9d87-4580-ad09-dcc83056195d |
+| uuid        | 34e96388-c7a3-46bc-b4fe-0128d099ab60 |
+| host_uuid   | e2efc721-727f-4166-a2dd-9623dc8fa23b |
 | label_key   | sriov                                |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 740a8980-b680-4565-81e3-188d2b50c4f0 |
-| host_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid        | 940d4b2e-043a-41b1-bb1f-45b9bc5226ee |
+| host_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | label_key   | openstack-compute-node               |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | 8d131803-c682-4dcf-9bf2-261573b5f6db |
-| host_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid        | d341a0bd-2db1-4543-af38-ce24e52c1918 |
+| host_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | label_key   | openvswitch                          |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 +-------------+--------------------------------------+
 | Property    | Value                                |
 +-------------+--------------------------------------+
-| uuid        | a1f51dc6-1d73-4693-8e31-d018cee1f549 |
-| host_uuid   | f94c8e04-da78-4a63-ba5b-01d793eaa59a |
+| uuid        | e2587a11-28c5-4502-bad3-ab05a0742536 |
+| host_uuid   | 81bcd63d-32f5-47e4-a1b3-db49bcf47fba |
 | label_key   | sriov                                |
 | label_value | enabled                              |
 +-------------+--------------------------------------+
 ```
 
+## (Optional) Setup Remote Storage
+
+> None in virtual installation.
+
+## Provisioning controller-1
+
+### Add interfaces on Controller-1
+
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -n oam0 -c platform --networks oam controller-1 $(system host-if-list -a controller-1 | awk '/enp2s1/{print $2}'
-)
+[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -n oam0 -c platform --networks oam controller-1 $(system host-if-list -a controller-1 | awk '/enp2s1/{print $2}')
 +--------------+--------------------------------------+
 | Property     | Value                                |
 +--------------+--------------------------------------+
@@ -2034,20 +2049,20 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s1']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:44:7e:63                    |
+| imac         | 52:54:00:30:78:84                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | oam                                  |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | a2c8cf1f-d495-40b5-9c24-811d42579314 |
-| ihost_uuid   | 52fbdff9-f575-42ea-b882-20fecebc3a7c |
+| uuid         | 4eeda01e-751c-4ace-b17b-b7b5343ffc6f |
+| ihost_uuid   | ba798c74-978c-40bf-8530-ba638e5a3021 |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:21:20.955989+00:00     |
-| updated_at   | 2019-05-29T09:25:51.761220+00:00     |
+| created_at   | 2019-05-29T14:17:38.563207+00:00     |
+| updated_at   | 2019-05-29T14:24:51.033954+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
@@ -2064,26 +2079,28 @@ Power on compute-1
 | iftype       | ethernet                             |
 | ports        | [u'enp2s2']                          |
 | datanetworks | []                                   |
-| imac         | 52:54:00:2f:73:a8                    |
+| imac         | 52:54:00:af:f3:e9                    |
 | imtu         | 1500                                 |
 | ifclass      | platform                             |
 | networks     | cluster-host,mgmt                    |
 | aemode       | None                                 |
 | schedpolicy  | None                                 |
 | txhashpolicy | None                                 |
-| uuid         | 4855f7aa-9b3c-4813-aa5f-6a36c8de591d |
-| ihost_uuid   | 52fbdff9-f575-42ea-b882-20fecebc3a7c |
+| uuid         | 5a39bb5c-8b1a-4dba-b46b-04c0af5a5c67 |
+| ihost_uuid   | ba798c74-978c-40bf-8530-ba638e5a3021 |
 | vlan_id      | None                                 |
 | uses         | []                                   |
 | used_by      | []                                   |
-| created_at   | 2019-05-29T09:21:21.873086+00:00     |
-| updated_at   | 2019-05-29T09:25:58.202780+00:00     |
+| created_at   | 2019-05-29T14:17:39.137755+00:00     |
+| updated_at   | 2019-05-29T14:25:13.775820+00:00     |
 | sriov_numvfs | 0                                    |
 | ipv4_mode    | static                               |
 | ipv6_mode    | disabled                             |
 | accelerated  | [False]                              |
 +--------------+--------------------------------------+
 ```
+
+### Unlock Controller-1
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock controller-1
@@ -2102,7 +2119,7 @@ Power on compute-1
 | config_status       | None                                 |
 | config_target       | None                                 |
 | console             | ttyS0,115200                         |
-| created_at          | 2019-05-29T09:10:07.675773+00:00     |
+| created_at          | 2019-05-29T14:05:53.758084+00:00     |
 | hostname            | controller-1                         |
 | id                  | 2                                    |
 | install_output      | text                                 |
@@ -2111,7 +2128,7 @@ Power on compute-1
 | invprovision        | unprovisioned                        |
 | location            | {}                                   |
 | mgmt_ip             | 192.168.204.4                        |
-| mgmt_mac            | 52:54:00:2f:73:a8                    |
+| mgmt_mac            | 52:54:00:af:f3:e9                    |
 | operational         | disabled                             |
 | personality         | controller                           |
 | reserved            | False                                |
@@ -2121,25 +2138,11 @@ Power on compute-1
 | task                | Unlocking                            |
 | tboot               | false                                |
 | ttys_dcd            | None                                 |
-| updated_at          | 2019-05-29T09:25:45.387277+00:00     |
-| uptime              | 268                                  |
-| uuid                | 52fbdff9-f575-42ea-b882-20fecebc3a7c |
+| updated_at          | 2019-05-29T14:25:38.123525+00:00     |
+| uptime              | 499                                  |
+| uuid                | ba798c74-978c-40bf-8530-ba638e5a3021 |
 | vim_progress_status | None                                 |
 +---------------------+--------------------------------------+
-```
-
-```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ system host-list                                                                                                                      
-+----+--------------+-------------+----------------+-------------+--------------+
-| id | hostname     | personality | administrative | operational | availability |
-+----+--------------+-------------+----------------+-------------+--------------+
-| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | disabled    | offline      |
-| 3  | compute-0    | worker      | locked         | disabled    | online       |
-| 4  | compute-1    | worker      | locked         | disabled    | online       |
-| 5  | storage-0    | storage     | locked         | disabled    | online       |
-| 6  | storage-1    | storage     | locked         | disabled    | online       |
-+----+--------------+-------------+----------------+-------------+--------------+
 ```
 
 ```sh
@@ -2148,12 +2151,16 @@ Power on compute-1
 | id | hostname     | personality | administrative | operational | availability |
 +----+--------------+-------------+----------------+-------------+--------------+
 | 1  | controller-0 | controller  | unlocked       | enabled     | available    |
-| 2  | controller-1 | controller  | unlocked       | enabled     | degraded     |
-| 3  | compute-0    | worker      | locked         | disabled    | online       |
-| 4  | compute-1    | worker      | locked         | disabled    | online       |
-| 5  | storage-0    | storage     | locked         | disabled    | online       |
-| 6  | storage-1    | storage     | locked         | disabled    | online       |
+| 2  | controller-1 | controller  | unlocked       | disabled    | offline      |
+| 3  | storage-0    | storage     | locked         | disabled    | online       |
+| 4  | storage-1    | storage     | locked         | disabled    | online       |
+| 5  | compute-0    | worker      | locked         | disabled    | online       |
+| 6  | compute-1    | worker      | locked         | disabled    | online       |
 +----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
+
 ```
 
 ```sh
@@ -2177,8 +2184,15 @@ Power on compute-1
 
 ```
 
+## Provision storage
+
+### Add the cluster-host interface on storage hosts
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -c platform --networks cluster-host storage-0 $(system host-if-list -a storage-0 | awk '/mgmt0/{print $2}')
 +--------------+--------------------------------------+
 | Property     | Value                                |
@@ -2238,6 +2252,8 @@ Power on compute-1
 +--------------+--------------------------------------+
 ```
 
+### Add an OSD to the storage hosts
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-0 $(system host-disk-list storage-0 | awk '/sdb/{print $2}')
 +------------------+--------------------------------------------------+
@@ -2258,6 +2274,9 @@ Power on compute-1
 | created_at       | 2019-05-29T09:36:56.225007+00:00                 |
 | updated_at       | None                                             |
 +------------------+--------------------------------------------------+
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-1 $(system host-disk-list storage-1 | awk '/sdb/{print $2}')
 +------------------+--------------------------------------------------+
 | Property         | Value                                            |
@@ -2277,8 +2296,9 @@ Power on compute-1
 | created_at       | 2019-05-29T09:37:02.283811+00:00                 |
 | updated_at       | None                                             |
 +------------------+--------------------------------------------------+
-[wrsroot@controller-0 ~(keystone_admin)]$ source /etc/platform/openrc
 ```
+
+### Unlock the storage hosts
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-0
@@ -2380,6 +2400,9 @@ Power on compute-1
 | 5  | storage-0    | storage     | unlocked       | disabled    | intest       |
 | 6  | storage-1    | storage     | unlocked       | disabled    | intest       |
 +----+--------------+-------------+----------------+-------------+--------------+
+```
+
+```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
   cluster:
     id:     88457a91-6b7f-4069-917d-03f7adc9366a
