@@ -1874,6 +1874,223 @@ Application platform-integ-apps deleted.
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-lock compute-1
 ```
 
+- https://www.google.com/search?client=ubuntu&channel=fs&q=%22operation+aborted%2C+check+logs+for+detail%22&ie=utf-8&oe=utf-8
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get pods --all-namespaces | grep tiller
+kube-system   tiller-deploy-9c6df7f79-7x8fp              1/1     Running   1          3h39m
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get services --all-namespaces | grep tiller
+kube-system   tiller-deploy   ClusterIP   10.109.71.107   <none>        44134/TCP       3h39m
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get deployments.apps --all-namespaces | grep tiller
+kube-system   tiller-deploy             1/1     1            1           3h39m
+[wrsroot@controller-0 ~(keystone_admin)]$ get pods --all-namespaces | grep tiller
+-sh: get: command not found
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get pods --all-namespaces | grep tiller
+kube-system   tiller-deploy-9c6df7f79-7x8fp              1/1     Running   1          3h40m
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get services --all-namespaces | grep tiller
+kube-system   tiller-deploy   ClusterIP   10.109.71.107   <none>        44134/TCP       3h40m
+[wrsroot@controller-0 ~(keystone_admin)]$ kubectl get deployments.apps --all-namespaces | grep tiller
+kube-system   tiller-deploy             1/1     1            1           3h40m
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ cat /etc/build.info
+###
+### StarlingX
+###     Built from master
+###
+
+OS="centos"
+SW_VERSION="19.01"
+BUILD_TARGET="Host Installer"
+BUILD_TYPE="Formal"
+BUILD_ID="20190528T202529Z"
+
+JOB="STX_build_master_master"
+BUILD_BY="starlingx.build@cengn.ca"
+BUILD_NUMBER="119"
+BUILD_HOST="starlingx_mirror"
+BUILD_DATE="2019-05-28 20:25:29 +0000"
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ cat /var/log/sysinv.log
+...
+...
+2019-05-29 12:15:47.743 95438 INFO sysinv.conductor.kube_app [-] Application overrides generated.
+2019-05-29 12:15:47.781 95438 INFO sysinv.conductor.kube_app [-] Armada manifest file has no img tags for chart helm-toolkit
+2019-05-29 12:15:47.804 95438 INFO sysinv.conductor.kube_app [-] Image 192.168.204.2:9001/quay.io/external_storage/rbd-provisioner:v2.1.1-k8s1.11 download started from local registry
+2019-05-29 12:15:47.858 95438 INFO sysinv.conductor.kube_app [-] Image 192.168.204.2:9001/docker.io/port/ceph-config-helper:v1.10.3 download started from local registry
+2019-05-29 12:15:58.047 95438 ERROR sysinv.conductor.kube_app [-] Image 192.168.204.2:9001/quay.io/external_storage/rbd-provisioner:v2.1.1-k8s1.11 download failed from local registry: 500 Server Error: Internal Server Error ("Get https://192.168.204.2:9001/v2/: net/http: TLS handshake timeout")
+2019-05-29 12:15:58.089 95438 ERROR sysinv.conductor.kube_app [-] Image 192.168.204.2:9001/docker.io/port/ceph-config-helper:v1.10.3 download failed from local registry: 500 Server Error: Internal Server Error ("Get https://192.168.204.2:9001/v2/: net/http: TLS handshake timeout")
+2019-05-29 12:15:58.090 95438 ERROR sysinv.conductor.kube_app [-] Deployment of application platform-integ-apps (1.0-5) failed: failed to download one or more image(s).
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app Traceback (most recent call last):
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app   File "/usr/lib64/python2.7/site-packages/sysinv/conductor/kube_app.py", line 1212, in perform_app_apply
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app     self._download_images(app)
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app   File "/usr/lib64/python2.7/site-packages/sysinv/conductor/kube_app.py", line 546, in _download_images
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app     reason="failed to download one or more image(s).")
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app KubeAppApplyFailure: Deployment of application platform-integ-apps (1.0-5) failed: failed to download one or more image(s).
+2019-05-29 12:15:58.090 95438 TRACE sysinv.conductor.kube_app 
+2019-05-29 12:15:58.100 95438 ERROR sysinv.conductor.kube_app [-] Application apply aborted!.
+2019-05-29 12:16:25.598 96284 INFO sysinv.api.controllers.v1.host [-] storage-0 ihost_patch_start_2019-05-29-12-16-25 patch
+2019-05-29 12:16:25.599 96284 INFO sysinv.api.controllers.v1.host [-] storage-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:16:27.045 96284 INFO sysinv.api.controllers.v1.host [-] storage-1 ihost_patch_start_2019-05-29-12-16-27 patch
+2019-05-29 12:16:27.046 96284 INFO sysinv.api.controllers.v1.host [-] storage-1 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:16:53.927 96284 INFO sysinv.api.controllers.v1.host [-] compute-0 ihost_patch_start_2019-05-29-12-16-53 patch
+2019-05-29 12:16:53.927 96284 INFO sysinv.api.controllers.v1.host [-] compute-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:18:41.853 96283 INFO sysinv.api.controllers.v1.host [-] controller-1 ihost_patch_start_2019-05-29-12-18-41 patch
+2019-05-29 12:18:41.853 96283 INFO sysinv.api.controllers.v1.host [-] controller-1 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:19:41.285 96283 INFO sysinv.api.controllers.v1.host [-] controller-0 ihost_patch_start_2019-05-29-12-19-41 patch
+2019-05-29 12:19:41.285 96283 INFO sysinv.api.controllers.v1.host [-] controller-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:20:07.508 96284 INFO sysinv.api.controllers.v1.host [-] compute-1 ihost_patch_start_2019-05-29-12-20-07 patch
+2019-05-29 12:20:07.508 96284 INFO sysinv.api.controllers.v1.host [-] compute-1 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:21:25.620 96283 INFO sysinv.api.controllers.v1.host [-] storage-0 ihost_patch_start_2019-05-29-12-21-25 patch
+2019-05-29 12:21:25.620 96283 INFO sysinv.api.controllers.v1.host [-] storage-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:21:27.079 96283 INFO sysinv.api.controllers.v1.host [-] storage-1 ihost_patch_start_2019-05-29-12-21-27 patch
+2019-05-29 12:21:27.079 96283 INFO sysinv.api.controllers.v1.host [-] storage-1 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:21:54.012 96284 INFO sysinv.api.controllers.v1.host [-] compute-0 ihost_patch_start_2019-05-29-12-21-53 patch
+2019-05-29 12:21:54.013 96284 INFO sysinv.api.controllers.v1.host [-] compute-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:23:41.921 96284 INFO sysinv.api.controllers.v1.host [-] controller-1 ihost_patch_start_2019-05-29-12-23-41 patch
+2019-05-29 12:23:41.922 96284 INFO sysinv.api.controllers.v1.host [-] controller-1 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:24:41.586 96284 INFO sysinv.api.controllers.v1.host [-] controller-0 ihost_patch_start_2019-05-29-12-24-41 patch
+2019-05-29 12:24:41.586 96284 INFO sysinv.api.controllers.v1.host [-] controller-0 ihost_patch_end.  No changes from mtce/1.0.
+2019-05-29 12:25:07.515 96283 INFO sysinv.api.controllers.v1.host [-] compute-1 ihost_patch_start_2019-05-29-12-25-07 patch
+2019-05-29 12:25:07.515 96283 INFO sysinv.api.controllers.v1.host [-] compute-1 ihost_patch_end.  No changes from mtce/1.0.
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo docker logs armada_service
+Password: 
++ CMD=armada
++ ARMADA_UWSGI_PORT=8000
++ ARMADA_UWSGI_TIMEOUT=3600
++ ARMADA_UWSGI_WORKERS=4
++ ARMADA_UWSGI_THREADS=1
++ '[' server = server ']'
++ exec uwsgi -b 32768 --die-on-term --http :8000 --http-timeout 3600 --enable-threads -L --lazy-apps --master --paste config:/etc/armada/api-paste.ini --pyargv '--config-file $
+etc/armada/armada.conf' --threads 1 --workers 4
+*** Starting uWSGI 2.0.18 (64bit) on [Wed May 29 09:06:44 2019] ***
+compiled with version: 7.3.0 on 09 April 2019 13:34:27
+os: Linux-3.10.0-957.1.3.el7.1.tis.x86_64 #1 SMP PREEMPT Tue May 28 21:28:13 UTC 2019
+nodename: d2887dc5d97e
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /armada
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+your memory page size is 4096 bytes
+detected max file descriptor number: 65536
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uWSGI http bound on :8000 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:46633 (port auto-assigned) fd 3
+Python version: 3.6.7 (default, Oct 22 2018, 11:32:17)  [GCC 8.2.0]
+Python main interpreter initialized at 0x5571f22eda70
+python threads support enabled
+your server socket listen backlog is limited to 100 connections                                                                                                         [0/1999]
+your mercy for graceful operations on workers is 60 seconds
+mapped 507960 bytes (496 KB) for 4 cores
+*** Operational MODE: preforking ***
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 1)
+spawned uWSGI worker 1 (pid: 15, cores: 1)
+spawned uWSGI worker 2 (pid: 16, cores: 1)
+spawned uWSGI worker 3 (pid: 17, cores: 1)
+spawned uWSGI worker 4 (pid: 18, cores: 1)
+spawned uWSGI http 1 (pid: 19)
+Loading paste environment: config:/etc/armada/api-paste.ini
+Loading paste environment: config:/etc/armada/api-paste.ini
+Loading paste environment: config:/etc/armada/api-paste.ini
+Loading paste environment: config:/etc/armada/api-paste.ini
+2019-05-29 09:06:45.997 15 WARNING keystonemiddleware.auth_token [-] Use of the auth_admin_prefix, auth_host, auth_port, auth_protocol, identity_uri, admin_token, admin_user, a
+dmin_password, and admin_tenant_name configuration options was deprecated in the Mitaka release in favor of an auth_plugin and its related options. This class may be removed in
+ a future release.
+2019-05-29 09:06:45.998 15 WARNING keystonemiddleware.auth_token [-] Configuring admin URI using auth fragments was deprecated in the Kilo release, and will be removed in the N
+ release, use 'identity_uri\ instead.
+2019-05-29 09:06:45.998 15 WARNING keystonemiddleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authe
+nticate against an admin endpoint
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x5571f22eda70 pid: 15 (default app)
+2019-05-29 09:06:45.998 16 WARNING keystonemiddleware.auth_token [-] Use of the auth_admin_prefix, auth_host, auth_port, auth_protocol, identity_uri, admin_token, admin_user, a
+dmin_password, and admin_tenant_name configuration options was deprecated in the Mitaka release in favor of an auth_plugin and its related options. This class may be removed in
+ a future release.
+2019-05-29 09:06:45.999 16 WARNING keystonemiddleware.auth_token [-] Configuring admin URI using auth fragments was deprecated in the Kilo release, and will be removed in the N
+ release, use 'identity_uri\ instead.
+2019-05-29 09:06:45.999 16 WARNING keystonemiddleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authe
+nticate against an admin endpoint
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x5571f22eda70 pid: 16 (default app)
+2019-05-29 09:06:46.009 17 WARNING keystonemiddleware.auth_token [-] Use of the auth_admin_prefix, auth_host, auth_port, auth_protocol, identity_uri, admin_token, admin_user, a
+dmin_password, and admin_tenant_name configuration options was deprecated in the Mitaka release in favor of an auth_plugin and its related options. This class may be removed in
+ a future release.
+2019-05-29 09:06:46.009 17 WARNING keystonemiddleware.auth_token [-] Configuring admin URI using auth fragments was deprecated in the Kilo release, and will be removed in the N
+ release, use 'identity_uri\ instead.
+2019-05-29 09:06:46.009 17 WARNING keystonemiddleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authe
+nticate against an admin endpoint
+WSGI app 0 (mountpoint='') ready in 2 seconds on interpreter 0x5571f22eda70 pid: 17 (default app)
+2019-05-29 09:06:46.018 18 WARNING keystonemiddleware.auth_token [-] Use of the auth_admin_prefix, auth_host, auth_port, auth_protocol, identity_uri, admin_token, admin_user, a
+dmin_password, and admin_tenant_name configuration options was deprecated in the Mitaka release in favor of an auth_plugin and its related options. This class may be removed in
+ a future release.
+2019-05-29 09:06:46.018 18 WARNING keystonemiddleware.auth_token [-] Configuring admin URI using auth fragments was deprecated in the Kilo release, and will be removed in the N
+ release, use 'identity_uri\ instead.
+2019-05-29 09:06:46.018 18 WARNING keystonemiddleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authe
+nticate against an admin endpoint
+WSGI app 0 (mountpoint='') ready in 2 seconds on interpreter 0x5571f22eda70 pid: 18 (default app)
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo docker exec armada_service sh -c 'ls *.log'
+platform-integ-apps-delete.log
+stx-openstack-delete.log
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo docker exec armada_service sh -c 'cat stx-openstack-delete.log'
+2019-05-29 10:27:23.891 129 DEBUG armada.handlers.tiller [-] Using Tiller namespace: kube-system _get_tiller_namespace /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:174
+2019-05-29 10:27:23.906 129 DEBUG armada.handlers.tiller [-] Found at least one Running Tiller pod. _get_tiller_pod /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:150
+2019-05-29 10:27:23.907 129 DEBUG armada.handlers.tiller [-] Using Tiller pod IP: 192.168.204.3 _get_tiller_ip /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:165
+2019-05-29 10:27:23.907 129 DEBUG armada.handlers.tiller [-] Using Tiller host port: 44134 _get_tiller_port /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:170
+2019-05-29 10:27:23.907 129 DEBUG armada.handlers.tiller [-] Tiller getting gRPC insecure channel at 192.168.204.3:44134 with options: [grpc.max_send_message_length=429496729, grpc.max_receive_message_length=429496729] get_channel /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:124
+2019-05-29 10:27:23.910 129 DEBUG armada.handlers.tiller [-] Armada is using Tiller at: None:44134, namespace=kube-system, timeout=300 __init__ /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:104
+2019-05-29 10:27:23.916 129 INFO armada.handlers.lock [-] Acquiring lock
+2019-05-29 10:27:23.929 129 DEBUG armada.handlers.tiller [-] Getting known releases from Tiller... list_charts /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:349
+2019-05-29 10:27:23.929 129 DEBUG armada.handlers.tiller [-] Tiller ListReleases() with timeout=300, request=limit: 32
+status_codes: UNKNOWN
+status_codes: DEPLOYED
+status_codes: DELETED
+status_codes: DELETING
+status_codes: FAILED
+status_codes: PENDING_INSTALL
+status_codes: PENDING_UPGRADE
+status_codes: PENDING_ROLLBACK
+ get_results /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:210
+2019-05-29 10:27:24.225 129 INFO armada.cli [-] There's no release to delete.
+2019-05-29 10:27:24.930 129 INFO armada.handlers.lock [-] Releasing lock
+
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ sudo docker exec armada_service sh -c 'cat platform-integ-apps-delete.log'
+2019-05-29 12:12:12.332 245 DEBUG armada.handlers.tiller [-] Using Tiller namespace: kube-system _get_tiller_namespace /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:174
+2019-05-29 12:12:12.345 245 DEBUG armada.handlers.tiller [-] Found at least one Running Tiller pod. _get_tiller_pod /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:150
+2019-05-29 12:12:12.345 245 DEBUG armada.handlers.tiller [-] Using Tiller pod IP: 192.168.204.3 _get_tiller_ip /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:165
+2019-05-29 12:12:12.346 245 DEBUG armada.handlers.tiller [-] Using Tiller host port: 44134 _get_tiller_port /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:170
+2019-05-29 12:12:12.346 245 DEBUG armada.handlers.tiller [-] Tiller getting gRPC insecure channel at 192.168.204.3:44134 with options: [grpc.max_send_message_length=429496729, grpc.max_receive_message_length=429496729] get_channel /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:124
+2019-05-29 12:12:12.348 245 DEBUG armada.handlers.tiller [-] Armada is using Tiller at: None:44134, namespace=kube-system, timeout=300 __init__ /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:104
+2019-05-29 12:12:12.353 245 INFO armada.handlers.lock [-] Acquiring lock
+2019-05-29 12:12:12.362 245 DEBUG armada.handlers.tiller [-] Getting known releases from Tiller... list_charts /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:349
+2019-05-29 12:12:12.362 245 DEBUG armada.handlers.tiller [-] Tiller ListReleases() with timeout=300, request=limit: 32
+status_codes: UNKNOWN
+status_codes: DEPLOYED
+status_codes: DELETED
+status_codes: DELETING
+status_codes: FAILED
+status_codes: PENDING_INSTALL
+status_codes: PENDING_UPGRADE
+status_codes: PENDING_ROLLBACK
+ get_results /usr/local/lib/python3.6/dist-packages/armada/handlers/tiller.py:210
+2019-05-29 12:12:12.376 245 INFO armada.cli [-] There's no release to delete.
+2019-05-29 12:12:13.364 245 INFO armada.handlers.lock [-] Releasing lock
+```
 
 
 # Bare Metal
