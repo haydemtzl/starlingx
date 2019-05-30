@@ -1,9 +1,12 @@
 # STOR_CORE_016
 
+> STOR_CORE_016 The objective of this test is to ensure that semantic checks with respect to node lock, work properly on nodes running ceph monitors.
+
 - Results
   - Bare Metal Passed
 - Issues
   - https://bugs.launchpad.net/starlingx/+bug/1829279
+- To Do
 
 ## Bare Metal
 
