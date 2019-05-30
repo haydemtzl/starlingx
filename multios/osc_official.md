@@ -1,5 +1,11 @@
 # Multi-OS
 
+## Strategy
+
+- https://build.opensuse.org/project/show/Cloud:StarlingX:2.0
+
+## Personal
+
 > https://build.opensuse.org/project/show/home:xe1gyq
 
 - mtce-storage
