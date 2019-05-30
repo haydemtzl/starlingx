@@ -1,7 +1,14 @@
 # STOR_CORE_014
 
-- Virtual
-- Bare Metal __Failed__
+> STOR_CORE_014 The objective of this test is to ensure that host reinstall of nodes running ceph-mon works properly on all supported configs.
+
+- Results
+  - Virtual
+  - Bare Metal __Failed__
+- Issues
+  - https://bugs.launchpad.net/starlingx/+bug/1829097
+  - https://bugs.launchpad.net/starlingx/+bug/1827080
+
 
 ## Virtual
 
