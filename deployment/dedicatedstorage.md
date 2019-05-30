@@ -3121,11 +3121,232 @@ After ~ 15 minutes...
 After ~ 30 minutes...
 
 ```sh
-
+[wrsroot@controller-0 ~(keystone_admin)]$ system application-list
++---------------------+-----------------------------+-------------------------------+---------------+---------+-----------+
+| application         | version                     | manifest name                 | manifest file | status  | progress  |
++---------------------+-----------------------------+-------------------------------+---------------+---------+-----------+
+| platform-integ-apps | 1.0-5                       | platform-integration-manifest | manifest.yaml | applied | completed |
+| stx-openstack       | 1.0-13-centos-stable-latest | armada-manifest               | manifest.yaml | applied | completed |
++---------------------+-----------------------------+-------------------------------+---------------+---------+-----------+
 ```
 
 ## Verify the cluster endpoints
 
+
+```sh
+WARNING: Unauthorized access to this system is forbidden and will be
+prosecuted by law. By accessing this system, you agree that your
+actions may be monitored if unauthorized usage is suspected.
+
+controller-0:~$ sudo mkdir -p /etc/openstack
+Password: 
+controller-0:~$ 
+```
+
+```sh
+controller-0:~$ sudo tee /etc/openstack/clouds.yaml << EOF
+> clouds:
+>   openstack_helm:
+>     region_name: RegionOne
+>     identity_api_version: 3
+>     endpoint_type: internalURL
+>     auth:
+>       username: 'admin'
+>       password: 'Li69nux*'
+>       project_name: 'admin'
+>       project_domain_name: 'default'
+>       user_domain_name: 'default'
+>       auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
+> EOF
+clouds:
+  openstack_helm:
+    region_name: RegionOne
+    identity_api_version: 3
+    endpoint_type: internalURL
+    auth:
+      username: 'admin'
+      password: 'Li69nux*'
+      project_name: 'admin'
+      project_domain_name: 'default'
+      user_domain_name: 'default'
+      auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
+controller-0:~$ 
+```
+
+```sh
+controller-0:~$ sudo vi /etc/openstack/clouds.yaml
+```
+
+```yaml
+clouds:
+  openstack_helm:
+    region_name: RegionOne
+    identity_api_version: 3
+    endpoint_type: internalURL
+    auth:
+      username: 'admin'
+      password: 'Sta4rlingX*'
+      project_name: 'admin'
+      project_domain_name: 'default'
+      user_domain_name: 'default'
+      auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
+```
+
+```sh
+controller-0:~$ export OS_CLOUD=openstack_helm
+```
+
+```sh
+controller-0:~$ openstack endpoint list
+controller-0:~$ openstack endpoint list                                                                                                                                       
++----------------------------------+-----------+--------------+----------------+---------+-----------+------------------------------------------------------------------------
+---+
+| ID                               | Region    | Service Name | Service Type   | Enabled | Interface | URL                                                                    
+   |
++----------------------------------+-----------+--------------+----------------+---------+-----------+------------------------------------------------------------------------
+---+
+| 01260daf8fec4aeab5135eebbf4bb361 | RegionOne | aodh         | alarming       | True    | public    | http://aodh.openstack.svc.cluster.local:80/                            
+   |
+| 01321839956d450b96f09c327559d0d2 | RegionOne | cinder       | volume         | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v1/%(tenant_id)s    
+   |
+| 078fd4da88e14eaeb771368892211380 | RegionOne | gnocchi      | metric         | True    | public    | http://gnocchi.openstack.svc.cluster.local:80/                         
+   |
+| 0c69000f50204b228c8ebedbd6ed2bef | RegionOne | panko        | event          | True    | internal  | http://panko-api.openstack.svc.cluster.local:8977/                     
+   |
+| 1804d100862f4af2a05c33d36b4ee796 | RegionOne | gnocchi      | metric         | True    | admin     | http://gnocchi-api.openstack.svc.cluster.local:8041/                   
+   |
+| 18cb05e909064152946c68a2f6c8a3ae | RegionOne | nova         | compute        | True    | admin     | http://nova-api-proxy.openstack.svc.cluster.local:8774/v2.1/%(tenant_id
+)s |
+| 238cb5dd9ea94d34a143013cdb524cce | RegionOne | panko        | event          | True    | admin     | http://panko-api.openstack.svc.cluster.local:8977/                     
+   |
+| 2e10b3dd6d204885b840c58c90860ce9 | RegionOne | nova         | compute        | True    | public    | http://nova.openstack.svc.cluster.local:80/v2.1/%(tenant_id)s          
+   |
+| 39c0b58e98104c3990daaea0eac43dbf | RegionOne | aodh         | alarming       | True    | admin     | http://aodh-api.openstack.svc.cluster.local:8042/                      
+   |
+| 4062815bc5bc4f08a64f96d763c53e43 | RegionOne | keystone     | identity       | True    | admin     | http://keystone.openstack.svc.cluster.local:80/v3                      
+   |
+| 40aa55cd3e464f22875ea24595446eb6 | RegionOne | aodh         | alarming       | True    | internal  | http://aodh-api.openstack.svc.cluster.local:8042/                      
+   |
+| 44f4341014b14b26807b4d392053cd20 | RegionOne | cinderv3     | volumev3       | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v3/%(tenant_id)s    
+   |
+| 4bd3bcfa3124449fbaf4577556499f96 | RegionOne | heat-cfn     | cloudformation | True    | admin     | http://heat-cfn.openstack.svc.cluster.local:8000/v1                    
+   |
+| 4f2cc437dde7403e9b484ae312cd09f7 | RegionOne | neutron      | network        | True    | public    | http://neutron.openstack.svc.cluster.local:80/                         
+   |
+| 5b482036884d43aa8088b7d115f01da5 | RegionOne | heat         | orchestration  | True    | internal  | http://heat-api.openstack.svc.cluster.local:8004/v1/%(project_id)s     
+   |
+| 5fe5c525abf545058b150f32e4cf9a83 | RegionOne | cinderv3     | volumev3       | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v3/%(tenant_id)s    
+   |
+| 68851056271d4d17bb61e602fc58ecd4 | RegionOne | cinderv3     | volumev3       | True    | public    | http://cinder.openstack.svc.cluster.local:80/v3/%(tenant_id)s          
+   |
+| 697b27e1f1184fe2bbc0bf7f05624aaa | RegionOne | cinderv2     | volumev2       | True    | public    | http://cinder.openstack.svc.cluster.local:80/v2/%(tenant_id)s          
+   |
+| 6e3d10af7b144cfda1c35a89a29df67f | RegionOne | cinderv2     | volumev2       | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v2/%(tenant_id)s    
+   |
+| 72ad226512f24421a20a034565859292 | RegionOne | neutron      | network        | True    | admin     | http://neutron-server.openstack.svc.cluster.local:9696/                
+   |
+| 755579127f374faabbd2866ed3fa2674 | RegionOne | heat-cfn     | cloudformation | True    | internal  | http://heat-cfn.openstack.svc.cluster.local:8000/v1                       |
+| 7ce8efd04862499e9ec24d57b04afd05 | RegionOne | barbican     | key-manager    | True    | internal  | http://barbican-api.openstack.svc.cluster.local:9311/                     |
+| 81d12673f41b4a61b2bd598a33bf37e0 | RegionOne | barbican     | key-manager    | True    | admin     | http://barbican-api.openstack.svc.cluster.local:9311/                     |
+| 8276cd38691741df91f7174638b206be | RegionOne | heat-cfn     | cloudformation | True    | public    | http://cloudformation.openstack.svc.cluster.local:80/v1                   |
+| 85f345ebe9a643dda778b7a67248b7cc | RegionOne | heat         | orchestration  | True    | admin     | http://heat-api.openstack.svc.cluster.local:8004/v1/%(project_id)s        |
+| 8bb66c19ebc74337a084e4b262fd663b | RegionOne | heat         | orchestration  | True    | public    | http://heat.openstack.svc.cluster.local:80/v1/%(project_id)s              |
+| 9062c0e6763b4b33829e1db0f24aa75b | RegionOne | panko        | event          | True    | public    | http://panko.openstack.svc.cluster.local:80/                              |
+| 9791a4d1c9494f63908afc5d0a2c476d | RegionOne | neutron      | network        | True    | internal  | http://neutron-server.openstack.svc.cluster.local:9696/                   |
+| 9803f619bd2141dc97f490bb6cf4433c | RegionOne | placement    | placement      | True    | internal  | http://placement-api.openstack.svc.cluster.local:8778/                    |
+| 9a1f8cc214004ff8ae9da79491bcf7a1 | RegionOne | glance       | image          | True    | admin     | http://glance-api.openstack.svc.cluster.local:9292/                       |
+| 9a5967dee3244fb58c5fa214588e5029 | RegionOne | cinder       | volume         | True    | public    | http://cinder.openstack.svc.cluster.local:80/v1/%(tenant_id)s             |
+| a085ec422d8d4274973220c05204abbc | RegionOne | cinderv2     | volumev2       | True    | internal  | http://cinder-api.openstack.svc.cluster.local:8776/v2/%(tenant_id)s       |
+| a6a45707b55743cfae8fccfd37ad1772 | RegionOne | barbican     | key-manager    | True    | public    | http://barbican.openstack.svc.cluster.local:80/                           |
+| a7692ce12f8a40528399794c5d04107c | RegionOne | placement    | placement      | True    | public    | http://placement.openstack.svc.cluster.local:80/                          |
+| a89646fa8e6c470daaf09b8e9364a93e | RegionOne | glance       | image          | True    | internal  | http://glance-api.openstack.svc.cluster.local:9292/                       |
+| af4a4af815934a02959868e478cab4b7 | RegionOne | nova         | compute        | True    | internal  | http://nova-api-proxy.openstack.svc.cluster.local:8774/v2.1/%(tenant_id)s |
+| b668d9607e334b268c0fad667566c64a | RegionOne | placement    | placement      | True    | admin     | http://placement-api.openstack.svc.cluster.local:8778/                    |
+| cccdb9d2d0ad4921894228ea7fdb38c3 | RegionOne | glance       | image          | True    | public    | http://glance.openstack.svc.cluster.local:80/                             |
+| e489e534de66444cbff26e2b0ccf6a79 | RegionOne | cinder       | volume         | True    | admin     | http://cinder-api.openstack.svc.cluster.local:8776/v1/%(tenant_id)s       |
+| e956ddf74bd144c283ee54e3cd74d38d | RegionOne | gnocchi      | metric         | True    | internal  | http://gnocchi-api.openstack.svc.cluster.local:8041/                      |
+| f383bce5b8bd482e83452b8a2f96374c | RegionOne | keystone     | identity       | True    | internal  | http://keystone-api.openstack.svc.cluster.local:5000/v3                   |
+| ffedebc9af4348af9a42107e98886cf4 | RegionOne | keystone     | identity       | True    | public    | http://keystone.openstack.svc.cluster.local:80/v3                         |
++----------------------------------+-----------+--------------+----------------+---------+-----------+---------------------------------------------------------------------------+
+```
+
+## Provider/tenant networking setup
+
+```sh
+controller-0:~$ ADMINID=`openstack project list | grep admin | awk '{print $2}'`
+controller-0:~$ PHYSNET0='physnet0'
+controller-0:~$ PHYSNET1='physnet1'
+```
+
+```sh
+controller-0:~$ openstack network segment range create ${PHYSNET0}-a --network-type vlan --physical-network ${PHYSNET0}  --minimum 400 --maximum 499 --private --project ${ADMINID}
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                                     |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| available        | ['400-499']                                                                                                                                                                                               |
+| default          | False                                                                                                                                                                                                     |
+| id               | 816e675d-1fff-40d0-a1d1-785fcc4b88d3                                                                                                                                                                      |
+| location         | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'e74952133e364290bf5da9fc694687c2'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| maximum          | 499                                                                                                                                                                                                       |
+| minimum          | 400                                                                                                                                                                                                       |
+| name             | physnet0-a                                                                                                                                                                                                |
+| network_type     | vlan                                                                                                                                                                                                      |
+| physical_network | physnet0                                                                                                                                                                                                  |
+| project_id       | e74952133e364290bf5da9fc694687c2                                                                                                                                                                          |
+| shared           | False                                                                                                                                                                                                     |
+| used             | {}                                                                                                                                                                                                        |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:~$ openstack network segment range create  ${PHYSNET0}-b --network-type vlan  --physical-network ${PHYSNET0}  --minimum 10 --maximum 10 --shared
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                                     |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| available        | ['10']                                                                                                                                                                                                    |
+| default          | False                                                                                                                                                                                                     |
+| id               | 76353ed4-a46e-4e18-9ab8-f28d553959a1                                                                                                                                                                      |
+| location         | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'e74952133e364290bf5da9fc694687c2'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| maximum          | 10                                                                                                                                                                                                        |
+| minimum          | 10                                                                                                                                                                                                        |
+| name             | physnet0-b                                                                                                                                                                                                |
+| network_type     | vlan                                                                                                                                                                                                      |
+| physical_network | physnet0                                                                                                                                                                                                  |
+| project_id       | None                                                                                                                                                                                                      |
+| shared           | True                                                                                                                                                                                                      |
+| used             | {}                                                                                                                                                                                                        |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+```sh
+controller-0:~$ openstack network segment range create ${PHYSNET1}-a --network-type vlan  --physical-network  ${PHYSNET1} --minimum 500 --maximum 599  --private --project ${ADMINID}
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                                                                                     |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| available        | ['500-599']                                                                                                                                                                                               |
+| default          | False                                                                                                                                                                                                     |
+| id               | c6f2ee53-c111-4e55-829e-8815efdaa4fb                                                                                                                                                                      |
+| location         | Munch({'project': Munch({'domain_name': 'default', 'domain_id': None, 'name': 'admin', 'id': u'e74952133e364290bf5da9fc694687c2'}), 'cloud': 'openstack_helm', 'region_name': 'RegionOne', 'zone': None}) |
+| maximum          | 599                                                                                                                                                                                                       |
+| minimum          | 500                                                                                                                                                                                                       |
+| name             | physnet1-a                                                                                                                                                                                                |
+| network_type     | vlan                                                                                                                                                                                                      |
+| physical_network | physnet1                                                                                                                                                                                                  |
+| project_id       | e74952133e364290bf5da9fc694687c2                                                                                                                                                                          |
+| shared           | False                                                                                                                                                                                                     |
+| used             | {}                                                                                                                                                                                                        |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+### Tenant Networking setup
+
+> All followed
+
+- https://wiki.openstack.org/wiki/StarlingX/Containers/Installation#Provider.2Ftenant_networking_setup
+
+### Additional Setup Instructions
+
+> None followed, just for reference
 
 ## Failures
 
