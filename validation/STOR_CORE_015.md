@@ -485,7 +485,7 @@ ID CLASS WEIGHT  TYPE NAME              STATUS REWEIGHT PRI-AFF
 8. Perform basic actions to ensure the system is working properly, e.g. create some volumes, import some images, launch VMs from volume.
 9. Repeat test for the other system configuration types
 
-### Additional
+### Third Storage Node
 
 #### storage-2
 
@@ -565,6 +565,49 @@ Unlock the storage hosts.
 
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-2
+```
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ fm alarm-list 
++-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
+| Alarm | Reason Text                                                                          | Entity ID                            | Severity | Time Stamp     |
+| ID    |                                                                                      |                                      |          |                |
++-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
+| 800.  | Loss of replication in replication group  group-1: peer host down                    | cluster=e8ab94c1-8878-40bd-          | major    | 2019-05-30T04: |
+| 011   |                                                                                      | ac05-381366f91e97.peergroup=group-1  |          | 46:44.987319   |
+|       |                                                                                      |                                      |          |                |
+| 800.  | Storage Alarm Condition: HEALTH_WARN [PGs are degraded/stuck or undersized]. Please  | cluster=e8ab94c1-8878-40bd-          | warning  | 2019-05-30T04: |
+| 001   | check 'ceph -s' for more details.                                                    | ac05-381366f91e97                    |          | 46:44.631795   |
+|       |                                                                                      |                                      |          |                |
++-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
+```
+
+Check CEPH status after some time:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_WARN
+            615/3106 objects misplaced (19.800%)
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in; 296 remapped pgs
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.55 k objects, 1004 MiB
+    usage:   2.4 GiB used, 594 GiB / 597 GiB avail
+    pgs:     615/3106 objects misplaced (19.800%)
+             560 active+clean
+             296 active+clean+remapped
+ 
+  io:
+    client:   2.0 KiB/s rd, 364 KiB/s wr, 2 op/s rd, 66 op/s wr
+
 ```
 
 ## Bare Metal
