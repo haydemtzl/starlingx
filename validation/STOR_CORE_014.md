@@ -157,6 +157,8 @@ In Horizon: Pre-Install ... Installing Packages (23%) ... Post-Install
 
 6. Check that ceph reports HEALTH_OK via
 
+After a couple of minutes...
+
 ```sh
 [wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
   cluster:
@@ -184,6 +186,62 @@ In Horizon: Pre-Install ... Installing Packages (23%) ... Post-Install
     client:   182 KiB/s wr, 0 op/s rd, 37 op/s wr
 ```
 
+After ~ 10 minutes...
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_WARN
+            Degraded data redundancy: 503/2818 objects degraded (17.850%), 61 pgs degraded, 61 pgs undersized
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in; 60 remapped pgs
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.41 k objects, 757 MiB
+    usage:   1.2 GiB used, 397 GiB / 398 GiB avail
+    pgs:     503/2818 objects degraded (17.850%)
+             795 active+clean
+             35  active+recovery_wait+undersized+degraded+remapped
+             25  active+undersized+degraded+remapped+backfill_wait
+             1   active+recovering+undersized+degraded+remapped
+ 
+  io:
+    client:   141 KiB/s wr, 0 op/s rd, 34 op/s wr
+    recovery: 198 KiB/s, 0 objects/s
+ 
+```
+
+An finally, after ~20 minutes:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.41 k objects, 759 MiB
+    usage:   1.7 GiB used, 396 GiB / 398 GiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   486 KiB/s wr, 0 op/s rd, 91 op/s wr
+
+```
+
 7. Ensure the weights look accurate in
 
 ```sh
@@ -200,42 +258,38 @@ ID CLASS WEIGHT  TYPE NAME              STATUS REWEIGHT PRI-AFF
 8. Ensure there are no unexpected alarms or events
 
 ```sh
-[wrsroot@controller-0 ~(keystone_admin)]$ fm alarm-list 
-+-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
-| Alarm | Reason Text                                                                          | Entity ID                            | Severity | Time Stamp     |
-| ID    |                                                                                      |                                      |          |                |
-+-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
-| 800.  | Storage Alarm Condition: HEALTH_WARN [PGs are degraded/stuck or undersized]. Please  | cluster=e8ab94c1-8878-40bd-          | warning  | 2019-05-29T16: |
-| 001   | check 'ceph -s' for more details.                                                    | ac05-381366f91e97                    |          | 59:29.062697   |
-|       |                                                                                      |                                      |          |                |
-| 250.  | compute-1 Configuration is out-of-date.                                              | host=compute-1                       | major    | 2019-05-29T16: |
-| 001   |                                                                                      |                                      |          | 37:52.318338   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP configuration does not contain any valid or reachable NTP servers.               | host=controller-1.ntp                | major    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 47:51.855769   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP address 129.250.35.250 is not a valid or a reachable NTP server.                 | host=controller-1.ntp=129.250.35.250 | minor    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 47:51.812477   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP address 23.239.24.67 is not a valid or a reachable NTP server.                   | host=controller-1.ntp=23.239.24.67   | minor    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 47:51.802781   |
-|       |                                                                                      |                                      |          |                |
-| 400.  | Communication failure detected with peer over port enp2s1 on host controller-1       | host=controller-1.network=oam        | major    | 2019-05-29T14: |
-| 005   |                                                                                      |                                      |          | 33:08.994881   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP configuration does not contain any valid or reachable NTP servers.               | host=controller-0.ntp                | major    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 14:10.751106   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP address 103.105.51.156 is not a valid or a reachable NTP server.                 | host=controller-0.ntp=103.105.51.156 | minor    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 14:10.573019   |
-|       |                                                                                      |                                      |          |                |
-| 100.  | NTP address 72.30.35.89 is not a valid or a reachable NTP server.                    | host=controller-0.ntp=72.30.35.89    | minor    | 2019-05-29T14: |
-| 114   |                                                                                      |                                      |          | 14:10.519140   |
-|       |                                                                                      |                                      |          |                |
-| 400.  | Communication failure detected with peer over port enp2s1 on host controller-0       | host=controller-0.network=oam        | major    | 2019-05-29T14: |
-| 005   |                                                                                      |                                      |          | 01:01.284789   |
-|       |                                                                                      |                                      |          |                |
-+-------+--------------------------------------------------------------------------------------+--------------------------------------+----------+----------------+
+[wrsroot@controller-0 ~(keystone_admin)]$ fm alarm-list
++----------+--------------------------------------------------------------------------------+------------------------+----------+----------------+
+| Alarm ID | Reason Text                                                                    | Entity ID              | Severity | Time Stamp     |
++----------+--------------------------------------------------------------------------------+------------------------+----------+----------------+
+| 250.001  | compute-1 Configuration is out-of-date.                                        | host=compute-1         | major    | 2019-05-29T16: |
+|          |                                                                                |                        |          | 37:52.318338   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP configuration does not contain any valid or reachable NTP servers.         | host=controller-1.ntp  | major    | 2019-05-29T14: |
+|          |                                                                                |                        |          | 47:51.855769   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP address 129.250.35.250 is not a valid or a reachable NTP server.           | host=controller-1.ntp= | minor    | 2019-05-29T14: |
+|          |                                                                                | 129.250.35.250         |          | 47:51.812477   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP address 23.239.24.67 is not a valid or a reachable NTP server.             | host=controller-1.ntp= | minor    | 2019-05-29T14: |
+|          |                                                                                | 23.239.24.67           |          | 47:51.802781   |
+|          |                                                                                |                        |          |                |
+| 400.005  | Communication failure detected with peer over port enp2s1 on host controller-1 | host=controller-1.     | major    | 2019-05-29T14: |
+|          |                                                                                | network=oam            |          | 33:08.994881   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP configuration does not contain any valid or reachable NTP servers.         | host=controller-0.ntp  | major    | 2019-05-29T14: |
+|          |                                                                                |                        |          | 14:10.751106   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP address 103.105.51.156 is not a valid or a reachable NTP server.           | host=controller-0.ntp= | minor    | 2019-05-29T14: |
+|          |                                                                                | 103.105.51.156         |          | 14:10.573019   |
+|          |                                                                                |                        |          |                |
+| 100.114  | NTP address 72.30.35.89 is not a valid or a reachable NTP server.              | host=controller-0.ntp= | minor    | 2019-05-29T14: |
+|          |                                                                                | 72.30.35.89            |          | 14:10.519140   |
+|          |                                                                                |                        |          |                |
+| 400.005  | Communication failure detected with peer over port enp2s1 on host controller-0 | host=controller-0.     | major    | 2019-05-29T14: |
+|          |                                                                                | network=oam            |          | 01:01.284789   |
+|          |                                                                                |                        |          |                |
++----------+--------------------------------------------------------------------------------+------------------------+----------+----------------+
 ```
 
 9. Perform basic actions to ensure the system is working properly, e.g. create some volumes, import some images, launch VMs from volume.
