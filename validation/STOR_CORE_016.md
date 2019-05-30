@@ -1,6 +1,9 @@
 # STOR_CORE_016
 
-- Bare Metal Passed
+- Results
+  - Bare Metal Passed
+- Issues
+  - https://bugs.launchpad.net/starlingx/+bug/1829279
 
 ## Bare Metal
 
