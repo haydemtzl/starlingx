@@ -408,11 +408,80 @@ Unlock the storage hosts.
 After ~ 20 minutes...
 
 ```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_WARN
+            Degraded data redundancy: 152/3100 objects degraded (4.903%), 20 pgs degraded, 20 pgs undersized
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in; 19 remapped pgs
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.55 k objects, 990 MiB
+    usage:   2.1 GiB used, 396 GiB / 398 GiB avail
+    pgs:     152/3100 objects degraded (4.903%)
+             836 active+clean
+             19  active+undersized+degraded+remapped+backfill_wait
+             1   active+undersized+degraded+remapped+backfilling
+ 
+  io:
+    client:   404 KiB/s wr, 0 op/s rd, 75 op/s wr
+    recovery: 2.0 MiB/s, 0 keys/s, 0 objects/s
+
+```
+
+And finally:
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.55 k objects, 990 MiB
+    usage:   2.3 GiB used, 396 GiB / 398 GiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   3.6 KiB/s rd, 283 KiB/s wr, 4 op/s rd, 62 op/s wr
 
 ```
 
 6. Ensure the weights look accurate in
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph osd tree
+ID CLASS WEIGHT  TYPE NAME              STATUS REWEIGHT PRI-AFF 
+-1       0.38840 root storage-tier                              
+-3       0.38840     chassis group-0                            
+-4       0.19420         host storage-0                         
+ 0   hdd 0.19420             osd.0          up  1.00000 1.00000 
+-5       0.19420         host storage-1                         
+ 1   hdd 0.19420             osd.1          up  1.00000 1.00000 
+```
+
 7. Ensure there are no unexpected alarms or events
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ fm alarm-list
+
+<None related to storage>
+
+```
+
 8. Perform basic actions to ensure the system is working properly, e.g. create some volumes, import some images, launch VMs from volume.
 9. Repeat test for the other system configuration types
 
