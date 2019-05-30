@@ -44,7 +44,6 @@ localhost:~$ ip a
 localhost:~$ sudo ip address add 10.10.10.10/24 dev enp2s1
 localhost:~$ sudo ip link set up dev enp2s1
 localhost:~$ sudo ip route add default via 10.10.10.1 dev enp2s1
-localhost:~$ ping 8.8.8.8
 localhost:~$ ping 10.248.2.1
 localhost:~$ ping 10.22.224.196
 ```
