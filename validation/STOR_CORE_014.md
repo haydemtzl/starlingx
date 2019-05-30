@@ -10,6 +10,26 @@
   - https://bugs.launchpad.net/starlingx/+bug/1827080
 
 
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ cat /etc/build.info 
+###
+### StarlingX
+###     Built from master
+###
+
+OS="centos"
+SW_VERSION="19.01"
+BUILD_TARGET="Host Installer"
+BUILD_TYPE="Formal"
+BUILD_ID="20190523T013000Z"
+
+JOB="STX_build_master_master"
+BUILD_BY="starlingx.build@cengn.ca"
+BUILD_NUMBER="113"
+BUILD_HOST="starlingx_mirror"
+BUILD_DATE="2019-05-23 01:30:00 +0000"
+```
+
 ## Virtual
 
 1. Lock one of the nodes that are part of a ceph-system. e.g. controller-0 on an All-in-One Duplex system, controller-0 on a standard system, or storage-0 on a ceph storage system.
