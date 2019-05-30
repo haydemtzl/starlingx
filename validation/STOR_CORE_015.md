@@ -485,6 +485,88 @@ ID CLASS WEIGHT  TYPE NAME              STATUS REWEIGHT PRI-AFF
 8. Perform basic actions to ensure the system is working properly, e.g. create some volumes, import some images, launch VMs from volume.
 9. Repeat test for the other system configuration types
 
+### Additional
+
+#### storage-2
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-list
++----+--------------+-------------+----------------+-------------+--------------+
+| id | hostname     | personality | administrative | operational | availability |
++----+--------------+-------------+----------------+-------------+--------------+
+| 1  | controller-0 | controller  | unlocked       | enabled     | available    |
+| 2  | controller-1 | controller  | unlocked       | enabled     | available    |
+| 4  | storage-1    | storage     | unlocked       | enabled     | available    |
+| 5  | compute-0    | worker      | unlocked       | enabled     | available    |
+| 7  | compute-1    | worker      | locked         | disabled    | online       |
+| 8  | storage-0    | storage     | unlocked       | enabled     | available    |
+| 9  | storage-2    | storage     | locked         | disabled    | online       |
+| 11 | compute-2    | worker      | locked         | disabled    | offline      |
++----+--------------+-------------+----------------+-------------+--------------+
+```
+
+Add the cluster-host interface on storage hosts.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-if-modify -c platform --networks cluster-host storage-2 $(system host-if-list -a storage-2 | awk '/mgmt0/{print $2}')
++--------------+--------------------------------------+
+| Property     | Value                                |
++--------------+--------------------------------------+
+| ifname       | mgmt0                                |
+| iftype       | ethernet                             |
+| ports        | [u'enp2s2']                          |
+| datanetworks | []                                   |
+| imac         | 52:54:00:9d:cf:e2                    |
+| imtu         | 1500                                 |
+| ifclass      | platform                             |
+| networks     | cluster-host,mgmt                    |
+| aemode       | None                                 |
+| schedpolicy  | None                                 |
+| txhashpolicy | None                                 |
+| uuid         | 3715d273-74ce-4f99-81f2-c5c9bbf64e6a |
+| ihost_uuid   | a8a91b47-67ac-4a00-b43f-21c32cc32049 |
+| vlan_id      | None                                 |
+| uses         | []                                   |
+| used_by      | []                                   |
+| created_at   | 2019-05-30T04:39:09.651741+00:00     |
+| updated_at   | 2019-05-30T04:40:00.270561+00:00     |
+| sriov_numvfs | 0                                    |
+| ipv4_mode    | static                               |
+| ipv6_mode    | disabled                             |
+| accelerated  | [False]                              |
++--------------+--------------------------------------+
+```
+
+Add an OSD to the storage hosts.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-stor-add storage-2 $(system host-disk-list storage-2 | awk '/sdb/{print $2}')
++------------------+--------------------------------------------------+
+| Property         | Value                                            |
++------------------+--------------------------------------------------+
+| osdid            | 2                                                |
+| function         | osd                                              |
+| state            | configuring-on-unlock                            |
+| journal_location | 60e1eb24-07a9-4c31-ac56-ad9937e83edf             |
+| journal_size_gib | 1024                                             |
+| journal_path     | /dev/disk/by-path/pci-0000:00:1f.2-ata-2.0-part2 |
+| journal_node     | /dev/sdb2                                        |
+| uuid             | 60e1eb24-07a9-4c31-ac56-ad9937e83edf             |
+| ihost_uuid       | a8a91b47-67ac-4a00-b43f-21c32cc32049             |
+| idisk_uuid       | 96126eb2-54b9-455b-b134-239f947b1557             |
+| tier_uuid        | a9d1d16f-68d6-4aa6-9274-d417da4a4068             |
+| tier_name        | storage                                          |
+| created_at       | 2019-05-30T04:42:22.156009+00:00                 |
+| updated_at       | None                                             |
++------------------+--------------------------------------------------+
+```
+
+Unlock the storage hosts.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ system host-unlock storage-2
+```
+
 ## Bare Metal
 
 1. Lock one of the nodes that are part of a ceph-system. e.g. controller-0 on an All-in-One Duplex system, controller-0 on a standard system, or storage-0 on a ceph storage system.
