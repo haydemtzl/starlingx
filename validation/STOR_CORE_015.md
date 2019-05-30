@@ -610,6 +610,34 @@ Check CEPH status after some time:
 
 ```
 
+After ~ 30 minutes... how do we fix this? now we have 3 OSDs instead of 2 OSDs.
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_WARN
+            615/3108 objects misplaced (19.788%)
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 3 osds: 3 up, 3 in; 296 remapped pgs
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.55 k objects, 1012 MiB
+    usage:   2.4 GiB used, 594 GiB / 597 GiB avail
+    pgs:     615/3108 objects misplaced (19.788%)
+             560 active+clean
+             296 active+clean+remapped
+ 
+  io:
+    client:   199 KiB/s wr, 0 op/s rd, 43 op/s wr
+ 
+```
+
 ## Bare Metal
 
 1. Lock one of the nodes that are part of a ceph-system. e.g. controller-0 on an All-in-One Duplex system, controller-0 on a standard system, or storage-0 on a ceph storage system.
