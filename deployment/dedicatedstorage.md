@@ -1,5 +1,12 @@
 # Installing StarlingX with containers: Standard Storage configuration
 
+Steps being in section "Setup Controller-0" taken from:
+- https://wiki.openstack.org/wiki/StarlingX/Containers/InstallationOnStandardStorage
+
+## ISO Information
+
+Info on the ISO installed seen once ISO is installed.
+
 ```sh
 controller-0:~$ cat /etc/build.info 
 ###
