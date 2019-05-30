@@ -3348,6 +3348,31 @@ controller-0:~$ openstack network segment range create ${PHYSNET1}-a --network-t
 
 > None followed, just for reference
 
+## Health
+
+```sh
+[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.41 k objects, 747 MiB
+    usage:   1.6 GiB used, 396 GiB / 398 GiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   339 KiB/s wr, 0 op/s rd, 63 op/s wr
+
+```
+
 ## Failures
 
 ```sh
@@ -3727,7 +3752,27 @@ Is registries secure: False
 
 Applying configuration (this will take several minutes):
 
-01/08: Creating bootstrap configuration ... DONE
+01/08: Creating bootstrap configuration ... DONE[wrsroot@controller-0 ~(keystone_admin)]$ ceph -s
+  cluster:
+    id:     e8ab94c1-8878-40bd-ac05-381366f91e97
+    health: HEALTH_OK
+ 
+  services:
+    mon: 3 daemons, quorum controller-0,controller-1,storage-0
+    mgr: controller-0(active), standbys: controller-1
+    osd: 2 osds: 2 up, 2 in
+    rgw: 1 daemon active
+ 
+  data:
+    pools:   9 pools, 856 pgs
+    objects: 1.41 k objects, 747 MiB
+    usage:   1.6 GiB used, 396 GiB / 398 GiB avail
+    pgs:     856 active+clean
+ 
+  io:
+    client:   339 KiB/s wr, 0 op/s rd, 63 op/s wr
+ 
+
 02/08: Applying bootstrap manifest ... DONE
 03/08: Persisting local configuration ... DONE
 04/08: Populating initial system inventory ... DONE
